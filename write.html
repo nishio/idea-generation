@@ -4,7 +4,7 @@
 function add_item(){
   var t = $('#text').val();
   $('#text').val('');
-  var item = $('<li>');
+  var item = $('<p>');
   item.text(t);
   $('#list').append(item);
 }
@@ -17,5 +17,5 @@ $(function(){
   });
 });
 </script>
-<ul id='list'></ul>
-<textarea id='text'></textarea>
+<div id='list'></div>
+<textarea id='text' cols='28' rows='5'></textarea>
