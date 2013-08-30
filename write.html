@@ -1,2 +1,21 @@
 <html>
-<textarea>
+  <script type="text/javascript" src="common/jquery-1.7.1.js"></script>
+<script>
+function add_item(){
+  var t = $('#text').val();
+  $('#text').val('');
+  var item = $('<li>');
+  item.text(t);
+  $('#list').append(item);
+}
+$(function(){
+  $('#text').keypress(function(e) {
+    if (e.keyCode == 13){
+      add_item();
+      return false;
+    }
+  });
+});
+</script>
+<ul id='list'></ul>
+<textarea id='text'></textarea>
