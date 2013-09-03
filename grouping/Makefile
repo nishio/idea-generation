@@ -13,7 +13,7 @@ LIBPATH_FOR_BUILDER = $(patsubst %,--root="%", $(LIBPATH))
 EXTERNS_FOR_BUILDER = $(patsubst %,--compiler_flags="--externs=%", $(EXTERNS))
 
 # targets
-.PHONY: compile full
+.PHONY: compile deps.js deps.txt lint watch report
 
 compile:
 	-$(CLOSURE_BUILDER) \
@@ -28,10 +28,6 @@ compile:
 	    > /dev/null 2> new_compile.log
 	mv new_compile.log compile.log
 	cat compile.log
-
-full:
-	make deps
-	make compile
 
 deps: deps.js deps.txt
 
