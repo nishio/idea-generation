@@ -7,9 +7,21 @@
  * @param model {gapi.drive.realtime.Model} the Realtime root model object.
  */
 function initializeModel(model) {
-  var string = model.createString('Hello Realtime World!');
-  model.getRoot().set('text', string);
+    var field = model.createList();
+    field.pushAll(['test1', 'test2']);
+    model.getRoot().set('my_list', field);
 }
+
+var my_list;
+
+function updateUI() {
+  $('#list').empty();
+  var array = my_list.asArray();
+  for (var i in array) {
+    var new_item = $('<li>').text(array[i]);
+    $('#list').append(new_item);
+  }
+};
 
 /**
  * This function is called when the Realtime file has been loaded. It should
@@ -19,52 +31,35 @@ function initializeModel(model) {
  * @param doc {gapi.drive.realtime.Document} the Realtime document.
  */
 function onFileLoaded(doc) {
-  var string = doc.getModel().getRoot().get('text');
+    my_list = doc.getModel().getRoot().get('my_list');
+    updateUI();
 
-  // Keeping one box updated with a String binder.
-  var textArea1 = document.getElementById('editor1');
-  gapi.drive.realtime.databinding.bindString(string, textArea1);
 
-  // Keeping one box updated with a custom EventListener.
-  var textArea2 = document.getElementById('editor2');
-  var updateTextArea2 = function(e) {
-    textArea2.value = string;
-  };
-  string.addEventListener(gapi.drive.realtime.EventType.TEXT_INSERTED, updateTextArea2);
-  string.addEventListener(gapi.drive.realtime.EventType.TEXT_DELETED, updateTextArea2);
-  textArea2.onkeyup = function() {
-    string.setText(textArea2.value);
-  };
-  updateTextArea2();
+    // Add logic for undo button.
+    var model = doc.getModel();
+    var undoButton = document.getElementById('undoButton');
+    var redoButton = document.getElementById('redoButton');
 
-  // Enabling UI Elements.
-  textArea1.disabled = false;
-  textArea2.disabled = false;
+    undoButton.onclick = function(e) {
+        model.undo();
+    };
+    redoButton.onclick = function(e) {
+        model.redo();
+    };
 
-  // Add logic for undo button.
-  var model = doc.getModel();
-  var undoButton = document.getElementById('undoButton');
-  var redoButton = document.getElementById('redoButton');
-
-  undoButton.onclick = function(e) {
-    model.undo();
-  };
-  redoButton.onclick = function(e) {
-    model.redo();
-  };
-
-  // Add event handler for UndoRedoStateChanged events.
-  var onUndoRedoStateChanged = function(e) {
-    undoButton.disabled = !e.canUndo;
-    redoButton.disabled = !e.canRedo;
-  };
-  model.addEventListener(gapi.drive.realtime.EventType.UNDO_REDO_STATE_CHANGED, onUndoRedoStateChanged);
+    // Add event handler for UndoRedoStateChanged events.
+    var onUndoRedoStateChanged = function(e) {
+        undoButton.disabled = !e.canUndo;
+        redoButton.disabled = !e.canRedo;
+    };
+    model.addEventListener(gapi.drive.realtime.EventType.UNDO_REDO_STATE_CHANGED, onUndoRedoStateChanged);
 }
 
 /**
  * Options for the Realtime loader.
  */
 var realtimeOptions = {
+    appId: '240613571940',
   /**
    * Client ID from the APIs Console.
    */
@@ -117,7 +112,37 @@ var realtimeOptions = {
  * Start the Realtime loader with the options.
  */
 function startRealtime() {
-  var realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
-  realtimeLoader.start();
+    var realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
+    realtimeLoader.start();
+
+    $('#add_texts').click(function(){
+        var items = $('#texts').val().split(/\n\s*/g);
+        items.forEach(function(x){
+            my_list.push(x);
+        });
+    });
+
+    $('#openButton').click(function(){
+        // Opens the Google Picker.
+        var token = gapi.auth.getToken().access_token;
+        var view = new google.picker.View(google.picker.ViewId.DOCS);
+        view.setMimeTypes("application/vnd.google-apps.drive-sdk." + realtimeOptions.appId);
+        var picker = new google.picker.PickerBuilder()
+        .enableFeature(google.picker.Feature.NAV_HIDDEN)
+        .setAppId(realtimeOptions.appId)
+        .setOAuthToken(token)
+        .addView(view)
+        .addView(new google.picker.DocsUploadView())
+        .setCallback(openCallback)
+        .build();
+        picker.setVisible(true);
+    });
 }
 
+function openCallback(data) {
+  if (data.action == google.picker.Action.PICKED) {
+    var fileId = data.docs[0].id;
+    rtpg.realtimeLoader.redirectTo([fileId], rtpg.realtimeLoader.authorizer.userId);
+  }
+}
+google.load('picker', '1');
