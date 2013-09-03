@@ -1,0 +1,16 @@
+.selected {
+  background: #aaaaff;
+}
+
+.option {
+  border: solid 1px;
+  padding: 2px;
+}
+
+label {
+    float: left;
+    width: 180px;
+}
+input {
+    float: left;
+}
