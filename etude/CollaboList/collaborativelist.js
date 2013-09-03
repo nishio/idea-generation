@@ -1,9 +1,7 @@
 /**
  * This function is called the first time that the Realtime model is created
  * for a file. This function should be used to initialize any values of the
- * model. In this case, we just create the single string model that will be
- * used to control our text box. The string has a starting value of 'Hello
- * Realtime World!', and is named 'text'.
+ * model. 
  * @param model {gapi.drive.realtime.Model} the Realtime root model object.
  */
 function initializeModel(model) {
@@ -26,8 +24,7 @@ function updateUI() {
 /**
  * This function is called when the Realtime file has been loaded. It should
  * be used to initialize any user interface components and event handlers
- * depending on the Realtime model. In this case, create a text control binder
- * and bind it to our string model that we created in initializeModel.
+ * depending on the Realtime model.
  * @param doc {gapi.drive.realtime.Document} the Realtime document.
  */
 function onFileLoaded(doc) {
@@ -42,9 +39,11 @@ function onFileLoaded(doc) {
 
     undoButton.onclick = function(e) {
         model.undo();
+        updateUI();
     };
     redoButton.onclick = function(e) {
         model.redo();
+        updateUI();
     };
 
     // Add event handler for UndoRedoStateChanged events.
@@ -83,7 +82,7 @@ var realtimeOptions = {
   /**
    * The name of newly created Drive files.
    */
-  defaultTitle: "New Realtime Quickstart File",
+  defaultTitle: "My Idea",
 
   /**
    * The MIME type of newly created Drive Files. By default the application
@@ -111,8 +110,9 @@ var realtimeOptions = {
 /**
  * Start the Realtime loader with the options.
  */
-function startRealtime() {
-    var realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
+ var realtimeLoader
+ function startRealtime() {
+    realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
     realtimeLoader.start();
 
     $('#add_texts').click(function(){
@@ -120,6 +120,7 @@ function startRealtime() {
         items.forEach(function(x){
             my_list.push(x);
         });
+        updateUI();
     });
 
     $('#openButton').click(function(){
@@ -142,7 +143,7 @@ function startRealtime() {
 function openCallback(data) {
   if (data.action == google.picker.Action.PICKED) {
     var fileId = data.docs[0].id;
-    rtpg.realtimeLoader.redirectTo([fileId], rtpg.realtimeLoader.authorizer.userId);
+    realtimeLoader.redirectTo([fileId], realtimeLoader.authorizer.userId);
   }
 }
 google.load('picker', '1');
