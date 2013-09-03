@@ -433,12 +433,9 @@ main.main = function() {
         for (var i = 0; i < groups.length; i++) {
             var hull = hulls[i];
             var N = hull.length;
-            function get(hull, i) { // cyclic access
-                return hull[(i + N) % N];
-            }
             for (var j = 0; j < N; j++) {
                 var p = hull[j];
-                var next = get(hull, j + 1);
+                var next = hull[(j + 1 + N) % N]; // cyclic access
                 var v = next.sub(p);
                 var nv = v.normalize();
                 for (var k = 0; k < 4; k++) {
