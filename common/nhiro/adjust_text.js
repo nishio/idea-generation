@@ -107,7 +107,7 @@ nhiro.adjust_text = (function() {
             var font = adjust.font_size;
             text.attr('text', content)
             .attr('font', font + 'px arial');
-        }
+        };
 
         text.set_align = function(type) {
             align = type;
@@ -119,11 +119,11 @@ nhiro.adjust_text = (function() {
                 text.attr('text-anchor', 'middle');
             }
             text.attr(_calc_text_pos(text));
-        }
+        };
 
         text.update_text(content);
         return text;
-    }
+    };
 
     return result;
 })();

@@ -35,7 +35,7 @@ nhiro.path = function() {
         }else {
             return this.items.join(' ');
         }
-    }
+    };
 
     /**
      * @param {has_xy|number} p .
@@ -51,7 +51,7 @@ nhiro.path = function() {
         }
         this.items.push('L ' + p.to_str());
         return this;
-    }
+    };
 
 
     /**
@@ -66,7 +66,7 @@ nhiro.path = function() {
             'A' + radius + ',' + radius +
                 ',0,0,0,' + endpoint.to_str());
         return this;
-    }
+    };
 
 
     /**
@@ -83,7 +83,7 @@ nhiro.path = function() {
         }
         this.items.push('M ' + p.to_str());
         return this;
-    }
+    };
 
     /**
      * @return {path} .
@@ -92,7 +92,7 @@ nhiro.path = function() {
     p.close = function() {
         this.items.push('Z');
         return this;
-    }
+    };
 
     return path;
 }();

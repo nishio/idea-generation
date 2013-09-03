@@ -550,20 +550,20 @@ main.main = function() {
         r.unselect = function() {
             r[0].attr({stroke: '#000', 'stroke-width': 1});
             r.selected = false;
-        }
+        };
         r.original_move = r.move;
         r.move = function(tx, ty) {
             stateman.trigger('box', 'move', null, [r, tx, ty]);
             return this;
-        }
+        };
         r.on_drag_start = function() {
             r.ox = r.x;
             r.oy = r.y;
             stateman.trigger('box', 'drag_start', null, [r]);
-        }
+        };
         r.on_drag_end = function() {
             stateman.trigger('box', 'drag_end', null, [r]);
-        }
+        };
 
         r.mouseover(function() {
             r.toFront();

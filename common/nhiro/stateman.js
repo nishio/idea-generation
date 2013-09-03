@@ -29,7 +29,7 @@ nhiro.stateman = (function create_stateman() {
         var result = empty_state();
         nhiro.assert.assert(state_table[name] == null);
         state_table[name] = result;
-    }
+    };
 
     /** @type {nhiro.stateman.State} */
     // current_state should be private
@@ -45,7 +45,7 @@ nhiro.stateman = (function create_stateman() {
         var handler = current_state.handler_table[target_type + ' ' + message];
         if (handler == null) return;
         handler.apply(target, args);
-    }
+    };
 
     /**
      * @param {string} state .
@@ -62,7 +62,7 @@ nhiro.stateman = (function create_stateman() {
         if (cur.enter != null) {
             cur.enter();
         }
-    }
+    };
 
     /**
      * @param {string} state_name .
@@ -78,7 +78,7 @@ nhiro.stateman = (function create_stateman() {
         nhiro.assert.assert(state != null);
         nhiro.assert.assert(state.handler_table[sig] == null);
         state.handler_table[sig] = handler;
-    }
+    };
 
     /**
      * @param {string} state_name .
@@ -93,21 +93,21 @@ nhiro.stateman = (function create_stateman() {
         nhiro.assert.assert(state != null);
         nhiro.assert.assert(current_state.handler_table[sig] != null);
         state.handler_table[sig] = null;
-    }
+    };
 
     stateman.add_exit = function add_exit(state_name, handler) {
         var state = state_table[state_name];
         nhiro.assert.assert(state != null);
         nhiro.assert.assert(state.exit == null);
         state.exit = handler;
-    }
+    };
 
     stateman.add_enter = function add_enter(state_name, handler) {
         var state = state_table[state_name];
         nhiro.assert.assert(state != null);
         nhiro.assert.assert(state.enter == null);
         state.enter = handler;
-    }
+    };
 
     stateman.create_stateman = create_stateman;
     return stateman;

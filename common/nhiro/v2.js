@@ -26,13 +26,15 @@ nhiro.V2 = function() {
     var p = V2.prototype;
 
     /**
+     * @this {V2}
      * @param {number} x .
      * @param {number} y .
      * @return {V2} .
      */
-    p.make = V2.make = function(x, y) {
+    p.make = function(x, y) {
         return new V2({x: x, y: y});
     };
+    V2.make = p.make;
 
     /**
      * @this {V2}
@@ -71,7 +73,7 @@ nhiro.V2 = function() {
      */
     p.outer = function(rhs) {
         return this.x * rhs.y - rhs.x * this.y;
-    }
+    };
 
 
     /**
@@ -81,7 +83,7 @@ nhiro.V2 = function() {
      */
     p.dot = function(rhs) {
         return this.x * rhs.x + this.y * rhs.y;
-    }
+    };
 
 
     function is_number(x) {
@@ -95,7 +97,7 @@ nhiro.V2 = function() {
     p.to_str = function() {
         nhiro.assert.assert(is_number(this.x) && is_number(this.y));
         return this.x + ', ' + this.y;
-    }
+    };
 
     /**
      * @this {V2}
@@ -103,7 +105,7 @@ nhiro.V2 = function() {
      */
     p.rot90 = function() {
         return p.make(this.y, -this.x);
-    }
+    };
 
 
     /**
@@ -113,7 +115,7 @@ nhiro.V2 = function() {
      */
     p.scale = function(s) {
         return p.make(this.x * s, this.y * s);
-    }
+    };
 
     /**
      * @this {V2}
@@ -121,7 +123,7 @@ nhiro.V2 = function() {
      */
     p.norm = function() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
-    }
+    };
 
     /**
      * @this {V2}
@@ -129,7 +131,7 @@ nhiro.V2 = function() {
      */
     p.normalize = function() {
         return this.scale(1 / this.norm());
-    }
+    };
 
     /**
      * rotate vector clockwise.
@@ -144,7 +146,7 @@ nhiro.V2 = function() {
             this.x * c - this.y * s,
             this.x * s + this.y * c
         );
-    }
+    };
     return V2;
 }();
 

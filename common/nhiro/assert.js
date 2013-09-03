@@ -6,6 +6,7 @@ goog.scope(function() {
     var _ = nhiro.assert;
     /**
      * @suppress {checkTypes}
+     * @param {string=} opt_message message.
      */
     _._show = function(opt_message) {
         if (window.console) {
@@ -16,7 +17,7 @@ goog.scope(function() {
             if (window.console.trace) window.console.trace();
             if (Error().stack) window.console.log(Error().stack);
         }
-    }
+    };
 
     /**
      * @param {boolean} condition condition.
@@ -28,7 +29,10 @@ goog.scope(function() {
             // breakpoint
             if (nhiro.assert.to_break) debugger;
         }
-    }
+    };
+    /**
+     * When true, enter into debugger mode on assertion error.
+     */
     _.to_break = true;
     /**
      * @param {string=} opt_message message.
@@ -37,6 +41,6 @@ goog.scope(function() {
         _._show(opt_message);
         // breakpoint
         if (nhiro.assert.to_break) debugger;
-    }
+    };
 
 });

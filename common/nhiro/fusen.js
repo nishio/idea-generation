@@ -47,13 +47,13 @@ nhiro.fusen = (function() {
         r.cy = r.y + r.h / 2;
         r.on_drag = function(dx, dy) {
             r.move(r.ox + dx, r.oy + dy);
-        }
+        };
         r.on_drag_start = function() {
             r.ox = r.x;
             r.oy = r.y;
-        }
+        };
         r.on_drag_end = function() {
-        }
+        };
         _add_drag_handler(
             r,
             function(dx, dy) {r.on_drag(dx, dy)},
@@ -69,17 +69,17 @@ nhiro.fusen = (function() {
             r.y = ty;
             r.cx = r.x + r.w / 2;
             r.cy = r.y + r.h / 2;
-        }
+        };
 
         r.update_text = function(content) {
             text.update_text(content);
-        }
+        };
 
         r.set_align = function(type) {
             text.set_align(type);
-        }
+        };
         return r;
-    }
+    };
 
     return result;
 })();
