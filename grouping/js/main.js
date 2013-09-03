@@ -601,7 +601,7 @@ main.main = function() {
 
     $('#multitext_submit').click(function(e) {
         var items = $('#multitext').val().split(/\n\s*/g);
-        items.forEach(function(x){
+        items.forEach(function(x) {
             add_box(x);
         });
         $('.move').click();

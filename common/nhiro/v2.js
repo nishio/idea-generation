@@ -9,6 +9,9 @@
 goog.require('nhiro.assert');
 goog.provide('nhiro.V2');
 
+/**
+ * library to handle 2-dim vector
+ */
 nhiro.V2 = function() {
     /**
      * @constructor

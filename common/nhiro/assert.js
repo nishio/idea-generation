@@ -7,7 +7,7 @@ goog.scope(function() {
     /**
      * @suppress {checkTypes}
      */
-    _._show = function (opt_message) {
+    _._show = function(opt_message) {
         if (window.console) {
             // show message
             window.console.log('Assertion Failure');
@@ -22,7 +22,7 @@ goog.scope(function() {
      * @param {boolean} condition condition.
      * @param {string=} opt_message message.
      */
-    _.assert = function (condition, opt_message) {
+    _.assert = function(condition, opt_message) {
         if (!condition) {
             _._show(opt_message);
             // breakpoint
@@ -33,7 +33,7 @@ goog.scope(function() {
     /**
      * @param {string=} opt_message message.
      */
-    nhiro.assert.not_here = function (opt_message) {
+    nhiro.assert.not_here = function(opt_message) {
         _._show(opt_message);
         // breakpoint
         if (nhiro.assert.to_break) debugger;
