@@ -292,8 +292,6 @@ function style2attr(style) {
 
 /**
  * @suppress {checkTypes}
- * @param {*} $ .
- * @param {*} Raphael .
  */
 main.main = function() {
     var $ = nhiro.repos.get('jQuery');
@@ -545,7 +543,7 @@ main.main = function() {
     function add_box(content) {
         if (content === undefined) content = $('.text').val();
         if (content == '') return;
-        var r = nhiro.fusen.add(jQuery, paper, content, 100, 100, 130);
+        var r = nhiro.fusen.add(paper, content, 100, 100, 130);
         r.id = new Date().getTime();
         r.selected = false;
         r.select = function() {
