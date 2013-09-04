@@ -43,12 +43,15 @@ lint:
 	cat lint.log
 
 
-watch:
-	./build.sh
-	cat deps.txt | xargs watchmedo shell-command --command="./build.sh" &
+#
+# taregts for jscc
+watch-start:
+	python _jscc/watch.py
 
+watch-stop:
+	python _jscc/watch.py --kill
 
 report:
 	@cat lint.log
 	@cat compile.log
-	python client.py
+	python _jscc/report.py
