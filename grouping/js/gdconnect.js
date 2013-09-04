@@ -35,49 +35,14 @@ main.gdcon.updateUI = function() {
     var array = main.gdcon._list.asArray();
     var N = main.boxes.length;
     for (var i in array) {
-        if(i < N){
+        if (i < N) {
             // box already exists
             // TODO implement updating
-        }else{
+        }else {
             // box not exists yet
             var v = JSON.parse(array[i]);
-        var r = nhiro.fusen.add(main.paper, v.text, 100, 100, 130);
-        r.id = v.id;
-
-        r.selected = false;
-        r.select = function() {
-            r[0].attr({stroke: 'blue', 'stroke-width': 2});
-            r.selected = true;
-        };
-        r.unselect = function() {
-            r[0].attr({stroke: '#000', 'stroke-width': 1});
-            r.selected = false;
-        };
-        r.original_move = r.move;
-        r.move = function(tx, ty) {
-            nhiro.stateman.trigger('box', 'move', null, [r, tx, ty]);
-            return this;
-        };
-        r.on_drag_start = function() {
-            r.ox = r.x;
-            r.oy = r.y;
-            nhiro.stateman.trigger('box', 'drag_start', null, [r]);
-        };
-        r.on_drag_end = function() {
-            nhiro.stateman.trigger('box', 'drag_end', null, [r]);
-        };
-
-        r.mouseover(function() {
-            r.toFront();
-        });
-
-        r.mousedown(function() {
-            nhiro.stateman.trigger('box', 'mousedown', null, [r]);
-        });
-
-        main.boxes.push(r);
+            main.add_fusen(v.text, 100, 100);
         }
-
     }
 };
 
@@ -172,13 +137,13 @@ var realtimeOptions = {
   afterAuth: null // No action.
 };
 
-main.gdcon.pushText = function (text){
-    main.gdcon.pushObj({'text': text})
-}
-main.gdcon.pushObj = function (obj){
+main.gdcon.pushText = function(text) {
+    main.gdcon.pushObj({'text': text});
+};
+main.gdcon.pushObj = function(obj) {
     nhiro.assert(main.gdcon._list, 'do auth first', true);
     main.gdcon._list.push(JSON.stringify(obj));
-}
+};
 /**
  * Start the Realtime loader with the options.
  * @suppress {checkTypes}

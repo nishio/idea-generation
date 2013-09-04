@@ -29,9 +29,9 @@ goog.scope(function() {
         if (window.console) {
             // show message
             window.console.log('Assertion Failure');
-            if (opt_message){
+            if (opt_message) {
                 window.console.log('Message: ' + opt_message);
-                if(use_alert){
+                if (use_alert) {
                     window.alert(opt_message);
                 }
             }

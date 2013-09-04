@@ -302,6 +302,94 @@ function style2attr(style) {
 }
 
 /**
+ * Add fusen and add event handlers on it.
+ * @suppress {checkTypes}
+ */
+main.add_fusen = function(text, x, y) {
+    var r = nhiro.fusen.add(main.paper, text, x, y, 130);
+    r.id = main.boxes.length;
+
+    r.selected = false;
+    r.select = function() {
+        r[0].attr({stroke: 'blue', 'stroke-width': 2});
+        r.selected = true;
+    };
+    r.unselect = function() {
+        r[0].attr({stroke: '#000', 'stroke-width': 1});
+        r.selected = false;
+    };
+    r.original_move = r.move;
+    r.move = function(tx, ty) {
+        nhiro.stateman.trigger('box', 'move', null, [r, tx, ty]);
+        return this;
+    };
+    r.on_drag_start = function() {
+        r.ox = r.x;
+        r.oy = r.y;
+        nhiro.stateman.trigger('box', 'drag_start', null, [r]);
+    };
+    r.on_drag_end = function() {
+        nhiro.stateman.trigger('box', 'drag_end', null, [r]);
+    };
+
+    r.mouseover(function() {
+        r.toFront();
+    });
+
+    r.mousedown(function() {
+        nhiro.stateman.trigger('box', 'mousedown', null, [r]);
+    });
+    main.boxes.push(r);
+
+    groups.push({
+        path: main.paper.path('M0,0L0,0')
+        .attr({'stroke-dasharray': '. '}),
+        boxes: [r]});
+    main.update_group_view();
+
+    main.disable_if_less_than_two_boxes();
+    return r;
+};
+
+/**
+ * If there are less than 2 boxes, disable 'draw line' option, v.v.
+ * @suppress {checkTypes}
+ */
+main.disable_if_less_than_two_boxes = function() {
+    var $ = nhiro.repos.get('jQuery');
+    if (main.boxes.length > 1) {
+        $('.line').removeAttr('disabled');
+    } else {
+        $('.line').attr('disabled', 'disabled');
+    }
+};
+
+/**
+ * @suppress {checkTypes}
+ */
+main.update_group_view = function(threshold) {
+    var Raphael = nhiro.repos.get('Raphael');
+
+    if (threshold == null) threshold = 1;
+    var pathstr = '';
+    for (var i = 0; i < groups.length; i++) {
+        var path = groups[i].path;
+        var boxes = groups[i].boxes;
+        if (boxes.length > threshold) {
+            var points = nhiro.util.flatten(boxes.map(get_four_corner));
+            points = nhiro.convex_hull(points);
+            pathstr = broaden(points);
+        }else {
+            pathstr = 'M0,0';
+        }
+        path.attr(
+            'path',
+            Raphael.parsePathString(pathstr));
+    }
+};
+
+
+/**
  * @suppress {checkTypes}
  */
 main.main = function() {
@@ -323,7 +411,7 @@ main.main = function() {
             var path = groups[i].path;
             path.attr({'stroke-dasharray': ''});
         }
-        update_group_view(0);
+        main.update_group_view(0);
     });
 
     stateman.add_exit('group', function() {
@@ -331,13 +419,13 @@ main.main = function() {
             var path = groups[i].path;
             path.attr({'stroke-dasharray': '. '});
         }
-        update_group_view(1);
+        main.update_group_view(1);
     });
 
     stateman.add_handler('move', 'box', 'move', function(r, tx, ty) {
         r.original_move(tx, ty);
         move_lines(r);
-        update_group_view();
+        main.update_group_view();
     });
 
     stateman.add_handler('group', 'box', 'move', function(r, tx, ty) {
@@ -378,10 +466,10 @@ main.main = function() {
                 path: main.paper.path('M0,0'),
                 boxes: []});
             change_group(r, groups.length - 1);
-            update_group_view(0);
+            main.update_group_view(0);
         }else {
             change_group(r, nearest_group);
-            update_group_view(0);
+            main.update_group_view(0);
         }
         calc_hull_and_cache();
         reset_highlight();
@@ -488,24 +576,6 @@ main.main = function() {
     }
 
 
-    function update_group_view(threshold) {
-        if (threshold == null) threshold = 1;
-        var pathstr = '';
-        for (var i = 0; i < groups.length; i++) {
-            var path = groups[i].path;
-            var boxes = groups[i].boxes;
-            if (boxes.length > threshold) {
-                var points = nhiro.util.flatten(boxes.map(get_four_corner));
-                points = nhiro.convex_hull(points);
-                pathstr = broaden(points);
-            }else {
-                pathstr = 'M0,0';
-            }
-            path.attr(
-                'path',
-                Raphael.parsePathString(pathstr));
-        }
-    }
 
 
     /**
@@ -549,66 +619,20 @@ main.main = function() {
     }
 
     function add_box(content) {
-        if (content === undefined){
+        if (content === undefined) {
             content = $('.text').val();
             $('.text').val('');
         }
         if (content == '') return;
+
         var id = main.boxes.length;
         var when = new Date().toISOString();
         main.gdcon.pushObj({
             'text': content,
             'when': when,
-            'id': id})
+            'id': id});
 
-        var r = nhiro.fusen.add(main.paper, content, 100, 100, 130);
-        r.id = id;
-        r.selected = false;
-        r.select = function() {
-            r[0].attr({stroke: 'blue', 'stroke-width': 2});
-            r.selected = true;
-        };
-        r.unselect = function() {
-            r[0].attr({stroke: '#000', 'stroke-width': 1});
-            r.selected = false;
-        };
-        r.original_move = r.move;
-        r.move = function(tx, ty) {
-            stateman.trigger('box', 'move', null, [r, tx, ty]);
-            return this;
-        };
-        r.on_drag_start = function() {
-            r.ox = r.x;
-            r.oy = r.y;
-            stateman.trigger('box', 'drag_start', null, [r]);
-        };
-        r.on_drag_end = function() {
-            stateman.trigger('box', 'drag_end', null, [r]);
-        };
-
-        r.mouseover(function() {
-            r.toFront();
-        });
-
-        r.mousedown(function() {
-            stateman.trigger('box', 'mousedown', null, [r]);
-        });
-
-        main.boxes.push(r);
-
-        groups.push({
-            path: main.paper.path('M0,0L0,0')
-                  .attr({'stroke-dasharray': '. '}),
-            boxes: [r]});
-        update_group_view();
-
-        if (main.boxes.length > 1) {
-            $('.line').removeAttr('disabled');
-        } else {
-            $('.line').attr('disabled', 'disabled');
-        }
-
-        return r;
+        return main.add_fusen(content, 100, 100);
     }
 
 
@@ -671,7 +695,7 @@ main.main = function() {
         groups = groups.filter(function(x) {return x.boxes.length > 0});
     }
 
-    update_group_view();
+    main.update_group_view();
     var offset = $('#canvas').offset();
 
     $('#canvas').mousemove(function(e) {
