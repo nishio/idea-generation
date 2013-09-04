@@ -6,11 +6,13 @@ CLOSURE_COMPILER = ../common/compiler.jar
 LIBPATH = js ../common/nhiro $(CLOSURE_LIB)
 ENTRYPOINT = js/main.js
 EXTERNS = ../common/externs/nhiro.js
+JS_FILES = deps.js
 
 # automatic settings
 LIBPATH_FOR_CALCDEPS = $(patsubst %,-p %, $(LIBPATH))
 LIBPATH_FOR_BUILDER = $(patsubst %,--root="%", $(LIBPATH))
 EXTERNS_FOR_BUILDER = $(patsubst %,--compiler_flags="--externs=%", $(EXTERNS))
+JS_FILES_FOR_BUILDER = $(patsubst %,--compiler_flags="--js=%", $(JS_FILES))
 
 # targets
 .PHONY: compile deps.js deps.txt lint watch report
@@ -20,14 +22,15 @@ compile:
 	    --namespace="main.main" \
 	    $(LIBPATH_FOR_BUILDER) \
 	    $(EXTERNS_FOR_BUILDER) \
+	    $(JS_FILES_FOR_BUILDER) \
 	    --output_mode=compiled --compiler_jar="$(CLOSURE_COMPILER)" \
 	    -f --compilation_level=ADVANCED_OPTIMIZATIONS \
 	    -f --warning_level=VERBOSE \
 	    -f --jscomp_warning=visibility \
-	    --compiler_flags="--js=deps.js" \
 	    > /dev/null 2> new_compile.log
 	mv new_compile.log compile.log
 	cat compile.log
+
 
 deps: deps.js deps.txt
 
