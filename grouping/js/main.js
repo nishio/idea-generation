@@ -19,6 +19,12 @@ var first_box = null;
 //var mode = 'move';
 var line_style = 'single_tip';
 
+// cached in calc_hull_and_cache
+var hulls = [];
+
+var nearest_group = null;
+
+
 /** @typedef {*} */
 var Box;
 
@@ -392,19 +398,209 @@ main.update_group_view = function(threshold) {
 /**
  * @suppress {checkTypes}
  */
-main.main = function() {
+main.reset_temp_line = function() {
+    var Raphael = nhiro.repos.get('Raphael');
+    temp_line.attr('path', Raphael.parsePathString('M0,0L0,0'));
+    if (first_box != null) {
+        first_box.unselect();
+        first_box = null;
+    }
+};
+
+
+/**
+ * @suppress {checkTypes}
+ */
+function move_lines(r) {
     var $ = nhiro.repos.get('jQuery');
     var Raphael = nhiro.repos.get('Raphael');
+    $(lines).each(function() {
+        var box1 = null, box2 = null, e1, e2;
+        if (this.box1.id == r.id) {
+            box1 = r;
+            box2 = this.box2;
+        } else if (this.box2.id == r.id) {
+            box1 = this.box1;
+            box2 = r;
+        }
+        if (box1 != null && box2 != null) {
+            var pathstr = line2path(box1, box2, this.style);
+            pathstr = Raphael.parsePathString(pathstr);
+            this.attr('path', pathstr);
+        }
+    });
+}
+
+
+/**
+ * find group which collide with Box r
+ * @param {Box} r .
+ * @return {number} .
+ * @suppress {checkTypes}
+ */
+function find_group(r) {
+    var corners = get_four_corner(r);
+
+    // first stage: is in convex hull?
+    for (var i = 0; i < groups.length; i++) {
+        var hull = hulls[i];
+        for (var j = 0; j < 4; j++) {
+            if (is_in_hull(corners[j], hull)) {
+                return i;
+            }
+        }
+    }
+
+    var radius = 20;
+    // second stage: if in raduis
+    for (var i = 0; i < groups.length; i++) {
+        var hull = hulls[i];
+        var N = hull.length;
+        for (var j = 0; j < N; j++) {
+            var p = hull[j];
+            var next = hull[(j + 1 + N) % N]; // cyclic access
+            var v = next.sub(p);
+            var nv = v.normalize();
+            for (var k = 0; k < 4; k++) {
+                var ckp = corners[k].sub(p);
+                if (ckp.norm() < radius) {
+                    return i;
+                }
+                var d = ckp.dot(nv);
+                if (d < 0 || d > v.norm()) {
+                    continue;
+                }
+                var indir = nv.rot90();
+                d = -ckp.dot(indir);
+                if (d < 0 || d > radius) {
+                    continue;
+                }
+                return i;
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * @suppress {checkTypes}
+ */
+function calc_hull_and_cache() {
+    // calc convex hull and cache them
+    hulls = [];
+    for (var i = 0; i < groups.length; i++) {
+        var boxes = groups[i].boxes;
+        var points = nhiro.util.flatten(boxes.map(get_four_corner));
+        var hull = nhiro.convex_hull(points);
+        hulls.push(hull);
+    }
+}
+
+
+/**
+ * @suppress {checkTypes}
+ */
+function reset_highlight() {
+    for (var i = 0; i < groups.length; i++) {
+        var path = groups[i].path;
+        path.attr('stroke-width', 1);
+    }
+}
+
+
+/**
+ * @suppress {checkTypes}
+ */
+function add_box(content) {
+    var $ = nhiro.repos.get('jQuery');
+    if (content === undefined) {
+        content = $('.text').val();
+        $('.text').val('');
+    }
+    if (content == '') return;
+
+    var id = main.boxes.length;
+    var when = new Date().toISOString();
+    main.gdcon.pushObj({
+        'text': content,
+        'when': when,
+        'id': id});
+
+    return main.add_fusen(content, 100, 100);
+}
+
+
+/**
+ * return if *point* is in given convex hull.
+ * @param {nhiro.V2} point .
+ * @param {Array.<nhiro.V2>} hull .
+ * @return {boolean} .
+ */
+function is_in_hull(point, hull) {
+    var N = hull.length;
+    function get(hull, i) { // cyclic access
+        return hull[(i + N) % N];
+    }
+    for (var i = 0; i < N; i++) {
+        var p = hull[i];
+        var next = get(hull, i + 1);
+        var outdir = p.sub(next).rot90().normalize();
+        if (point.sub(p).dot(outdir) > 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * @param {*} box1 box1.
+ * @param {*} box2 box2.
+ * @param {number} style style.
+ * @param {Array.<number>} distant distant.
+ * @param {Object=} attr attr.
+ * @suppress {checkTypes}
+ */
+function add_line(box1, box2, style, distant, attr) {
+    var pathstr = line2path(box1, box2, style);
+    var line = (main.paper.path(pathstr)
+                .attr({stroke: '#000', 'stroke-width': 2}));
+    line.attr(style2attr(style));
+
+    line.toBack();
+    line.box1 = box1;
+    line.box2 = box2;
+    line.style = style;
+    line.distant = distant;
+
+    lines.push(line);
+}
+
+
+/**
+ * @suppress {checkTypes}
+ */
+function highlight_group(r) {
+    reset_highlight();
+    nearest_group = find_group(r);
+    if (nearest_group != null) {
+        var path = groups[nearest_group].path;
+        path.attr('stroke-width', 5);
+    }
+}
+
+
+/**
+ * @suppress {checkTypes}
+ */
+main.setup_event_handling = function() {
+    var $ = nhiro.repos.get('jQuery');
+    var Raphael = nhiro.repos.get('Raphael');
+
     var stateman = nhiro.stateman;
     stateman.make_empty_state('move');
     stateman.make_empty_state('line');
     stateman.make_empty_state('group');
     stateman.go('move');
-    function make_raphael_paper() {
-        var w = $('#canvas').width();
-        var h = $('#canvas').height();
-        main.paper = Raphael($('#canvas')[0], w, h);
-    }
 
     stateman.add_enter('group', function() {
         for (var i = 0; i < groups.length; i++) {
@@ -437,7 +633,7 @@ main.main = function() {
     stateman.add_handler('line', 'box', 'mousedown', function(r) {
         if (first_box != null) {
             add_line(first_box, r, line_style);
-            reset_temp_line();
+            main.reset_temp_line();
         } else {
             $(main.boxes.children).each(function() { r.unselect(); });
             first_box = r;
@@ -445,6 +641,7 @@ main.main = function() {
         }
     });
 
+    var offset = $('#canvas').offset();
     stateman.add_handler('line', 'canvas', 'mousemove', function(e) {
         if (first_box != null) {
             var path = new nhiro.path();
@@ -455,7 +652,7 @@ main.main = function() {
         }
     });
 
-    stateman.add_exit('line', reset_temp_line);
+    stateman.add_exit('line', main.reset_temp_line);
     stateman.add_handler('group', 'box', 'drag_start', function(r) {
         calc_hull_and_cache();
     });
@@ -475,169 +672,9 @@ main.main = function() {
         reset_highlight();
     });
 
-    /**
-     * return if *point* is in given convex hull.
-     * @param {nhiro.V2} point .
-     * @param {Array.<nhiro.V2>} hull .
-     * @return {boolean} .
-     */
-    function is_in_hull(point, hull) {
-        var N = hull.length;
-        function get(hull, i) { // cyclic access
-            return hull[(i + N) % N];
-        }
-        for (var i = 0; i < N; i++) {
-            var p = hull[i];
-            var next = get(hull, i + 1);
-            var outdir = p.sub(next).rot90().normalize();
-            if (point.sub(p).dot(outdir) > 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    var hulls = [];
-    function calc_hull_and_cache() {
-        // calc convex hull and cache them
-        hulls = [];
-        for (var i = 0; i < groups.length; i++) {
-            var boxes = groups[i].boxes;
-            var points = nhiro.util.flatten(boxes.map(get_four_corner));
-            var hull = nhiro.convex_hull(points);
-            hulls.push(hull);
-        }
-    }
-
-    /**
-     * find group which collide with Box r
-     * @param {Box} r .
-     * @return {number} .
-     */
-    function find_group(r) {
-        var corners = get_four_corner(r);
-
-        // first stage: is in convex hull?
-        for (var i = 0; i < groups.length; i++) {
-            var hull = hulls[i];
-            for (var j = 0; j < 4; j++) {
-                if (is_in_hull(corners[j], hull)) {
-                    return i;
-                }
-            }
-        }
-
-        var radius = 20;
-        // second stage: if in raduis
-        for (var i = 0; i < groups.length; i++) {
-            var hull = hulls[i];
-            var N = hull.length;
-            for (var j = 0; j < N; j++) {
-                var p = hull[j];
-                var next = hull[(j + 1 + N) % N]; // cyclic access
-                var v = next.sub(p);
-                var nv = v.normalize();
-                for (var k = 0; k < 4; k++) {
-                    var ckp = corners[k].sub(p);
-                    if (ckp.norm() < radius) {
-                        return i;
-                    }
-                    var d = ckp.dot(nv);
-                    if (d < 0 || d > v.norm()) {
-                        continue;
-                    }
-                    var indir = nv.rot90();
-                    d = -ckp.dot(indir);
-                    if (d < 0 || d > radius) {
-                        continue;
-                    }
-                    return i;
-                }
-            }
-        }
-        return null;
-    }
-
-    function reset_highlight() {
-        for (var i = 0; i < groups.length; i++) {
-            var path = groups[i].path;
-            path.attr('stroke-width', 1);
-        }
-    }
-
-    var nearest_group = null;
-    function highlight_group(r) {
-        reset_highlight();
-        nearest_group = find_group(r);
-        if (nearest_group != null) {
-            var path = groups[nearest_group].path;
-            path.attr('stroke-width', 5);
-        }
-    }
-
-
-
-
-    /**
-     * @param {*} box1 box1.
-     * @param {*} box2 box2.
-     * @param {number} style style.
-     * @param {Array.<number>} distant distant.
-     * @param {Object=} attr attr.
-     */
-    function add_line(box1, box2, style, distant, attr) {
-        var pathstr = line2path(box1, box2, style);
-        var line = (main.paper.path(pathstr)
-                    .attr({stroke: '#000', 'stroke-width': 2}));
-        line.attr(style2attr(style));
-
-        line.toBack();
-        line.box1 = box1;
-        line.box2 = box2;
-        line.style = style;
-        line.distant = distant;
-
-        lines.push(line);
-    }
-
-    function move_lines(r) {
-        $(lines).each(function() {
-            var box1 = null, box2 = null, e1, e2;
-            if (this.box1.id == r.id) {
-                box1 = r;
-                box2 = this.box2;
-            } else if (this.box2.id == r.id) {
-                box1 = this.box1;
-                box2 = r;
-            }
-            if (box1 != null && box2 != null) {
-                var pathstr = line2path(box1, box2, this.style);
-                pathstr = Raphael.parsePathString(pathstr);
-                this.attr('path', pathstr);
-            }
-        });
-    }
-
-    function add_box(content) {
-        if (content === undefined) {
-            content = $('.text').val();
-            $('.text').val('');
-        }
-        if (content == '') return;
-
-        var id = main.boxes.length;
-        var when = new Date().toISOString();
-        main.gdcon.pushObj({
-            'text': content,
-            'when': when,
-            'id': id});
-
-        return main.add_fusen(content, 100, 100);
-    }
-
-
-    make_raphael_paper();
-    main.gdcon.startRealtime();
+    $('#canvas').mousemove(function(e) {
+        stateman.trigger('canvas', 'mousemove', null, [e]);
+    });
 
     $('.text').keypress(function(e) {
         if (e.keyCode == 13) add_box();
@@ -653,16 +690,9 @@ main.main = function() {
         $('.move').click();
     });
 
-    function reset_temp_line() {
-        temp_line.attr('path', Raphael.parsePathString('M0,0L0,0'));
-        if (first_box != null) {
-            first_box.unselect();
-            first_box = null;
-        }
-    }
     $('body').keydown(function(e) {
         if (e.keyCode == 27) { // ESC
-            reset_temp_line();
+            main.reset_temp_line();
         }
     });
 
@@ -677,29 +707,45 @@ main.main = function() {
         $('#mode_line').attr('checked', true);
         line_style = $('input[name=style]:checked').val();
     });
+};
+
+/**
+ * @suppress {checkTypes}
+ */
+function change_group(box, to) {
+    for (var i = 0; i < groups.length; i++) {
+        var g = groups[i];
+        var boxes = g.boxes;
+        g.boxes = boxes.filter(function(x) {return x !== box});
+        if (g.boxes.length == 0) {
+            g.path.attr('path', 'M0,0');
+        }
+    }
+    groups[to].boxes.push(box);
+    groups = groups.filter(function(x) {return x.boxes.length > 0});
+}
+
+/**
+ * @suppress {checkTypes}
+ */
+main.main = function() {
+    var $ = nhiro.repos.get('jQuery');
+    var Raphael = nhiro.repos.get('Raphael');
+    main.setup_event_handling();
+
+    // make Raphael paper
+    var w = $('#canvas').width();
+    var h = $('#canvas').height();
+    main.paper = Raphael($('#canvas')[0], w, h);
+
+    // start connection to Google Drive
+    main.gdcon.startRealtime();
 
     temp_line = (
         main.paper.path('M0,0L0,0')
         .attr({stroke: '#000', 'stroke-width': 2}));
 
-    function change_group(box, to) {
-        for (var i = 0; i < groups.length; i++) {
-            var g = groups[i];
-            var boxes = g.boxes;
-            g.boxes = boxes.filter(function(x) {return x !== box});
-            if (g.boxes.length == 0) {
-                g.path.attr('path', 'M0,0');
-            }
-        }
-        groups[to].boxes.push(box);
-        groups = groups.filter(function(x) {return x.boxes.length > 0});
-    }
 
     main.update_group_view();
-    var offset = $('#canvas').offset();
-
-    $('#canvas').mousemove(function(e) {
-        stateman.trigger('canvas', 'mousemove', null, [e]);
-    });
 };
 
