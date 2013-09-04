@@ -2,6 +2,7 @@
  * box-arrow
  * (c) 2013, Cybozu.
  */
+goog.require('main.gdcon');
 goog.require('nhiro.V2');
 goog.require('nhiro.assert');
 goog.require('nhiro.convex_hull');
