@@ -3,6 +3,7 @@
  * (c) 2013, Cybozu.
  */
 goog.require('main.gdcon');
+goog.require('main.grouping');
 goog.require('nhiro.V2');
 goog.require('nhiro.assert');
 goog.require('nhiro.convex_hull');
@@ -10,6 +11,7 @@ goog.require('nhiro.fusen');
 goog.require('nhiro.path');
 goog.require('nhiro.stateman');
 goog.require('nhiro.util');
+
 goog.provide('main.main');
 
 var circles = [];
@@ -19,9 +21,6 @@ var first_box = null;
 //var mode = 'move';
 var line_style = 'single_tip';
 
-// cached in calc_hull_and_cache
-var hulls = [];
-
 var nearest_group = null;
 
 
@@ -30,12 +29,6 @@ var Box;
 
 /** @type {Array.<Box>} */
 main.boxes = [];
-
-/** @typedef {{path: *, boxes: Array.<Box>}} */
-var Group;
-
-/** @type {Array.<Group>} */
-var groups = [];
 
  /** @typedef {*} */
 var Paper;
@@ -346,12 +339,7 @@ main.add_fusen = function(text, x, y) {
         nhiro.stateman.trigger('box', 'mousedown', null, [r]);
     });
     main.boxes.push(r);
-
-    groups.push({
-        path: main.paper.path('M0,0L0,0')
-        .attr({'stroke-dasharray': '. '}),
-        boxes: [r]});
-    main.update_group_view();
+    main.grouping.pushBox(r);
 
     main.disable_if_less_than_two_boxes();
     return r;
@@ -370,29 +358,6 @@ main.disable_if_less_than_two_boxes = function() {
     }
 };
 
-/**
- * @suppress {checkTypes}
- */
-main.update_group_view = function(threshold) {
-    var Raphael = nhiro.repos.get('Raphael');
-
-    if (threshold == null) threshold = 1;
-    var pathstr = '';
-    for (var i = 0; i < groups.length; i++) {
-        var path = groups[i].path;
-        var boxes = groups[i].boxes;
-        if (boxes.length > threshold) {
-            var points = nhiro.util.flatten(boxes.map(get_four_corner));
-            points = nhiro.convex_hull(points);
-            pathstr = broaden(points);
-        }else {
-            pathstr = 'M0,0';
-        }
-        path.attr(
-            'path',
-            Raphael.parsePathString(pathstr));
-    }
-};
 
 
 /**
@@ -429,82 +394,6 @@ function move_lines(r) {
             this.attr('path', pathstr);
         }
     });
-}
-
-
-/**
- * find group which collide with Box r
- * @param {Box} r .
- * @return {number} .
- * @suppress {checkTypes}
- */
-function find_group(r) {
-    var corners = get_four_corner(r);
-
-    // first stage: is in convex hull?
-    for (var i = 0; i < groups.length; i++) {
-        var hull = hulls[i];
-        for (var j = 0; j < 4; j++) {
-            if (is_in_hull(corners[j], hull)) {
-                return i;
-            }
-        }
-    }
-
-    var radius = 20;
-    // second stage: if in raduis
-    for (var i = 0; i < groups.length; i++) {
-        var hull = hulls[i];
-        var N = hull.length;
-        for (var j = 0; j < N; j++) {
-            var p = hull[j];
-            var next = hull[(j + 1 + N) % N]; // cyclic access
-            var v = next.sub(p);
-            var nv = v.normalize();
-            for (var k = 0; k < 4; k++) {
-                var ckp = corners[k].sub(p);
-                if (ckp.norm() < radius) {
-                    return i;
-                }
-                var d = ckp.dot(nv);
-                if (d < 0 || d > v.norm()) {
-                    continue;
-                }
-                var indir = nv.rot90();
-                d = -ckp.dot(indir);
-                if (d < 0 || d > radius) {
-                    continue;
-                }
-                return i;
-            }
-        }
-    }
-    return null;
-}
-
-/**
- * @suppress {checkTypes}
- */
-function calc_hull_and_cache() {
-    // calc convex hull and cache them
-    hulls = [];
-    for (var i = 0; i < groups.length; i++) {
-        var boxes = groups[i].boxes;
-        var points = nhiro.util.flatten(boxes.map(get_four_corner));
-        var hull = nhiro.convex_hull(points);
-        hulls.push(hull);
-    }
-}
-
-
-/**
- * @suppress {checkTypes}
- */
-function reset_highlight() {
-    for (var i = 0; i < groups.length; i++) {
-        var path = groups[i].path;
-        path.attr('stroke-width', 1);
-    }
 }
 
 
@@ -579,19 +468,6 @@ function add_line(box1, box2, style, distant, attr) {
 /**
  * @suppress {checkTypes}
  */
-function highlight_group(r) {
-    reset_highlight();
-    nearest_group = find_group(r);
-    if (nearest_group != null) {
-        var path = groups[nearest_group].path;
-        path.attr('stroke-width', 5);
-    }
-}
-
-
-/**
- * @suppress {checkTypes}
- */
 main.setup_event_handling = function() {
     var $ = nhiro.repos.get('jQuery');
     var Raphael = nhiro.repos.get('Raphael');
@@ -603,31 +479,25 @@ main.setup_event_handling = function() {
     stateman.go('move');
 
     stateman.add_enter('group', function() {
-        for (var i = 0; i < groups.length; i++) {
-            var path = groups[i].path;
-            path.attr({'stroke-dasharray': ''});
-        }
-        main.update_group_view(0);
+        main.grouping.make_solid();
+        main.grouping.update_group_view(0);
     });
 
     stateman.add_exit('group', function() {
-        for (var i = 0; i < groups.length; i++) {
-            var path = groups[i].path;
-            path.attr({'stroke-dasharray': '. '});
-        }
-        main.update_group_view(1);
+        main.grouping.make_dotted();
+        main.grouping.update_group_view(1);
     });
 
     stateman.add_handler('move', 'box', 'move', function(r, tx, ty) {
         r.original_move(tx, ty);
         move_lines(r);
-        main.update_group_view();
+        main.grouping.update_group_view();
     });
 
     stateman.add_handler('group', 'box', 'move', function(r, tx, ty) {
         r.original_move(tx, ty);
         move_lines(r);
-        highlight_group(r);
+        main.grouping.highlight_group(r);
     });
 
     stateman.add_handler('line', 'box', 'mousedown', function(r) {
@@ -654,22 +524,18 @@ main.setup_event_handling = function() {
 
     stateman.add_exit('line', main.reset_temp_line);
     stateman.add_handler('group', 'box', 'drag_start', function(r) {
-        calc_hull_and_cache();
+        main.grouping.calc_hull_and_cache();
     });
     stateman.add_handler('group', 'box', 'drag_end', function(r) {
         if (nearest_group == null) {
-            // create new group
-            groups.push({
-                path: main.paper.path('M0,0'),
-                boxes: []});
-            change_group(r, groups.length - 1);
-            main.update_group_view(0);
+            main.grouping.create(r);
+            main.grouping.update_group_view(0);
         }else {
-            change_group(r, nearest_group);
-            main.update_group_view(0);
+            main.grouping.change_group(r, nearest_group);
+            main.grouping.update_group_view(0);
         }
-        calc_hull_and_cache();
-        reset_highlight();
+        main.grouping.calc_hull_and_cache();
+        main.grouping.reset_highlight();
     });
 
     $('#canvas').mousemove(function(e) {
@@ -712,22 +578,6 @@ main.setup_event_handling = function() {
 /**
  * @suppress {checkTypes}
  */
-function change_group(box, to) {
-    for (var i = 0; i < groups.length; i++) {
-        var g = groups[i];
-        var boxes = g.boxes;
-        g.boxes = boxes.filter(function(x) {return x !== box});
-        if (g.boxes.length == 0) {
-            g.path.attr('path', 'M0,0');
-        }
-    }
-    groups[to].boxes.push(box);
-    groups = groups.filter(function(x) {return x.boxes.length > 0});
-}
-
-/**
- * @suppress {checkTypes}
- */
 main.main = function() {
     var $ = nhiro.repos.get('jQuery');
     var Raphael = nhiro.repos.get('Raphael');
@@ -738,14 +588,14 @@ main.main = function() {
     var h = $('#canvas').height();
     main.paper = Raphael($('#canvas')[0], w, h);
 
-    // start connection to Google Drive
-    main.gdcon.startRealtime();
-
+    // create templine
     temp_line = (
         main.paper.path('M0,0L0,0')
         .attr({stroke: '#000', 'stroke-width': 2}));
 
+    // start connection to Google Drive
+    main.gdcon.startRealtime();
 
-    main.update_group_view();
+    main.grouping.update_group_view();
 };
 
