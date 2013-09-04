@@ -2,31 +2,82 @@
  * connect to Google Drive
  * (c) 2013, Cybozu.
  */
+goog.require('nhiro.assert');
+goog.require('nhiro.fusen');
 goog.provide('main.gdcon');
 
 google.load('picker', '1');
 
-var my_list;
+// Data are stored in  main.gdcon._list;
+// Don't touch it out of the file except for debug purpose
+
+var realtimeLoader;
+
 
 /**
  * This function is called the first time that the Realtime model is created
  * for a file. This function should be used to initialize any values of the
  * model.
- * @param model {gapi.drive.realtime.Model} the Realtime root model object.
+ * x@param {gapi.drive.realtime.Model} model the Realtime root model object.
+ * @suppress {checkTypes}
  */
-main.gdcon.initializeModel = function(model){
+main.gdcon.initializeModel = function(model) {
     var field = model.createList();
     field.pushAll(['test1', 'test2']);
     model.getRoot().set('my_list', field);
-}
+};
 
+/**
+ * update UI
+ * @suppress {checkTypes}
+ */
 main.gdcon.updateUI = function() {
-    var $ = nhiro.repos.get('jQuery');
-    $('#list').empty();
-    var array = my_list.asArray();
+    var array = main.gdcon._list.asArray();
+    var N = main.boxes.length;
     for (var i in array) {
-        var new_item = $('<li>').text(array[i]);
-        $('#list').append(new_item);
+        if(i < N){
+            // box already exists
+            // TODO implement updating
+        }else{
+            // box not exists yet
+            var v = JSON.parse(array[i]);
+        var r = nhiro.fusen.add(main.paper, v.text, 100, 100, 130);
+        r.id = v.id;
+
+        r.selected = false;
+        r.select = function() {
+            r[0].attr({stroke: 'blue', 'stroke-width': 2});
+            r.selected = true;
+        };
+        r.unselect = function() {
+            r[0].attr({stroke: '#000', 'stroke-width': 1});
+            r.selected = false;
+        };
+        r.original_move = r.move;
+        r.move = function(tx, ty) {
+            nhiro.stateman.trigger('box', 'move', null, [r, tx, ty]);
+            return this;
+        };
+        r.on_drag_start = function() {
+            r.ox = r.x;
+            r.oy = r.y;
+            nhiro.stateman.trigger('box', 'drag_start', null, [r]);
+        };
+        r.on_drag_end = function() {
+            nhiro.stateman.trigger('box', 'drag_end', null, [r]);
+        };
+
+        r.mouseover(function() {
+            r.toFront();
+        });
+
+        r.mousedown(function() {
+            nhiro.stateman.trigger('box', 'mousedown', null, [r]);
+        });
+
+        main.boxes.push(r);
+        }
+
     }
 };
 
@@ -34,12 +85,13 @@ main.gdcon.updateUI = function() {
  * This function is called when the Realtime file has been loaded. It should
  * be used to initialize any user interface components and event handlers
  * depending on the Realtime model.
- * @param doc {gapi.drive.realtime.Document} the Realtime document.
+ * x@param {gapi.drive.realtime.Document} doc the Realtime document.
+ * @suppress {checkTypes}
  */
 function onFileLoaded(doc) {
     var gapi = nhiro.repos.get('gapi');
 
-    my_list = doc.getModel().getRoot().get('my_list');
+    main.gdcon._list = doc.getModel().getRoot().get('my_list');
     main.gdcon.updateUI();
 
 
@@ -62,7 +114,9 @@ function onFileLoaded(doc) {
         undoButton.disabled = !e.canUndo;
         redoButton.disabled = !e.canRedo;
     };
-    model.addEventListener(gapi.drive.realtime.EventType.UNDO_REDO_STATE_CHANGED, onUndoRedoStateChanged);
+    model.addEventListener(
+        gapi.drive.realtime.EventType.UNDO_REDO_STATE_CHANGED,
+        onUndoRedoStateChanged);
 }
 
 /**
@@ -93,7 +147,7 @@ var realtimeOptions = {
   /**
    * The name of newly created Drive files.
    */
-  defaultTitle: "My Idea",
+  defaultTitle: 'My Idea',
 
   /**
    * The MIME type of newly created Drive Files. By default the application
@@ -116,12 +170,19 @@ var realtimeOptions = {
    * Function to be called after authorization and before loading files.
    */
   afterAuth: null // No action.
-}
+};
 
+main.gdcon.pushText = function (text){
+    main.gdcon.pushObj({'text': text})
+}
+main.gdcon.pushObj = function (obj){
+    nhiro.assert(main.gdcon._list, 'do auth first', true);
+    main.gdcon._list.push(JSON.stringify(obj));
+}
 /**
  * Start the Realtime loader with the options.
+ * @suppress {checkTypes}
  */
- var realtimeLoader
 main.gdcon.startRealtime = function() {
     var rtclient = nhiro.repos.get('rtclient');
     var $ = nhiro.repos.get('jQuery');
@@ -130,19 +191,21 @@ main.gdcon.startRealtime = function() {
     realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
     realtimeLoader.start();
 
-    $('#add_texts').click(function(){
+    $('#add_texts').click(function() {
         var items = $('#texts').val().split(/\n\s*/g);
-        items.forEach(function(x){
-            my_list.push(x);
+        items.forEach(function(x) {
+            main.gdcon._list.push(x);
         });
         main.gdcon.updateUI();
     });
 
-    $('#openButton').click(function(){
+    $('#openButton').click(function() {
         // Opens the Google Picker.
         var token = gapi.auth.getToken().access_token;
         var view = new google.picker.View(google.picker.ViewId.DOCS);
-        view.setMimeTypes("application/vnd.google-apps.drive-sdk." + realtimeOptions.appId);
+        view.setMimeTypes(
+            'application/vnd.google-apps.drive-sdk.' +
+                realtimeOptions.appId);
         var picker = new google.picker.PickerBuilder()
         .enableFeature(google.picker.Feature.NAV_HIDDEN)
         .setAppId(realtimeOptions.appId)
@@ -153,8 +216,11 @@ main.gdcon.startRealtime = function() {
         .build();
         picker.setVisible(true);
     });
-}
+};
 
+/**
+ * @suppress {checkTypes}
+ */
 function openCallback(data) {
   if (data.action == google.picker.Action.PICKED) {
     var fileId = data.docs[0].id;

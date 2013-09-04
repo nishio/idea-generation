@@ -15,41 +15,56 @@
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="entrypoint.js"></script>
   <link type="text/css" rel="stylesheet" href="basic.css">
-  <title>BoxArrowGroup</title>
+  <title>idea-generation</title>
 <body>
-  <h1>BoxArrow</h1>
-  <div class="menu" style="float:left; width: 200px;">
+idea-generation: menu is below the canvas
+  <div style="width: 100%">
+    <div>
+    <div id="canvas" style="width:100%; height:800px; border: solid;"></div>
+    </div>
+  </div>
+
+
+  <div class="menu" style="width: 100%; display: none">
     <b>Menu</b>
     <div class="line_style" style="width: 200px;">
-      <label>
+      <p><label>
         <input type="radio" name="mode" class="move" value="move" checked="checked"/>
-        Move a box</label>
-      <label>
+        Move a box</label></p>
+      <p><label>
         <input type="radio" name="mode" class="line" value="line" id="mode_line"/>
-        Add a line</label>
+        Add a line</label></p>
       <div style="margin-left: 20px;">
-        <label><input type="radio" name="style" value="single_tip" checked="checked" class="line_1"/>Single Tip</label>
-        <label><input type="radio" name="style" value="double_tip" class="line_2"/>Double Tip</label>
-        <label><input type="radio" name="style" value="double_arrow" class="line_3"/>Double Arrow</label>
-        <label><input type="radio" name="style" value="double_line" class="line_4"/>Double Line</label>
-        <label><input type="radio" name="style" value="dashed_line" class="line_5"/>Dashed Line</label>
+        <p><label><input type="radio" name="style" value="single_tip" checked="checked" class="line_1"/>Single Tip</label></p>
+        <p><label><input type="radio" name="style" value="double_tip" class="line_2"/>Double Tip</label></p>
+        <p><label><input type="radio" name="style" value="double_arrow" class="line_3"/>Double Arrow</label></p>
+        <p><label><input type="radio" name="style" value="double_line" class="line_4"/>Double Line</label></p>
+        <p><label><input type="radio" name="style" value="dashed_line" class="line_5"/>Dashed Line</label></p>
       </div>
       <label>
         <input type="radio" name="mode" class="line" value="group" id="mode_group"/>
         Grouping</label>
     </div>
+  </div>
+
+  <div>
+    <button id="authorizeButton" disabled>You must authorize</button>
+    <button id="openButton">Open Existing List</button>
+
+    <!-- Undo and redo buttons. -->
+    <button id="undoButton" disabled>Undo</button>
+    <button id="redoButton" disabled>Redo</button>
+  </div>
+  <div>
     <b>Enter text:</b><br/>
     <input class="text" type="text" style="width:152px; height:95px;"/>
-
-    <textarea id="multitext"></textarea>
+  </div>
+  <div>
+    <b>Enter multiple text:</b><br/>
+    <textarea id="multitext" cols='40' rows='10'></textarea>
     <input id="multitext_submit" type="submit"/>
+  </div>
 
-  </div>
-  
-  <div style="float:left; margin-left: -200px; width: 100%">
-    <div style="padding-left: 200px">
-    <div id="canvas" style="width:100%; height:800px; border: solid;"></div>
-    </div>
-  </div>
+
 </body>
 </html>

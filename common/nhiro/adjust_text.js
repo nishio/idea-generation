@@ -83,7 +83,7 @@ nhiro.adjust_text = (function() {
     /**
      * @suppress {checkTypes}
      */
-    result.add = function(jQuery, paper, content, x, y, w, h) {
+    result.add = function(paper, content, x, y, w, h) {
         var text = (paper.text(x + w / 2, y + h / 2, '')
                  .attr({fill: '#000'}));
         var align = 'center';

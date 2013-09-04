@@ -13,8 +13,6 @@ goog.require('nhiro.util');
 goog.provide('main.main');
 
 var circles = [];
-var boxes = [];
-var paper;
 var temp_line;
 var lines = [];
 var first_box = null;
@@ -23,10 +21,22 @@ var line_style = 'single_tip';
 
 /** @typedef {*} */
 var Box;
+
+/** @type {Array.<Box>} */
+main.boxes = [];
+
 /** @typedef {{path: *, boxes: Array.<Box>}} */
 var Group;
+
 /** @type {Array.<Group>} */
 var groups = [];
+
+ /** @typedef {*} */
+var Paper;
+
+/** @type {Paper} */
+main.paper;
+
 
 /**
  * @param {has_xywh} box .
@@ -305,7 +315,7 @@ main.main = function() {
     function make_raphael_paper() {
         var w = $('#canvas').width();
         var h = $('#canvas').height();
-        paper = Raphael($('#canvas')[0], w, h);
+        main.paper = Raphael($('#canvas')[0], w, h);
     }
 
     stateman.add_enter('group', function() {
@@ -341,7 +351,7 @@ main.main = function() {
             add_line(first_box, r, line_style);
             reset_temp_line();
         } else {
-            $(boxes.children).each(function() { r.unselect(); });
+            $(main.boxes.children).each(function() { r.unselect(); });
             first_box = r;
             r.select();
         }
@@ -365,7 +375,7 @@ main.main = function() {
         if (nearest_group == null) {
             // create new group
             groups.push({
-                path: paper.path('M0,0'),
+                path: main.paper.path('M0,0'),
                 boxes: []});
             change_group(r, groups.length - 1);
             update_group_view(0);
@@ -507,7 +517,7 @@ main.main = function() {
      */
     function add_line(box1, box2, style, distant, attr) {
         var pathstr = line2path(box1, box2, style);
-        var line = (paper.path(pathstr)
+        var line = (main.paper.path(pathstr)
                     .attr({stroke: '#000', 'stroke-width': 2}));
         line.attr(style2attr(style));
 
@@ -539,10 +549,20 @@ main.main = function() {
     }
 
     function add_box(content) {
-        if (content === undefined) content = $('.text').val();
+        if (content === undefined){
+            content = $('.text').val();
+            $('.text').val('');
+        }
         if (content == '') return;
-        var r = nhiro.fusen.add(paper, content, 100, 100, 130);
-        r.id = new Date().getTime();
+        var id = main.boxes.length;
+        var when = new Date().toISOString();
+        main.gdcon.pushObj({
+            'text': content,
+            'when': when,
+            'id': id})
+
+        var r = nhiro.fusen.add(main.paper, content, 100, 100, 130);
+        r.id = id;
         r.selected = false;
         r.select = function() {
             r[0].attr({stroke: 'blue', 'stroke-width': 2});
@@ -574,23 +594,26 @@ main.main = function() {
             stateman.trigger('box', 'mousedown', null, [r]);
         });
 
-        boxes.push(r);
+        main.boxes.push(r);
+
         groups.push({
-            path: paper.path('M0,0L0,0')
+            path: main.paper.path('M0,0L0,0')
                   .attr({'stroke-dasharray': '. '}),
             boxes: [r]});
         update_group_view();
-        if (boxes.length > 1) {
+
+        if (main.boxes.length > 1) {
             $('.line').removeAttr('disabled');
         } else {
             $('.line').attr('disabled', 'disabled');
         }
-        $('.text').val('');
+
         return r;
     }
 
 
     make_raphael_paper();
+    main.gdcon.startRealtime();
 
     $('.text').keypress(function(e) {
         if (e.keyCode == 13) add_box();
@@ -602,6 +625,7 @@ main.main = function() {
         items.forEach(function(x) {
             add_box(x);
         });
+        $('#multitext').val('');
         $('.move').click();
     });
 
@@ -631,7 +655,7 @@ main.main = function() {
     });
 
     temp_line = (
-        paper.path('M0,0L0,0')
+        main.paper.path('M0,0L0,0')
         .attr({stroke: '#000', 'stroke-width': 2}));
 
     function change_group(box, to) {
