@@ -1,7 +1,7 @@
 /**
  * This function is called the first time that the Realtime model is created
  * for a file. This function should be used to initialize any values of the
- * model. 
+ * model.
  * @param model {gapi.drive.realtime.Model} the Realtime root model object.
  */
 function initializeModel(model) {
