@@ -1,0 +1,70 @@
+<html>
+  <script type="text/javascript" src="../common/closure-library/closure/goog/base.js"></script>
+  <script type="text/javascript" src="../common/jquery-1.7.1.js"></script>
+  <script type="text/javascript" src="../common/raphael.js"></script>
+  <!-- Load the Realtime libraries. -->
+  <script type="text/javascript" src="//www.google.com/jsapi"></script>
+  <script type="text/javascript"
+          src="https://apis.google.com/js/api.js"></script>
+
+  <!-- Load the utility library. -->
+  <script type="text/javascript"
+          src="../common/realtime-client-utils.js"></script>
+
+  <script type="text/javascript" src="deps.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="entrypoint.js"></script>
+  <link type="text/css" rel="stylesheet" href="basic.css">
+  <title>idea-generation</title>
+<body>
+idea-generation: menu is below the canvas
+  <div style="width: 100%">
+    <div>
+    <div id="canvas" style="width:100%; height:800px; border: solid;"></div>
+    </div>
+  </div>
+
+
+  <div class="menu" style="width: 100%; display: none">
+    <b>Menu</b>
+    <div class="line_style" style="width: 200px;">
+      <p><label>
+        <input type="radio" name="mode" class="move" value="move" checked="checked"/>
+        Move a box</label></p>
+      <p><label>
+        <input type="radio" name="mode" class="line" value="line" id="mode_line"/>
+        Add a line</label></p>
+      <div style="margin-left: 20px;">
+        <p><label><input type="radio" name="style" value="single_tip" checked="checked" class="line_1"/>Single Tip</label></p>
+        <p><label><input type="radio" name="style" value="double_tip" class="line_2"/>Double Tip</label></p>
+        <p><label><input type="radio" name="style" value="double_arrow" class="line_3"/>Double Arrow</label></p>
+        <p><label><input type="radio" name="style" value="double_line" class="line_4"/>Double Line</label></p>
+        <p><label><input type="radio" name="style" value="dashed_line" class="line_5"/>Dashed Line</label></p>
+      </div>
+      <label>
+        <input type="radio" name="mode" class="line" value="group" id="mode_group"/>
+        Grouping</label>
+    </div>
+  </div>
+
+  <div>
+    <button id="authorizeButton" disabled>You must authorize</button>
+    <button id="openButton">Open Existing List</button>
+
+    <!-- Undo and redo buttons. -->
+    <button id="undoButton" disabled>Undo</button>
+    <button id="redoButton" disabled>Redo</button>
+  </div>
+  <div>
+    <b>Enter text:</b><br/>
+    <input class="text" type="text" style="width:152px; height:95px;"/>
+  </div>
+  <div>
+    <b>Enter multiple text:</b><br/>
+    <textarea id="multitext" cols='40' rows='10'></textarea>
+    <input id="multitext_submit" type="submit"/>
+  </div>
+
+
+</body>
+</html>
