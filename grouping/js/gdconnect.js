@@ -41,7 +41,9 @@ main.gdcon.updateUI = function() {
         }else {
             // box not exists yet
             var v = JSON.parse(array[i]);
-            main.add_fusen(v.text, 100, 100);
+            if(v.x == null) v.x = 100;
+            if(v.y == null) v.y = 100;
+            main.add_fusen(v.text, v.x, v.y);
         }
     }
 };

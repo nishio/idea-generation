@@ -494,6 +494,13 @@ main.setup_event_handling = function() {
         main.grouping.update_group_view();
     });
 
+    stateman.add_handler('move', 'box', 'drag_end', function(r) {
+        var box = JSON.parse(main.gdcon._list.get(r.id));
+        box.x = r.x;
+        box.y = r.y;
+        main.gdcon._list.set(r.id, JSON.stringify(box));
+    });
+
     stateman.add_handler('group', 'box', 'move', function(r, tx, ty) {
         r.original_move(tx, ty);
         move_lines(r);
