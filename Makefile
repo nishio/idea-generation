@@ -1,3 +1,9 @@
+deploy:
+	make copy
+	git add -u
+	git commit -m 'update'
+	git push
+
 copy:
 	-rm ../idea-generation/grouping/**/*~
 	-mkdir grouping
