@@ -23,7 +23,6 @@ var realtimeLoader;
  */
 main.gdcon.initializeModel = function(model) {
     var field = model.createList();
-    field.pushAll(['test1', 'test2']);
     model.getRoot().set('my_list', field);
 };
 
