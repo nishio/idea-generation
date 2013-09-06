@@ -305,7 +305,10 @@ function style2attr(style) {
  * @suppress {checkTypes}
  */
 main.add_fusen = function(text, x, y) {
-    var r = nhiro.fusen.add(main.paper, text, x, y, 130);
+    var r = nhiro.fusen.add(
+        main.paper, text, x, y, 130, null,
+        {'fill': '#ffe', 'fill-opacity': 0.8,
+         'stroke': '#aaa', 'stroke-width': 0.3, 'stroke-opacity': 0.9});
     r.id = main.boxes.length;
 
     r.selected = false;
@@ -495,10 +498,7 @@ main.setup_event_handling = function() {
     });
 
     stateman.add_handler('move', 'box', 'drag_end', function(r) {
-        var box = JSON.parse(main.gdcon._list.get(r.id));
-        box.x = r.x;
-        box.y = r.y;
-        main.gdcon._list.set(r.id, JSON.stringify(box));
+        main.gdcon.updateItem(r);
     });
 
     stateman.add_handler('group', 'box', 'move', function(r, tx, ty) {
@@ -557,7 +557,10 @@ main.setup_event_handling = function() {
     $('#multitext_submit').click(function(e) {
         var items = $('#multitext').val().split(/\n\s*/g);
         items.forEach(function(x) {
-            add_box(x);
+            var b = add_box(x);
+            var pos = main.find_space(b.id);
+            b.move(pos);
+            main.gdcon.updateItem(b);
         });
         $('#multitext').val('');
         $('.move').click();
@@ -581,6 +584,25 @@ main.setup_event_handling = function() {
         line_style = $('input[name=style]:checked').val();
     });
 };
+
+/**
+ * find space to put a card
+ */
+main.find_space = function(i){
+    var b = nhiro.V2.make(
+        131 * (i % 11),
+        81 * (Math.floor(i / 11) % 10)
+    );
+    return b;
+}
+
+function t(){
+    main.boxes.forEach(function(b, i){
+        var pos = main.find_space(i);
+        b.move(pos.x, pos.y);
+        main.gdcon.updateItem(b);
+    });
+}
 
 /**
  * @suppress {checkTypes}
