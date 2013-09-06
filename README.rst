@@ -33,3 +33,10 @@ The project contains several third-party libraries:
 The project uses some Apache 2.0 Licensed code
 
 - https://github.com/googledrive/realtime-playground
+
+
+HISTORY
+=======
+
+2013-09-05 version 0.1 released
+
