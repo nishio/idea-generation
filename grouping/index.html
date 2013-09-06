@@ -1,4 +1,5 @@
 <html>
+  <link type="text/css" rel="stylesheet" href="basic.css">
   <script type="text/javascript" src="../common/closure-library/closure/goog/base.js"></script>
   <script type="text/javascript" src="../common/jquery-1.7.1.js"></script>
   <script type="text/javascript" src="../common/raphael.js"></script>
@@ -14,19 +15,15 @@
   <script type="text/javascript" src="deps.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="entrypoint.js"></script>
-  <link type="text/css" rel="stylesheet" href="basic.css">
   <title>idea-generation</title>
 <body>
 idea-generation: menu is below the canvas
   <div style="width: 100%">
-    <div>
-    <div id="canvas" style="width:100%; height:800px; border: solid;"></div>
-    </div>
+    <div id="canvas" class="canvas" style="width: 1440px; height: 809px; background: #fff;"></div>
   </div>
 
-
-  <div class="menu" style="width: 100%; display: none">
-    <b>Menu</b>
+  <div class="menu" style="width: 200px; float: left">
+    <b>Menu (NOTICE lines and groups are not saved on this version)</b>
     <div class="line_style" style="width: 200px;">
       <p><label>
         <input type="radio" name="mode" class="move" value="move" checked="checked"/>
@@ -47,7 +44,7 @@ idea-generation: menu is below the canvas
     </div>
   </div>
 
-  <div>
+  <div style="width: 100px; float: left">
     <button id="authorizeButton" disabled>You must authorize</button>
     <button id="openButton">Open Existing List</button>
 
@@ -65,6 +62,11 @@ idea-generation: menu is below the canvas
     <input id="multitext_submit" type="submit"/>
   </div>
 
+  <div style="width: 100px; float: left">
+    <h3>Debug</h3>
+    <button id="clearAllButton">Clear All</button>
+    <button id="showAllButton">Show Items on console</button>
+  </div>
 
 </body>
 </html>
