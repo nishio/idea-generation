@@ -40,20 +40,20 @@ main.gdcon.updateUI = function() {
         }else {
             // box not exists yet
             var v = JSON.parse(array[i]);
-            if(v.x == null) v.x = 142 * (v.id % 10);
-            if(v.y == null) v.y = 92 * (Math.floor(v.id / 10) % 10);
+            if (v.x == null) v.x = 142 * (v.id % 10);
+            if (v.y == null) v.y = 92 * (Math.floor(v.id / 10) % 10);
             main.add_fusen(v.text, v.x, v.y);
             main.gdcon.updateItem(v);
         }
     }
 };
 
-main.gdcon.updateItem = function(r){
+main.gdcon.updateItem = function(r) {
     var box = JSON.parse(main.gdcon._list.get(r.id));
     box.x = r.x;
     box.y = r.y;
     main.gdcon._list.set(r.id, JSON.stringify(box));
-}
+};
 
 /**
  * This function is called when the Realtime file has been loaded. It should

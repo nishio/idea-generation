@@ -588,16 +588,16 @@ main.setup_event_handling = function() {
 /**
  * find space to put a card
  */
-main.find_space = function(i){
+main.find_space = function(i) {
     var b = nhiro.V2.make(
         131 * (i % 11),
         81 * (Math.floor(i / 11) % 10)
     );
     return b;
-}
+};
 
-function t(){
-    main.boxes.forEach(function(b, i){
+function t() {
+    main.boxes.forEach(function(b, i) {
         var pos = main.find_space(i);
         b.move(pos.x, pos.y);
         main.gdcon.updateItem(b);
