@@ -30,12 +30,11 @@ nhiro.fusen = (function() {
      * @param {number} h .
      * @return {*} .
      */
-    result.add = function(paper, content, x, y, w, h) {
+    result.add = function(paper, content, x, y, w, h, attr) {
         var $ = nhiro.repos.get('jQuery');
-        if (h === undefined) {
-            h = w / 1.618;
-        }
-        var rect = paper.rect(x, y, w, h).attr({fill: '#fff'});
+        if (h == null) h = w / 1.618;
+        if (attr == null) attr = {fill: '#fff'};
+        var rect = paper.rect(x, y, w, h).attr(attr);
         var text = nhiro.adjust_text.add(paper, content, x, y, w, h);
         var r = paper.set([rect, text]);
 
