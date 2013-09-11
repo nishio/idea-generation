@@ -307,7 +307,7 @@ function style2attr(style) {
 main.add_fusen = function(text, x, y) {
     var r = nhiro.fusen.add(
         main.paper, text, x, y, 130, null,
-        {'fill': '#ffe', 'fill-opacity': 0.8,
+        {'fill': '#ffc', 'fill-opacity': 0.8,
          'stroke': '#aaa', 'stroke-width': 0.3, 'stroke-opacity': 0.9});
     r.id = main.boxes.length;
 
