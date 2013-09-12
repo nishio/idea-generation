@@ -583,6 +583,25 @@ main.setup_event_handling = function() {
         $('#mode_line').attr('checked', true);
         line_style = $('input[name=style]:checked').val();
     });
+
+    // when #go_menu clicked, scroll to menu
+    $('#go_menu').click(function(){
+        console.log('scroll');
+        $('body').animate({
+            scrollTop: $('#menu').offset().top
+        }, 100);
+        return false;
+    });
+
+    // when #go_menu clicked, scroll to top
+    $('#go_canvas').click(function(){
+        console.log('scroll');
+        $('body').animate({
+            scrollTop: 0
+        }, 100);
+        return false;
+    });
+
 };
 
 /**

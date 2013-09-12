@@ -17,13 +17,13 @@
   <script type="text/javascript" src="entrypoint.js"></script>
   <title>idea-generation</title>
 <body>
-idea-generation: menu is below the canvas
+idea-generation <a href='#' id='go_menu'>[go menu]</a>
   <div style="width: 100%">
     <div id="canvas" class="canvas" style="width: 1440px; height: 809px; background: #eee;"></div>
   </div>
 
-  <div class="menu" style="width: 200px; float: left">
-    <b>Menu (NOTICE lines and groups are not saved on this version)</b>
+  <div id="menu" style="width: 200px; float: left">
+    <b>Menu</b><a href="#" id="go_canvas">[go canvas]</a>
     <div class="line_style" style="width: 200px;">
       <p><label>
         <input type="radio" name="mode" class="move" value="move" checked="checked"/>
@@ -40,10 +40,15 @@ idea-generation: menu is below the canvas
       </div>
       <label>
         <input type="radio" name="mode" class="line" value="group" id="mode_group"/>
-        Grouping</label>
+        Grouping
+      </label>
     </div>
+    (NOTICE lines and groups are not saved on this version)
   </div>
 
+  <div style="width: 300px; float: left">
+    <b>Enter text:</b><input class="text" type="text"/>
+  </div>
   <div style="width: 100px; float: left">
     <button id="authorizeButton" disabled>You must authorize</button>
     <button id="openButton">Open Existing List</button>
@@ -51,10 +56,6 @@ idea-generation: menu is below the canvas
     <!-- Undo and redo buttons. -->
     <button id="undoButton" disabled>Undo</button>
     <button id="redoButton" disabled>Redo</button>
-  </div>
-  <div>
-    <b>Enter text:</b><br/>
-    <input class="text" type="text" style="width:152px; height:95px;"/>
   </div>
   <div>
     <b>Enter multiple text:</b><br/>
