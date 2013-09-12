@@ -121,6 +121,9 @@ var realtimeOptions = {
                     $(this).dialog("close");
                     _this.authorizeWithPopup();
                 }
+            },
+            open: function(){
+                $(".ui-dialog-titlebar-close", this.parentNode).hide();
             }
         });
     },
