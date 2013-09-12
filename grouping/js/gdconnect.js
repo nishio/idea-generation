@@ -3,8 +3,8 @@
  * (c) 2013, Cybozu.
  */
 goog.require('nhiro.assert');
-goog.require('nhiro.log');
 goog.require('nhiro.fusen');
+goog.require('nhiro.log');
 goog.require('nhiro.repos');
 goog.provide('main.gdcon');
 
@@ -42,7 +42,7 @@ main.gdcon.updateUI = function() {
         }else {
             // box not exists yet
             var v = JSON.parse(array[i]);
-            if (v.x == null && v.y == null){
+            if (v.x == null && v.y == null) {
                 v.x = 142 * (v.id % 10);
                 v.y = 92 * (Math.floor(v.id / 10) % 10);
                 main.gdcon.updateItem(v);
@@ -56,13 +56,17 @@ main.gdcon.updateItem = function(r) {
     var box = JSON.parse(main.gdcon._list.get(r.id));
     box.x = r.x;
     box.y = r.y;
-    try{
+    try {
         main.gdcon._list.set(r.id, JSON.stringify(box));
-    }catch(e){
-        if(e.toString().indexOf("Unable to apply local mutation because document is in read-only mode.") != -1){
-            nhiro.log("Unable to apply local mutation because document is in read-only mode.")
-            nhiro.notify("Your change will not saved because the document is read-only.");
-        }else{
+    }catch (e) {
+        var READONLY = ('Unable to apply local mutation ' +
+                        'because document is in read-only mode.');
+        var MESSAGE = (
+            'Your change will not saved because the document is read-only.');
+        if (e.toString().indexOf(READONLY) != -1) {
+            nhiro.log(READONLY);
+            nhiro.notify(MESSAGE);
+        }else {
             throw e;
         }
     }
@@ -110,27 +114,27 @@ function onFileLoaded(doc) {
  * @suppress {checkTypes}
  * @this {*}
  */
-main.gdcon.onNeedAuth = function(){
+main.gdcon.onNeedAuth = function() {
     var _this = this;
     nhiro.log('auth needed');
     var $ = nhiro.repos.get('jQuery');
-    var box = $("#modal-auth-dialog");
+    var box = $('#modal-auth-dialog');
     box.dialog({
         position: {
-            my: "center", at: "center", of: $('#canvas')},
+            my: 'center', at: 'center', of: $('#canvas')},
         resizable: false,
         modal: true,
         buttons: {
-            "Log in": function() {
-                box.dialog("close");
+            'Log in': function() {
+                box.dialog('close');
                 _this.authorizeWithPopup();
             }
         },
-        open: function(){
-            $(".ui-dialog-titlebar-close", box.parentNode).hide();
+        open: function() {
+            $('.ui-dialog-titlebar-close', box.parentNode).hide();
         }
     });
-}
+};
 
 /**
  * Options for the Realtime loader.
@@ -148,7 +152,7 @@ var realtimeOptions = {
     authButtonElementId: 'authorizeButton',
 
     onNeedAuth: main.gdcon.onNeedAuth,
-    onNoNeedAuth: function(){
+    onNoNeedAuth: function() {
         nhiro.log('no need to auth');
     },
 
@@ -209,9 +213,9 @@ main.gdcon.startRealtime = function() {
 
     realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
     realtimeLoader.start();
-    setInterval(function(){
+    setInterval(function() {
         nhiro.log('re-authorizing' + new Date());
-        realtimeLoader.authorizer.authorize()
+        realtimeLoader.authorizer.authorize();
         nhiro.log('re-authorized' + new Date());
     }, 1000 * 60 * 5);  // do auth each 5 minute
 

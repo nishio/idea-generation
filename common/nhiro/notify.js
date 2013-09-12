@@ -10,21 +10,21 @@ goog.provide('nhiro.notify');
  * @param {number=} seconds .
  * @suppress {checkTypes}
  */
-nhiro.notify = function(message, seconds){
+nhiro.notify = function(message, seconds) {
     var $ = nhiro.repos.get('jQuery');
     var box = $('<div>');
-    if(seconds == null) seconds = 10;
+    if (seconds == null) seconds = 10;
 
     box.text(message);
     box.appendTo('body');
     var position, onClose;
-    if(nhiro.notify.top_filled){
+    if (nhiro.notify.top_filled) {
         position = {my: 'right top', at: 'right bottom', of: nhiro.notify.last};
-        onClose = function(){};
-    }else{
+        onClose = function() {};
+    }else {
         position = {my: 'right top', at: 'right top', of: $('body')};
         nhiro.notify.top_filled = true;
-        onClose = function(){
+        onClose = function() {
             nhiro.notify.top_filled = false;
         };
     }
@@ -38,13 +38,13 @@ nhiro.notify = function(message, seconds){
     });
 
     nhiro.notify.last = dialog;
-    setTimeout(function(){
-        dialog.dialog("close");
-        setTimeout(function(){
-            dialog.dialog("destroy");
+    setTimeout(function() {
+        dialog.dialog('close');
+        setTimeout(function() {
+            dialog.dialog('destroy');
         }, 1000);
     }, 1000 * seconds);
-}
+};
 
 nhiro.notify.top_filled = false;
 nhiro.notify.last = null;

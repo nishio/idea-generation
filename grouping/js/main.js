@@ -586,7 +586,7 @@ main.setup_event_handling = function() {
     });
 
     // when #go_menu clicked, scroll to menu
-    $('#go_menu').click(function(){
+    $('#go_menu').click(function() {
         $('body').animate({
             scrollTop: $('#menu').offset().top
         }, 100);
@@ -594,7 +594,7 @@ main.setup_event_handling = function() {
     });
 
     // when #go_menu clicked, scroll to top
-    $('#go_canvas').click(function(){
+    $('#go_canvas').click(function() {
         $('body').animate({
             scrollTop: 0
         }, 100);
