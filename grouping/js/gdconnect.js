@@ -40,10 +40,12 @@ main.gdcon.updateUI = function() {
         }else {
             // box not exists yet
             var v = JSON.parse(array[i]);
-            if (v.x == null) v.x = 142 * (v.id % 10);
-            if (v.y == null) v.y = 92 * (Math.floor(v.id / 10) % 10);
+            if (v.x == null && v.y == null){
+                v.x = 142 * (v.id % 10);
+                v.y = 92 * (Math.floor(v.id / 10) % 10);
+                main.gdcon.updateItem(v);
+            }
             main.add_fusen(v.text, v.x, v.y);
-            main.gdcon.updateItem(v);
         }
     }
 };
@@ -52,7 +54,15 @@ main.gdcon.updateItem = function(r) {
     var box = JSON.parse(main.gdcon._list.get(r.id));
     box.x = r.x;
     box.y = r.y;
-    main.gdcon._list.set(r.id, JSON.stringify(box));
+    try{
+        main.gdcon._list.set(r.id, JSON.stringify(box));
+    }catch(e){
+        if(e.toString().indexOf("Unable to apply local mutation because document is in read-only mode.") != -1){
+            console.log("Unable to apply local mutation because document is in read-only mode.")
+        }else{
+            throw e;
+        }
+    }
 };
 
 /**
