@@ -98,20 +98,29 @@ function onFileLoaded(doc) {
  */
 var realtimeOptions = {
     appId: '240613571940',
-  /**
-   * Client ID from the APIs Console.
-   */
-  clientId: '240613571940.apps.googleusercontent.com',
+    /**
+     * Client ID from the APIs Console.
+     */
+    clientId: '240613571940.apps.googleusercontent.com',
 
-  /**
-   * The ID of the button to click to authorize. Must be a DOM element ID.
-   */
-  authButtonElementId: 'authorizeButton',
+    /**
+     * The ID of the button to click to authorize. Must be a DOM element ID.
+     */
+    authButtonElementId: 'authorizeButton',
 
-  /**
-   * Function to be called when a Realtime model is first created.
-   */
-  initializeModel: main.gdcon.initializeModel,
+    onNeedAuth: function(){
+        this.authButton.disabled = false;
+        this.authButton.onclick = authorizeWithPopup;
+    },
+    onNoNeedAuth: function(){
+        githis.authButton.disabled = true;
+    },
+
+
+    /**
+     * Function to be called when a Realtime model is first created.
+     */
+    initializeModel: main.gdcon.initializeModel,
 
   /**
    * Autocreate files right after auth automatically.
