@@ -164,6 +164,11 @@ main.gdcon.startRealtime = function() {
 
     realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
     realtimeLoader.start();
+    setInterval(function(){
+        console.log('re-authorizing' + new Date());
+        realtimeLoader.authorizer.authorize()
+        console.log('re-authorized' + new Date());
+    }, 1000 * 60 * 5);  // do auth each 5 minute
 
     $('#add_texts').click(function() {
         var items = $('#texts').val().split(/\n\s*/g);
