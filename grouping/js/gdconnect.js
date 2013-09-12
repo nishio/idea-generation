@@ -3,7 +3,9 @@
  * (c) 2013, Cybozu.
  */
 goog.require('nhiro.assert');
+goog.require('nhiro.log');
 goog.require('nhiro.fusen');
+goog.require('nhiro.repos');
 goog.provide('main.gdcon');
 
 google.load('picker', '1');
@@ -58,7 +60,8 @@ main.gdcon.updateItem = function(r) {
         main.gdcon._list.set(r.id, JSON.stringify(box));
     }catch(e){
         if(e.toString().indexOf("Unable to apply local mutation because document is in read-only mode.") != -1){
-            console.log("Unable to apply local mutation because document is in read-only mode.")
+            nhiro.log("Unable to apply local mutation because document is in read-only mode.")
+            nhiro.notify("Your change will not saved because the document is read-only.");
         }else{
             throw e;
         }
@@ -120,25 +123,27 @@ var realtimeOptions = {
 
     onNeedAuth: function(){
         var _this = this;
-        console.log('auth needed');
-        $("#modal-auth-dialog").dialog({
+        nhiro.log('auth needed');
+        var $ = nhiro.repos.get('jQuery');
+        var box = $("#modal-auth-dialog");
+        box.dialog({
             position: {
                 my: "center", at: "center", of: $('#canvas')},
             resizable: false,
             modal: true,
             buttons: {
                 "Log in": function() {
-                    $(this).dialog("close");
+                    box.dialog("close");
                     _this.authorizeWithPopup();
                 }
             },
             open: function(){
-                $(".ui-dialog-titlebar-close", this.parentNode).hide();
+                $(".ui-dialog-titlebar-close", box.parentNode).hide();
             }
         });
     },
     onNoNeedAuth: function(){
-        console.log('no need to auth');
+        nhiro.log('no need to auth');
     },
 
 
@@ -147,37 +152,37 @@ var realtimeOptions = {
      */
     initializeModel: main.gdcon.initializeModel,
 
-  /**
-   * Autocreate files right after auth automatically.
-   */
-  autoCreate: true,
+    /**
+     * Autocreate files right after auth automatically.
+     */
+    autoCreate: true,
 
-  /**
-   * The name of newly created Drive files.
-   */
-  defaultTitle: 'My Idea',
+    /**
+     * The name of newly created Drive files.
+     */
+    defaultTitle: 'My Idea',
 
-  /**
-   * The MIME type of newly created Drive Files. By default the application
-   * specific MIME type will be used:
-   *     application/vnd.google-apps.drive-sdk.
-   */
-  newFileMimeType: null, // Using default.
+    /**
+     * The MIME type of newly created Drive Files. By default the application
+     * specific MIME type will be used:
+     *     application/vnd.google-apps.drive-sdk.
+     */
+    newFileMimeType: null, // Using default.
 
-  /**
-   * Function to be called every time a Realtime file is loaded.
-   */
-  onFileLoaded: onFileLoaded,
+    /**
+     * Function to be called every time a Realtime file is loaded.
+     */
+    onFileLoaded: onFileLoaded,
 
-  /**
-   * Function to be called to inityalize custom Collaborative Objects types.
-   */
-  registerTypes: null, // No action.
+    /**
+     * Function to be called to inityalize custom Collaborative Objects types.
+     */
+    registerTypes: null, // No action.
 
-  /**
-   * Function to be called after authorization and before loading files.
-   */
-  afterAuth: null // No action.
+    /**
+     * Function to be called after authorization and before loading files.
+     */
+    afterAuth: null // No action.
 };
 
 main.gdcon.pushText = function(text) {
@@ -199,9 +204,9 @@ main.gdcon.startRealtime = function() {
     realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
     realtimeLoader.start();
     setInterval(function(){
-        console.log('re-authorizing' + new Date());
+        nhiro.log('re-authorizing' + new Date());
         realtimeLoader.authorizer.authorize()
-        console.log('re-authorized' + new Date());
+        nhiro.log('re-authorized' + new Date());
     }, 1000 * 60 * 5);  // do auth each 5 minute
 
     $('#add_texts').click(function() {

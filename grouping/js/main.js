@@ -8,6 +8,7 @@ goog.require('nhiro.V2');
 goog.require('nhiro.assert');
 goog.require('nhiro.convex_hull');
 goog.require('nhiro.fusen');
+goog.require('nhiro.notify');
 goog.require('nhiro.path');
 goog.require('nhiro.stateman');
 goog.require('nhiro.util');
@@ -586,7 +587,6 @@ main.setup_event_handling = function() {
 
     // when #go_menu clicked, scroll to menu
     $('#go_menu').click(function(){
-        console.log('scroll');
         $('body').animate({
             scrollTop: $('#menu').offset().top
         }, 100);
@@ -595,7 +595,6 @@ main.setup_event_handling = function() {
 
     // when #go_menu clicked, scroll to top
     $('#go_canvas').click(function(){
-        console.log('scroll');
         $('body').animate({
             scrollTop: 0
         }, 100);
