@@ -8,6 +8,7 @@ goog.require('nhiro.V2');
 goog.require('nhiro.assert');
 goog.require('nhiro.convex_hull');
 goog.require('nhiro.fusen');
+goog.require('nhiro.notify');
 goog.require('nhiro.path');
 goog.require('nhiro.stateman');
 goog.require('nhiro.util');
@@ -307,7 +308,7 @@ function style2attr(style) {
 main.add_fusen = function(text, x, y) {
     var r = nhiro.fusen.add(
         main.paper, text, x, y, 130, null,
-        {'fill': '#ffe', 'fill-opacity': 0.8,
+        {'fill': '#ffc', 'fill-opacity': 0.8,
          'stroke': '#aaa', 'stroke-width': 0.3, 'stroke-opacity': 0.9});
     r.id = main.boxes.length;
 
@@ -583,21 +584,38 @@ main.setup_event_handling = function() {
         $('#mode_line').attr('checked', true);
         line_style = $('input[name=style]:checked').val();
     });
+
+    // when #go_menu clicked, scroll to menu
+    $('#go_menu').click(function() {
+        $('body').animate({
+            scrollTop: $('#menu').offset().top
+        }, 100);
+        return false;
+    });
+
+    // when #go_menu clicked, scroll to top
+    $('#go_canvas').click(function() {
+        $('body').animate({
+            scrollTop: 0
+        }, 100);
+        return false;
+    });
+
 };
 
 /**
  * find space to put a card
  */
-main.find_space = function(i){
+main.find_space = function(i) {
     var b = nhiro.V2.make(
         131 * (i % 11),
         81 * (Math.floor(i / 11) % 10)
     );
     return b;
-}
+};
 
-function t(){
-    main.boxes.forEach(function(b, i){
+function t() {
+    main.boxes.forEach(function(b, i) {
         var pos = main.find_space(i);
         b.move(pos.x, pos.y);
         main.gdcon.updateItem(b);

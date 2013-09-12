@@ -4,6 +4,8 @@
  */
 goog.require('nhiro.assert');
 goog.require('nhiro.fusen');
+goog.require('nhiro.log');
+goog.require('nhiro.repos');
 goog.provide('main.gdcon');
 
 google.load('picker', '1');
@@ -40,20 +42,35 @@ main.gdcon.updateUI = function() {
         }else {
             // box not exists yet
             var v = JSON.parse(array[i]);
-            if(v.x == null) v.x = 142 * (v.id % 10);
-            if(v.y == null) v.y = 92 * (Math.floor(v.id / 10) % 10);
+            if (v.x == null && v.y == null) {
+                v.x = 142 * (v.id % 10);
+                v.y = 92 * (Math.floor(v.id / 10) % 10);
+                main.gdcon.updateItem(v);
+            }
             main.add_fusen(v.text, v.x, v.y);
-            main.gdcon.updateItem(v);
         }
     }
 };
 
-main.gdcon.updateItem = function(r){
+main.gdcon.updateItem = function(r) {
     var box = JSON.parse(main.gdcon._list.get(r.id));
     box.x = r.x;
     box.y = r.y;
-    main.gdcon._list.set(r.id, JSON.stringify(box));
-}
+    try {
+        main.gdcon._list.set(r.id, JSON.stringify(box));
+    }catch (e) {
+        var READONLY = ('Unable to apply local mutation ' +
+                        'because document is in read-only mode.');
+        var MESSAGE = (
+            'Your change will not saved because the document is read-only.');
+        if (e.toString().indexOf(READONLY) != -1) {
+            nhiro.log(READONLY);
+            nhiro.notify(MESSAGE);
+        }else {
+            throw e;
+        }
+    }
+};
 
 /**
  * This function is called when the Realtime file has been loaded. It should
@@ -94,56 +111,88 @@ function onFileLoaded(doc) {
 }
 
 /**
+ * @suppress {checkTypes}
+ * @this {*}
+ */
+main.gdcon.onNeedAuth = function() {
+    var _this = this;
+    nhiro.log('auth needed');
+    var $ = nhiro.repos.get('jQuery');
+    var box = $('#modal-auth-dialog');
+    box.dialog({
+        position: {
+            my: 'center', at: 'center', of: $('#canvas')},
+        resizable: false,
+        modal: true,
+        buttons: {
+            'Log in': function() {
+                box.dialog('close');
+                _this.authorizeWithPopup();
+            }
+        },
+        open: function() {
+            $('.ui-dialog-titlebar-close', box.parentNode).hide();
+        }
+    });
+};
+
+/**
  * Options for the Realtime loader.
  */
 var realtimeOptions = {
     appId: '240613571940',
-  /**
-   * Client ID from the APIs Console.
-   */
-  clientId: '240613571940.apps.googleusercontent.com',
+    /**
+     * Client ID from the APIs Console.
+     */
+    clientId: '240613571940.apps.googleusercontent.com',
 
-  /**
-   * The ID of the button to click to authorize. Must be a DOM element ID.
-   */
-  authButtonElementId: 'authorizeButton',
+    /**
+     * The ID of the button to click to authorize. Must be a DOM element ID.
+     */
+    authButtonElementId: 'authorizeButton',
 
-  /**
-   * Function to be called when a Realtime model is first created.
-   */
-  initializeModel: main.gdcon.initializeModel,
+    onNeedAuth: main.gdcon.onNeedAuth,
+    onNoNeedAuth: function() {
+        nhiro.log('no need to auth');
+    },
 
-  /**
-   * Autocreate files right after auth automatically.
-   */
-  autoCreate: true,
 
-  /**
-   * The name of newly created Drive files.
-   */
-  defaultTitle: 'My Idea',
+    /**
+     * Function to be called when a Realtime model is first created.
+     */
+    initializeModel: main.gdcon.initializeModel,
 
-  /**
-   * The MIME type of newly created Drive Files. By default the application
-   * specific MIME type will be used:
-   *     application/vnd.google-apps.drive-sdk.
-   */
-  newFileMimeType: null, // Using default.
+    /**
+     * Autocreate files right after auth automatically.
+     */
+    autoCreate: true,
 
-  /**
-   * Function to be called every time a Realtime file is loaded.
-   */
-  onFileLoaded: onFileLoaded,
+    /**
+     * The name of newly created Drive files.
+     */
+    defaultTitle: 'My Idea',
 
-  /**
-   * Function to be called to inityalize custom Collaborative Objects types.
-   */
-  registerTypes: null, // No action.
+    /**
+     * The MIME type of newly created Drive Files. By default the application
+     * specific MIME type will be used:
+     *     application/vnd.google-apps.drive-sdk.
+     */
+    newFileMimeType: null, // Using default.
 
-  /**
-   * Function to be called after authorization and before loading files.
-   */
-  afterAuth: null // No action.
+    /**
+     * Function to be called every time a Realtime file is loaded.
+     */
+    onFileLoaded: onFileLoaded,
+
+    /**
+     * Function to be called to inityalize custom Collaborative Objects types.
+     */
+    registerTypes: null, // No action.
+
+    /**
+     * Function to be called after authorization and before loading files.
+     */
+    afterAuth: null // No action.
 };
 
 main.gdcon.pushText = function(text) {
@@ -164,6 +213,11 @@ main.gdcon.startRealtime = function() {
 
     realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
     realtimeLoader.start();
+    setInterval(function() {
+        nhiro.log('re-authorizing' + new Date());
+        realtimeLoader.authorizer.authorize();
+        nhiro.log('re-authorized' + new Date());
+    }, 1000 * 60 * 5);  // do auth each 5 minute
 
     $('#add_texts').click(function() {
         var items = $('#texts').val().split(/\n\s*/g);

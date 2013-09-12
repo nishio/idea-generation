@@ -18,13 +18,13 @@ main.grouping._groups = [];
  * @param {Box} box .
  * @suppress {checkTypes}
  */
-main.grouping.pushBox = function(box){
+main.grouping.pushBox = function(box) {
     main.grouping._groups.push({
         path: main.paper.path('M0,0L0,0')
         .attr({'stroke-dasharray': '. '}),
         boxes: [box]});
     main.grouping.update_group_view();
-}
+};
 
 /**
  * @param {number=} threshold .
@@ -54,7 +54,7 @@ main.grouping.update_group_view = function(threshold) {
 /**
  * @suppress {checkTypes}
  */
-main.grouping.calc_hull_and_cache = function () {
+main.grouping.calc_hull_and_cache = function() {
     // calc convex hull and cache them
     hulls = [];
     for (var i = 0; i < main.grouping._groups.length; i++) {
@@ -63,7 +63,7 @@ main.grouping.calc_hull_and_cache = function () {
         var hull = nhiro.convex_hull(points);
         hulls.push(hull);
     }
-}
+};
 
 
 /**
@@ -127,58 +127,58 @@ main.grouping.highlight_group = function(r) {
     if (nearest_group != null) {
         _change_path_style(nearest_group, {'stroke-width': 5});
     }
-}
+};
 
 
 /**
  * @suppress {checkTypes}
  */
-function _change_path_style(id, style){
+function _change_path_style(id, style) {
     var path = main.grouping._groups[id].path;
     path.attr(style);
 }
 
-main.grouping.reset_highlight = function () {
+main.grouping.reset_highlight = function() {
     for (var i = 0; i < main.grouping._groups.length; i++) {
         _change_path_style(i, {'stroke-width': 1});
     }
-}
+};
 
 
 /**
  * make groups solid-lined
  */
- main.grouping.make_solid = function(){
+ main.grouping.make_solid = function() {
      for (var i = 0; i < main.grouping._groups.length; i++) {
         _change_path_style(i, {'stroke-dasharray': ''});
      }
- }
+ };
 
 
 /**
  * make groups dotted-lined
  */
- main.grouping.make_dotted = function(){
+ main.grouping.make_dotted = function() {
      for (var i = 0; i < main.grouping._groups.length; i++) {
         _change_path_style(i, {'stroke-dasharray': '. '});
      }
- }
+ };
 
 /**
  * create new group with a Box
  */
- main.grouping.create = function(r){
+ main.grouping.create = function(r) {
      // create new group
      main.grouping._groups.push({
          path: main.paper.path('M0,0'),
          boxes: []});
      main.grouping.change_group(r, main.grouping._groups.length - 1);
- }
+ };
 
 /**
  * @suppress {checkTypes}
  */
-main.grouping.change_group = function (box, to) {
+main.grouping.change_group = function(box, to) {
     for (var i = 0; i < main.grouping._groups.length; i++) {
         var g = main.grouping._groups[i];
         var boxes = g.boxes;
@@ -189,5 +189,5 @@ main.grouping.change_group = function (box, to) {
     }
     main.grouping._groups[to].boxes.push(box);
     main.grouping._groups = main.grouping._groups.filter(function(x) {return x.boxes.length > 0});
-}
+};
 

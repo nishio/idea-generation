@@ -9,7 +9,7 @@
 
 body {
     margin: 0;
-    background: #eee;
+    background: #ddd;
 }
 
 div .canvas {
@@ -18,6 +18,9 @@ div .canvas {
     background: #fff;
 }
 
+p {
+    margin: 0 0 0 0;
+}
 label {
 //    float: left;
     width: 180px;
