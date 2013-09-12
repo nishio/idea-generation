@@ -147,7 +147,7 @@ rtclient.Authorizer.prototype.authorize = function(onAuthComplete) {
     }
   };
 
-  var authorizeWithPopup = function() {
+  this.authorizeWithPopup = function() {
     gapi.auth.authorize({
       client_id: clientId,
       scope: [

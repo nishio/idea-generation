@@ -109,11 +109,23 @@ var realtimeOptions = {
     authButtonElementId: 'authorizeButton',
 
     onNeedAuth: function(){
-        this.authButton.disabled = false;
-        this.authButton.onclick = authorizeWithPopup;
+        var _this = this;
+        console.log('auth needed');
+        $("#modal-auth-dialog").dialog({
+            position: {
+                my: "center", at: "center", of: $('#canvas')},
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Log in": function() {
+                    $(this).dialog("close");
+                    _this.authorizeWithPopup();
+                }
+            }
+        });
     },
     onNoNeedAuth: function(){
-        githis.authButton.disabled = true;
+        console.log('no need to auth');
     },
 
 

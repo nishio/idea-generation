@@ -1,7 +1,11 @@
 <html>
   <link type="text/css" rel="stylesheet" href="basic.css">
   <script type="text/javascript" src="../common/closure-library/closure/goog/base.js"></script>
-  <script type="text/javascript" src="../common/jquery-1.7.1.js"></script>
+
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
   <script type="text/javascript" src="../common/raphael.js"></script>
   <!-- Load the Realtime libraries. -->
   <script type="text/javascript" src="//www.google.com/jsapi"></script>
@@ -69,5 +73,10 @@ idea-generation <a href='#' id='go_menu'>[go menu]</a>
     <button id="showAllButton">Show Items on console</button>
   </div>
 
+  <div id="modal-auth-dialog" title="Login">
+  <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+    You need to login with Google account:
+  </p>
+  </div>
 </body>
 </html>
