@@ -5,9 +5,11 @@
  */
 goog.provide('nhiro.notify');
 
-nhiro.notify.top_filled = false;
-nhiro.notify.last = null;
-
+/**
+ * @param {string} message .
+ * @param {number=} seconds .
+ * @suppress {checkTypes}
+ */
 nhiro.notify = function(message, seconds){
     var $ = nhiro.repos.get('jQuery');
     var box = $('<div>');
@@ -15,14 +17,14 @@ nhiro.notify = function(message, seconds){
 
     box.text(message);
     box.appendTo('body');
-    var position;
+    var position, onClose;
     if(nhiro.notify.top_filled){
         position = {my: 'right top', at: 'right bottom', of: nhiro.notify.last};
-        function onClose(){};
+        onClose = function(){};
     }else{
         position = {my: 'right top', at: 'right top', of: $('body')};
         nhiro.notify.top_filled = true;
-        function onClose(){
+        onClose = function(){
             nhiro.notify.top_filled = false;
         };
     }
@@ -43,3 +45,6 @@ nhiro.notify = function(message, seconds){
         }, 1000);
     }, 1000 * seconds);
 }
+
+nhiro.notify.top_filled = false;
+nhiro.notify.last = null;

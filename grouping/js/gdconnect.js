@@ -107,6 +107,32 @@ function onFileLoaded(doc) {
 }
 
 /**
+ * @suppress {checkTypes}
+ * @this {*}
+ */
+main.gdcon.onNeedAuth = function(){
+    var _this = this;
+    nhiro.log('auth needed');
+    var $ = nhiro.repos.get('jQuery');
+    var box = $("#modal-auth-dialog");
+    box.dialog({
+        position: {
+            my: "center", at: "center", of: $('#canvas')},
+        resizable: false,
+        modal: true,
+        buttons: {
+            "Log in": function() {
+                box.dialog("close");
+                _this.authorizeWithPopup();
+            }
+        },
+        open: function(){
+            $(".ui-dialog-titlebar-close", box.parentNode).hide();
+        }
+    });
+}
+
+/**
  * Options for the Realtime loader.
  */
 var realtimeOptions = {
@@ -121,27 +147,7 @@ var realtimeOptions = {
      */
     authButtonElementId: 'authorizeButton',
 
-    onNeedAuth: function(){
-        var _this = this;
-        nhiro.log('auth needed');
-        var $ = nhiro.repos.get('jQuery');
-        var box = $("#modal-auth-dialog");
-        box.dialog({
-            position: {
-                my: "center", at: "center", of: $('#canvas')},
-            resizable: false,
-            modal: true,
-            buttons: {
-                "Log in": function() {
-                    box.dialog("close");
-                    _this.authorizeWithPopup();
-                }
-            },
-            open: function(){
-                $(".ui-dialog-titlebar-close", box.parentNode).hide();
-            }
-        });
-    },
+    onNeedAuth: main.gdcon.onNeedAuth,
     onNoNeedAuth: function(){
         nhiro.log('no need to auth');
     },
