@@ -1,7 +1,7 @@
 deploy:
 	make copy
 	git add -u
-	git commit -m 'update'
+	-git commit -m 'update'
 	# assert workspace is clean, if not, do 'git add' manually
 	test -z "`git status --porcelain`"
 	git push
