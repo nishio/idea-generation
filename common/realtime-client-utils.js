@@ -112,6 +112,8 @@ rtclient.Authorizer = function(options) {
   // Get the user ID if it's available in the state query parameter.
   this.userId = rtclient.params['userId'];
   this.authButton = document.getElementById(rtclient.getOption(options, 'authButtonElementId'));
+  this.onNeedAuth = rtclient.getOption(options, 'onNeedAuth');
+  this.onNoNeedAuth = rtclient.getOption(options, 'onNoNeedAuth');
 }
 
 
@@ -138,11 +140,10 @@ rtclient.Authorizer.prototype.authorize = function(onAuthComplete) {
 
   var handleAuthResult = function(authResult) {
     if (authResult && !authResult.error) {
-      _this.authButton.disabled = true;
+      _this.onNoNeedAuth();
       _this.fetchUserId(onAuthComplete);
     } else {
-      _this.authButton.disabled = false;
-      _this.authButton.onclick = authorizeWithPopup;
+      _this.onNeedAuth();
     }
   };
 
