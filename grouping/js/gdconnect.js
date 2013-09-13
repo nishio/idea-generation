@@ -65,7 +65,7 @@ main.gdcon.updateItem = function(r) {
             'Your change will not saved because the document is read-only.');
         if (e.toString().indexOf(READONLY) != -1) {
             nhiro.log(READONLY);
-            nhiro.notify(MESSAGE);
+            nhiro.notify.once(MESSAGE);
         }else {
             throw e;
         }
