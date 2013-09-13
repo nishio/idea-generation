@@ -80,6 +80,7 @@ main.gdcon.updateItem = function(r) {
  * @suppress {checkTypes}
  */
 function onFileLoaded(doc) {
+    nhiro.notify('Loaded existing document');
     var gapi = nhiro.repos.get('gapi');
 
     main.gdcon._list = doc.getModel().getRoot().get('my_list');
@@ -192,7 +193,9 @@ var realtimeOptions = {
     /**
      * Function to be called after authorization and before loading files.
      */
-    afterAuth: null // No action.
+    afterAuth: function(){
+        nhiro.notify('Authorization finished');
+    }
 };
 
 main.gdcon.pushText = function(text) {
