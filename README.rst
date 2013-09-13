@@ -18,7 +18,8 @@ Pre-alpha. Data format will change.
 
 Demo in Japanese: http://nishio.github.io/idea-generation/grouping/#fileIds=0ByJEiOHyOVoPNC15OXFRR2tOSm8&userId=112643481944466832095
 
-Demo in English: Coming soon!
+Demo in English: http://nishio.github.io/idea-generation//grouping/#fileIds=0ByJEiOHyOVoPS1IyeVg1XzR6RU0&userId=112643481944466832095
+
 
 
 What You Can do
