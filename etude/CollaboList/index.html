@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Etude for Google Drive CollaborativeList</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=9">
+
+  <!-- Load the Realtime libraries. -->
+  <script type="text/javascript" src="//www.google.com/jsapi"></script>
+  <script type="text/javascript"
+          src="https://apis.google.com/js/api.js"></script>
+
+  <!-- Load the utility library. -->
+  <script type="text/javascript"
+          src="../../common/realtime-client-utils.js"></script>
+
+  <script type="text/javascript" src="../../common/jquery-1.7.1.js"></script>
+</head>
+
+<body onLoad='startRealtime()'>
+
+  <button id="authorizeButton" disabled>You must authorize</button>
+  <button id="openButton">Open Existing List</button>
+
+  <!-- Undo and redo buttons. -->
+  <button id="undoButton" disabled>Undo</button>
+  <button id="redoButton" disabled>Redo</button>
+
+  <ol id='list'>
+  </ol>
+
+  <textarea id='texts'></textarea><button id='add_texts'>add_texts</button>
+
+  <script type="text/javascript"
+          src="collaborativelist.js"></script>
+</body>

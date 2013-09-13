@@ -1,0 +1,30 @@
+.selected {
+  background: #aaaaff;
+}
+
+.option {
+  border: solid 1px;
+  padding: 2px;
+}
+
+body {
+    margin: 0;
+    background: #ddd;
+}
+
+div .canvas {
+    width: 1440px; // > 131 * 11 - 1 px
+    height: 809px; // == 81 * 10 - 1 px
+    background: #fff;
+}
+
+p {
+    margin: 0 0 0 0;
+}
+label {
+//    float: left;
+    width: 180px;
+}
+input {
+//    float: left;
+}
