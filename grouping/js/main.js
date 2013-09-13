@@ -560,7 +560,7 @@ main.setup_event_handling = function() {
         items.forEach(function(x) {
             var b = add_box(x);
             var pos = main.find_space(b.id);
-            b.move(pos);
+            b.move(pos.x, pos.y);
             main.gdcon.updateItem(b);
         });
         $('#multitext').val('');

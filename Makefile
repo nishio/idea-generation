@@ -17,8 +17,7 @@ copy:
 	-rm ../idea-generation/common/nhiro/**/*~
 	cp -r ../idea-generation/common/nhiro common/
 
-copy_third_party_libs:
-	cp -r ../idea-generation/common/closure-library common/
+	rsync ../idea-generation/common/closure-library common/
 	cp ../idea-generation/common/raphael.js common/
 	cp ../idea-generation/common/realtime-client-utils.js common/
 
