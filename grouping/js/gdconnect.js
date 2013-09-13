@@ -80,6 +80,7 @@ main.gdcon.updateItem = function(r) {
  * @suppress {checkTypes}
  */
 function onFileLoaded(doc) {
+    nhiro.notify('Loaded existing document');
     var gapi = nhiro.repos.get('gapi');
 
     main.gdcon._list = doc.getModel().getRoot().get('my_list');
@@ -192,7 +193,9 @@ var realtimeOptions = {
     /**
      * Function to be called after authorization and before loading files.
      */
-    afterAuth: null // No action.
+    afterAuth: function(){
+        nhiro.notify('Authorization finished');
+    }
 };
 
 main.gdcon.pushText = function(text) {
@@ -218,14 +221,6 @@ main.gdcon.startRealtime = function() {
         realtimeLoader.authorizer.authorize();
         nhiro.log('re-authorized' + new Date());
     }, 1000 * 60 * 5);  // do auth each 5 minute
-
-    $('#add_texts').click(function() {
-        var items = $('#texts').val().split(/\n\s*/g);
-        items.forEach(function(x) {
-            main.gdcon._list.push(x);
-        });
-        main.gdcon.updateUI();
-    });
 
     $('#openButton').click(function() {
         // Opens the Google Picker.

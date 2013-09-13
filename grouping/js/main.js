@@ -640,6 +640,7 @@ main.main = function() {
         main.paper.path('M0,0L0,0')
         .attr({stroke: '#000', 'stroke-width': 2}));
 
+    nhiro.notify('connecting to Google Drive');
     // start connection to Google Drive
     main.gdcon.startRealtime();
 
