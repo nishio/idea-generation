@@ -46,5 +46,13 @@ nhiro.notify = function(message, seconds) {
     }, 1000 * seconds);
 };
 
+nhiro.notify.shown = {};
+nhiro.notify.once = function(message, seconds) {
+    if(nhiro.notify.shown[message] == null){
+        nhiro.notify.shown[message] = true;
+        nhiro.notify(message, seconds);
+    }
+}
+
 nhiro.notify.top_filled = false;
 nhiro.notify.last = null;
