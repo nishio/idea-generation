@@ -16,9 +16,9 @@ LICENSE
 
 Pre-alpha. Data format will change.
 
-Demo in Japanese: http://nishio.github.io/idea-generation/grouping/#fileIds=0ByJEiOHyOVoPNC15OXFRR2tOSm8&userId=112643481944466832095
+Demo in Japanese: http://nishio.github.io/idea-generation/grouping/#fileIds=0ByJEiOHyOVoPNC15OXFRR2tOSm8
 
-Demo in English: http://nishio.github.io/idea-generation//grouping/#fileIds=0ByJEiOHyOVoPS1IyeVg1XzR6RU0&userId=112643481944466832095
+Demo in English: http://nishio.github.io/idea-generation//grouping/#fileIds=0ByJEiOHyOVoPS1IyeVg1XzR6RU0
 
 
 
@@ -33,11 +33,7 @@ What You Can do
 What You Can't do now
 =====================
 
-- Arrows and Grouping are not saved.
-- You can't add labels on arrows.
-- You can't export the data as JSON.
-- You can't reuse cards on other maps.
-
+https://github.com/nishio/idea-generation/issues?labels=enhancement&page=1&state=open
 
 License
 =======
