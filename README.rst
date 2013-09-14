@@ -5,28 +5,30 @@
 Tool to enhance your idea generation.
 
 
-Current Status
-==============
-
-Developing. Coming soon!
-
-
-LICENSE
-=======
-
-Pre-alpha. Data format will change.
+Demos
+=====
 
 Demo in Japanese: http://nishio.github.io/idea-generation/grouping/#fileIds=0ByJEiOHyOVoPNC15OXFRR2tOSm8
 
 Demo in English: http://nishio.github.io/idea-generation//grouping/#fileIds=0ByJEiOHyOVoPS1IyeVg1XzR6RU0
 
+Data for those demos are stored in Google Drive.
+I shared it as read-only. So even if you edit maps, it doesn't be saved. Feel free to edit as you want.
+
+You can create new map in your Google Drive from here: http://nishio.github.io/idea-generation/grouping/
+
+
+Current Status
+==============
+
+Pre-alpha. Data format will change.
 
 
 What You Can do
 ===============
 
 - Look *map*.
-- Make your own map. It stored into your Google Drive. Visit: http://nishio.github.io/idea-generation/grouping/
+- Make your own map.
 - Share it with others.
 
 
@@ -34,6 +36,7 @@ What You Can't do now
 =====================
 
 https://github.com/nishio/idea-generation/issues?labels=enhancement&page=1&state=open
+
 
 License
 =======
