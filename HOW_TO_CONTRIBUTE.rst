@@ -8,6 +8,18 @@ How to develop
 
 Sorry for lack of documents. Feel free to ask me. email: nishio (dot) hirokazu (at) gmail (dot) com.
 
+JavaScript origins
+------------------
+
+To use Google Drive API, I have to register JavaScript origins.
+They were:
+- http://nishio.github.io
+- http://localhost:8000
+- http://localhost:8080
+- http://axissoftwares.com
+
+For development, I usually use localhost. However if you want to register other origins, please contact me.
+
 
 Rules
 -----
