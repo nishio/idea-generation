@@ -18,7 +18,18 @@ They were:
 - http://localhost:8080
 - http://axissoftwares.com
 
-For development, I usually use localhost. However if you want to register other origins, please contact me.
+For development, I usually use localhost. It is easy, just run `python -mSimpleHTTPServer`.
+
+However if you need to register other origins for development, please contact me.
+
+Getting third-party libraries
+-----------------------------
+
+Some third-party libraries are not stored in the repository.
+In `common/README.rst` I wrote how to get some third-party libraries.
+
+If you see 'Uncaught ReferenceError: goog is not defined' on your develop environment,
+it is because you don't put Google Closure Library correctly.
 
 
 Rules
