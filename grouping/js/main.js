@@ -480,6 +480,7 @@ main.setup_event_handling = function() {
     stateman.make_empty_state('move');
     stateman.make_empty_state('line');
     stateman.make_empty_state('group');
+    stateman.make_empty_state('filter');
     stateman.go('move');
 
     stateman.add_enter('group', function() {
@@ -490,6 +491,14 @@ main.setup_event_handling = function() {
     stateman.add_exit('group', function() {
         main.grouping.make_dotted();
         main.grouping.update_group_view(1);
+    });
+
+    stateman.add_enter('filter', function() {
+        var N = main.boxes.length;
+        main.boxes.forEach(function(b, i) {
+            b.original_move(10, 10 + 2 * (N - i));
+        });
+
     });
 
     stateman.add_handler('move', 'box', 'move', function(r, tx, ty) {
@@ -601,6 +610,9 @@ main.setup_event_handling = function() {
         return false;
     });
 
+    $('#startFiltering').click(function(){
+        stateman.go('filter');
+    })
 };
 
 /**
