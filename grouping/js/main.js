@@ -336,7 +336,7 @@ main.add_fusen = function(text, x, y) {
     };
 
     r.mouseover(function() {
-        r.toFront();
+        nhiro.stateman.trigger('box', 'mouseover', null, [r]);
     });
 
     r.mousedown(function() {
@@ -527,6 +527,17 @@ main.setup_event_handling = function() {
             r.select();
         }
     });
+
+    stateman.add_handler('move', 'box', 'mouseover', function(r) {
+        r.toFront();
+    });
+    stateman.add_handler('line', 'box', 'mouseover', function(r) {
+        r.toFront();
+    });
+    stateman.add_handler('group', 'box', 'mouseover', function(r) {
+        r.toFront();
+    });
+
 
     var offset = $('#canvas').offset();
     stateman.add_handler('line', 'canvas', 'mousemove', function(e) {
