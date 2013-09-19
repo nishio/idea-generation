@@ -637,13 +637,15 @@ main.find_space = function(i) {
     return b;
 };
 
-function t() {
+// utility, not used now
+function rearrange_cards() {
     main.boxes.forEach(function(b, i) {
         var pos = main.find_space(i);
         b.move(pos.x, pos.y);
         main.gdcon.updateItem(b);
     });
 }
+
 
 /**
  * @suppress {checkTypes}
