@@ -13,10 +13,11 @@ JavaScript origins
 
 To use Google Drive API, I have to register JavaScript origins.
 They were:
-- http://nishio.github.io
-- http://localhost:8000
-- http://localhost:8080
-- http://axissoftwares.com
+
+  http://nishio.github.io
+  http://localhost:8000
+  http://localhost:8080
+  http://axissoftwares.com
 
 For development, I usually use localhost. It is easy, just run `python -mSimpleHTTPServer`.
 
