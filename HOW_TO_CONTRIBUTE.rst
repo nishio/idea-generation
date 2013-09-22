@@ -19,9 +19,11 @@ They were:
   http://localhost:8080
   http://axissoftwares.com
 
-For development, I usually use localhost. It is easy, just run `python -mSimpleHTTPServer`.
+For development, I usually use localhost. It is easy.
+You just run `$python -mSimpleHTTPServer` on the top of source tree.
 
 However if you need to register other origins for development, please contact me.
+
 
 Getting third-party libraries
 -----------------------------
