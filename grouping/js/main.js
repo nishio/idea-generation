@@ -38,6 +38,11 @@ var Paper;
 main.paper;
 
 
+var TOS_X = 500;
+var TOS_Y = 100;
+var DX = 200;
+var DY = 200;
+
 /**
  * @param {has_xywh} box .
  * @return {Array.<nhiro.V2>} .
@@ -494,11 +499,38 @@ main.setup_event_handling = function() {
     });
 
     stateman.add_enter('filter', function() {
-        var N = main.boxes.length;
-        main.boxes.forEach(function(b, i) {
-            b.original_move(10, 10 + 2 * (N - i));
+        main.top_stack = 0;
+        main.boxes.forEach(function(b) {
+            b.toFront();
         });
+        main.filtering_move();
+    });
 
+    stateman.add_handler('filter', 'body', 'keydown', function(e) {
+        var N = main.boxes.length;
+        var b = main.boxes[N - main.top_stack - 1];
+        if(e.keyCode == 90){ // z
+            b.original_move(TOS_X - DX, TOS_Y + DY);
+        }else if(e.keyCode == 88){ // x
+            b.original_move(TOS_X, TOS_Y + DY);
+        }else if(e.keyCode == 67){ // c
+            b.original_move(TOS_X + DX, TOS_Y + DY);
+        }else{
+            return;
+        }
+        b.toFront();
+        main.top_stack++;
+        main.filtering_move();
+        if(main.top_stack == main.boxes.length){
+            main.top_stack = null;
+            stateman.go('move');
+        }
+    });
+
+    stateman.add_handler('line', 'body', 'keydown', function(e) {
+        if (e.keyCode == 27) { // ESC
+            main.reset_temp_line();
+        }
     });
 
     stateman.add_handler('move', 'box', 'move', function(r, tx, ty) {
@@ -588,9 +620,7 @@ main.setup_event_handling = function() {
     });
 
     $('body').keydown(function(e) {
-        if (e.keyCode == 27) { // ESC
-            main.reset_temp_line();
-        }
+        stateman.trigger('body', 'keydown', null, [e]);
     });
 
     // add handler to change mode
@@ -646,6 +676,15 @@ function rearrange_cards() {
     });
 }
 
+main.filtering_move = function(){
+    var N = main.boxes.length;
+
+    main.boxes.forEach(function(b, i) {
+        var reverse_index = N - 1 - i;
+        if(reverse_index < main.top_stack) return;
+        b.original_move(TOS_X - 3 * (reverse_index - main.top_stack), TOS_Y);
+    });
+}
 
 /**
  * @suppress {checkTypes}
