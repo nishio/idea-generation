@@ -35,8 +35,17 @@ If you see 'Uncaught ReferenceError: goog is not defined' on your develop enviro
 it is because you don't put Google Closure Library correctly.
 
 
-Rules
------
+Accessing data
+--------------
+
+Currently all data for the map is stored in `main.gdcon._list`, it is CollaborativeList
+(see https://developers.google.com/drive/realtime/reference/gapi.drive.realtime.CollaborativeList)
+
+In future, I'll add other lists to store other type of data.
+
+
+Coding Rules
+------------
 
 - Whenever you changed goog.require or goog.provide, you have to 'make deps'
 - Don't write JS code in *.html. Put them in *.js files. I want to do type-check and lint for them.
