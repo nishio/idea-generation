@@ -612,6 +612,7 @@ main.setup_event_handling = function() {
         return false;
     });
 
+    $('#exportAsPNG').click(convertMapToPNG);
 };
 
 /**
