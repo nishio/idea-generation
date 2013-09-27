@@ -56,10 +56,17 @@ The project contains several third-party libraries:
 - Raphael: http://raphaeljs.com/ (MIT)
 - Closure Library: https://developers.google.com/closure/library/ (Apache 2.0)
 - box-arrow: https://github.com/nishio/box-arrow (MIT)
+- canvg (including StackBlur.js, rgbcolor.js): https://code.google.com/p/canvg/ (MIT)
+- jQuery SVG: http://keith-wood.name/svg.html (MIT)
 
 The project uses some Apache 2.0 Licensed code
 
 - https://github.com/googledrive/realtime-playground
+
+Contributors:
+
+Chang Hao, Thank you!
+
 
 
 History
