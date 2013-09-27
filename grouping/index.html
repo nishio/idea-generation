@@ -19,11 +19,19 @@
   <script type="text/javascript" src="deps.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="entrypoint.js"></script>
+  
+  <script src="common/convertPNG/rgbcolor.js"></script>
+  <script src="common/convertPNG/canvg.js"></script>
+  <script src="common/convertPNG/StackBlur.js"></script>
+  <script src="common/convertPNG/jquery.svg.min.js"></script>
+  
   <title>idea-generation</title>
 <body>
 <a href="https://github.com/nishio/idea-generation">idea-generation</a> <a href="#" id="go_menu">[go menu]</a>
   <div style="width: 100%">
     <div id="canvas" class="canvas" style="width: 1440px; height: 809px; background: #eee;"></div>
+    <canvas id="canvas2" style="display:none;">
+    </canvas>
   </div>
 
   <div id="menu" style="width: 200px; float: left">
