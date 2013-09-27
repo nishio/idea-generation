@@ -472,12 +472,12 @@ function add_line(box1, box2, style, distant, attr) {
     * display PNG from map
  */
 function convertMapToPNG() {
-            var canvas = document.getElementById('canvas2');
-            var svg = document.getElementById('canvas');
-            svg = svg.innerHTML;
-            canvg(canvas, svg);
-            var img = canvas.toDataURL("image/png");
-            document.write('<img src="'+img+'"/>');
+    var canvas = document.getElementById('canvas2');
+    var svg = document.getElementById('canvas');
+    svg = svg.innerHTML;
+    canvg(canvas, svg);
+    var img = canvas.toDataURL("image/png");
+    document.write('<img src="'+img+'"/>');
 }
 
 /**
