@@ -477,7 +477,7 @@ function convertMapToPNG() {
     svg = svg.innerHTML;
     canvg(canvas, svg);
     var img = canvas.toDataURL("image/png");
-    document.write('<img src="'+img+'"/>');
+    document.write('<img src="'+img+'" style="background-color: #eee;"/>');
 }
 
 /**
