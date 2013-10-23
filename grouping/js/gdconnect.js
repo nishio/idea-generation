@@ -193,7 +193,7 @@ var realtimeOptions = {
     /**
      * Function to be called after authorization and before loading files.
      */
-    afterAuth: function(){
+    afterAuth: function() {
         nhiro.notify('Authorization finished');
     }
 };
