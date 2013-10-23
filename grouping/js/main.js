@@ -1,5 +1,5 @@
 /**
- * box-arrow
+ * grouping
  * (c) 2013, Cybozu.
  */
 goog.require('main.gdcon');
