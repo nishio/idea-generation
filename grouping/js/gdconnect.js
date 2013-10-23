@@ -245,6 +245,18 @@ main.gdcon.startRealtime = function() {
         if(name == '') name = 'No Title';
         realtimeLoader.saveAsAndRedirect(name);
     });
+
+    $('#exportAsJSON').click(function(){
+        var result = '[';
+        var array = main.gdcon._list.asArray();
+        var last = array.length - 1;
+        for (var i in array) {
+            result += array[i];
+            if(i < last) result += ', ';
+        }
+        console.log(result + ']');
+    });
+
 };
 
 /**
