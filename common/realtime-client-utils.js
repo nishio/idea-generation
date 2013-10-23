@@ -398,3 +398,34 @@ rtclient.RealtimeLoader.prototype.createNewFileAndRedirect = function() {
     }
   });
 }
+
+
+/**
+ * Save as a new file and redirects to the URL to load it.
+ */
+rtclient.RealtimeLoader.prototype.saveAsAndRedirect = function(title) {
+  // No fileId or state have been passed. We create a new Realtime file and
+  // redirect to it.
+  var _this = this;
+  function onFileLoaded(doc){
+      var new_list = doc.getModel().getRoot().get('my_list');
+      new_list.insertAll(0, main.gdcon._list.asArray());
+  }
+
+  rtclient.createRealtimeFile(title, this.newFileMimeType, function(file) {
+    if (file.id) {
+        gapi.drive.realtime.load(
+            file.id,
+            onFileLoaded,
+            _this.initializeModel,
+            _this.handleErrors);
+
+        _this.redirectTo([file.id], _this.authorizer.userId);
+    }
+    // File failed to be created, log why and do not attempt to redirect.
+    else {
+      console.error('Error creating file.');
+      console.error(file);
+    }
+  });
+}

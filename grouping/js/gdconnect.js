@@ -239,6 +239,12 @@ main.gdcon.startRealtime = function() {
         .build();
         picker.setVisible(true);
     });
+
+    $('#saveButton').click(function(){
+        var name = $('#nameToSave').val();
+        if(name == '') name = 'No Title';
+        realtimeLoader.saveAsAndRedirect(name);
+    });
 };
 
 /**
