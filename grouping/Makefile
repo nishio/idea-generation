@@ -49,7 +49,7 @@ lint:
 #
 # taregts for jscc
 watch-start:
-	python _jscc/watch.py
+	python _jscc/watch.py --jsdir=js
 
 watch-stop:
 	python _jscc/watch.py --kill
