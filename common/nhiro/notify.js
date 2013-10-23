@@ -47,12 +47,17 @@ nhiro.notify = function(message, seconds) {
 };
 
 nhiro.notify.shown = {};
+
+/**
+ * @param {string} message .
+ * @param {number=} seconds .
+ */
 nhiro.notify.once = function(message, seconds) {
-    if(nhiro.notify.shown[message] == null){
+    if (nhiro.notify.shown[message] == null) {
         nhiro.notify.shown[message] = true;
         nhiro.notify(message, seconds);
     }
-}
+};
 
 nhiro.notify.top_filled = false;
 nhiro.notify.last = null;

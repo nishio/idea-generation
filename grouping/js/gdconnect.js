@@ -193,7 +193,7 @@ var realtimeOptions = {
     /**
      * Function to be called after authorization and before loading files.
      */
-    afterAuth: function(){
+    afterAuth: function() {
         nhiro.notify('Authorization finished');
     }
 };
@@ -238,6 +238,12 @@ main.gdcon.startRealtime = function() {
         .setCallback(openCallback)
         .build();
         picker.setVisible(true);
+    });
+
+    $('#saveButton').click(function(){
+        var name = $('#nameToSave').val();
+        if(name == '') name = 'No Title';
+        realtimeLoader.saveAsAndRedirect(name);
     });
 };
 
