@@ -478,11 +478,11 @@ function convertMapToPNG() {
     svg = svg.innerHTML;
     canvg(canvas, svg);
     var src = canvas.toDataURL("image/png");
-    var img = $('<img src="' + src + '" />');
+    var img = $('<img src="' + src + '" width=600/>');
     var box = $('<div>');
     box.appendTo('body');
     img.appendTo(box);
-    box.dialog({});
+    box.dialog({ width: 650 });
 }
 
 /**
