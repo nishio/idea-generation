@@ -16,6 +16,7 @@ function updateJSON(){
     if(is_multiline) json += '\n';
     json += ']';
     $('#json').val(json);
+    return json;
 }
 
 function update(){
@@ -26,23 +27,37 @@ function update(){
         'text': text,
         'when': when,
         'id': id};
-    
 
+    $('input[type=text]').each(function(i, x){
+        if(x.value != ''){
+            item[x.id] = x.value;
+        }
+    })
     items.push(item);
 
     // clear
     $('#text').val('');
+    $('#pages').val('');
+    $('#original_text').val('');
 
     // update JSON
-    updateJSON();
+    var json = updateJSON();
+    localStorage.setItem('collecting_ideas', json);
 }
 
 $(function(){
     items = localStorage.getItem('collecting_ideas');
-    if(items == null || items == ""){
+    try{
+        if(items == null){
+            items = [];
+        }else{
+            items = JSON.parse(items);
+        }
+    }catch(e){
+        console.log(items);
+        console.log('cannot understand as JSON')
         items = [];
     }
-
 
     $('input[type=text]').keypress(function(e) {
         if (e.keyCode == 13) update();
