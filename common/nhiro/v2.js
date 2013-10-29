@@ -18,8 +18,8 @@ nhiro.V2 = function() {
      * @param {{x: number, y: number}} pos .
      */
     function V2(pos) {
-        nhiro.assert.assert(!isNaN(pos.x));
-        nhiro.assert.assert(!isNaN(pos.y));
+        nhiro.assert(!isNaN(pos.x));
+        nhiro.assert(!isNaN(pos.y));
         this.x = pos.x;
         this.y = pos.y;
     }
@@ -95,7 +95,7 @@ nhiro.V2 = function() {
      * @return {string} .
      */
     p.to_str = function() {
-        nhiro.assert.assert(is_number(this.x) && is_number(this.y));
+        nhiro.assert(is_number(this.x) && is_number(this.y));
         return this.x + ', ' + this.y;
     };
 
