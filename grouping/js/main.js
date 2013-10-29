@@ -423,6 +423,7 @@ function add_box(content) {
 }
 
 
+
 /**
  * return if *point* is in given convex hull.
  * @param {nhiro.V2} point .
@@ -515,7 +516,7 @@ main.setup_event_handling = function() {
     });
 
     stateman.add_handler('move', 'box', 'drag_end', function(r) {
-        main.gdcon.updateItem(r);
+        main.gdcon.updateItem(r.id, {x: r.x, y: r.y});
     });
 
     stateman.add_handler('group', 'box', 'move', function(r, tx, ty) {
@@ -577,7 +578,31 @@ main.setup_event_handling = function() {
             var b = add_box(x);
             var pos = main.find_space(b.id);
             b.move(pos.x, pos.y);
-            main.gdcon.updateItem(b);
+            main.gdcon.updateItem(b.id, pos);
+        });
+        $('#multitext').val('');
+        $('.move').click();
+    });
+
+    $('#import_json').click(function(e) {
+        var json = $('#multitext').val();
+        var items;
+        try{
+            items = JSON.parse(json);
+        }catch(err){
+            nhiro.notify('cannot understand as JSON');
+            return;
+        }
+        items.forEach(function(item) {
+            var b = add_box(item.text);
+            if(item.x != null && item.y != null){
+                b.move(item.x, item.y);
+            }else{
+                var pos = main.find_space(b.id);
+                b.move(pos.x, pos.y);
+                item.x = pos.x; item.y = pos.y;
+            }
+            main.gdcon.updateItem(b.id, item);
         });
         $('#multitext').val('');
         $('.move').click();
@@ -630,14 +655,6 @@ main.find_space = function(i) {
     );
     return b;
 };
-
-function t() {
-    main.boxes.forEach(function(b, i) {
-        var pos = main.find_space(i);
-        b.move(pos.x, pos.y);
-        main.gdcon.updateItem(b);
-    });
-}
 
 /**
  * @suppress {checkTypes}

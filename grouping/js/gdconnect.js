@@ -52,12 +52,17 @@ main.gdcon.updateUI = function() {
     }
 };
 
-main.gdcon.updateItem = function(r) {
-    var box = JSON.parse(main.gdcon._list.get(r.id));
-    box.x = r.x;
-    box.y = r.y;
+/**
+ * @param {Number} id .
+ * @param {!Object} params (don't pass Raphael element).
+ */
+main.gdcon.updateItem = function(id, params) {
+    var box = JSON.parse(main.gdcon._list.get(id));
+    Object.keys(params).forEach(function(key){
+        box[key] = params[key];
+    });
     try {
-        main.gdcon._list.set(r.id, JSON.stringify(box));
+        main.gdcon._list.set(id, JSON.stringify(box));
     }catch (e) {
         var READONLY = ('Unable to apply local mutation ' +
                         'because document is in read-only mode.');
@@ -203,6 +208,7 @@ main.gdcon.pushText = function(text) {
 };
 main.gdcon.pushObj = function(obj) {
     nhiro.assert(main.gdcon._list, 'do auth first', true);
+    // it may throw exception if you call it before finish initialization
     main.gdcon._list.push(JSON.stringify(obj));
 };
 /**
