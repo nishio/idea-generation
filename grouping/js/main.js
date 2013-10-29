@@ -468,6 +468,22 @@ function add_line(box1, box2, style, distant, attr) {
     lines.push(line);
 }
 
+/**
+ * display PNG from map
+ * Require: jQuery UI Dialog
+ */
+function convertMapToPNG() {
+    var canvas = document.getElementById('canvas2');
+    var svg = document.getElementById('canvas');
+    svg = svg.innerHTML;
+    canvg(canvas, svg);
+    var src = canvas.toDataURL("image/png");
+    var img = $('<img src="' + src + '" width=600/>');
+    var box = $('<div>');
+    box.appendTo('body');
+    img.appendTo(box);
+    box.dialog({ width: 650 });
+}
 
 /**
  * @suppress {checkTypes}
@@ -601,6 +617,7 @@ main.setup_event_handling = function() {
         return false;
     });
 
+    $('#exportAsPNG').click(convertMapToPNG);
 };
 
 /**
@@ -634,6 +651,7 @@ main.main = function() {
     var w = $('#canvas').width();
     var h = $('#canvas').height();
     main.paper = Raphael($('#canvas')[0], w, h);
+    main.paper.rect(0, 0, 1440, 809).attr({fill: '#eee'});
 
     // create templine
     temp_line = (

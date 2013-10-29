@@ -5,7 +5,7 @@ CLOSURE_BUILDER = $(CLOSURE_LIB)/closure/bin/build/closurebuilder.py
 CLOSURE_COMPILER = ../common/compiler.jar
 LIBPATH = js ../common/nhiro $(CLOSURE_LIB)
 ENTRYPOINT = js/main.js
-EXTERNS = externs/nhiro.js
+EXTERNS = externs/nhiro.js externs/jquery-1.7.js externs/misc.js
 JS_FILES = deps.js
 
 # automatic settings
