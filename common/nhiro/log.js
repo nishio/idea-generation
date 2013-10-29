@@ -4,6 +4,7 @@
  */
 goog.provide('nhiro.log');
 /**
+ * @param {string} msg .
  * @suppress {checkTypes}
  */
 nhiro.log = function(msg) {

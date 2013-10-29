@@ -20,8 +20,7 @@ var realtimeLoader;
  * This function is called the first time that the Realtime model is created
  * for a file. This function should be used to initialize any values of the
  * model.
- * x@param {gapi.drive.realtime.Model} model the Realtime root model object.
- * @suppress {checkTypes}
+ * @param {gapi.drive.realtime.Model} model the Realtime root model object.
  */
 main.gdcon.initializeModel = function(model) {
     var field = model.createList();
@@ -30,7 +29,6 @@ main.gdcon.initializeModel = function(model) {
 
 /**
  * update UI
- * @suppress {checkTypes}
  */
 main.gdcon.updateUI = function() {
     var array = main.gdcon._list.asArray();
@@ -41,11 +39,13 @@ main.gdcon.updateUI = function() {
             // TODO implement updating
         }else {
             // box not exists yet
-            var v = JSON.parse(array[i]);
+
+            /** @type {!Object} */
+            var v = /** @type {!Object} */ (JSON.parse(array[i]));
             if (v.x == null && v.y == null) {
                 v.x = 142 * (v.id % 10);
                 v.y = 92 * (Math.floor(v.id / 10) % 10);
-                main.gdcon.updateItem(v);
+                main.gdcon.updateItem(v.id, v);
             }
             main.add_fusen(v.text, v.x, v.y);
         }
@@ -53,12 +53,12 @@ main.gdcon.updateUI = function() {
 };
 
 /**
- * @param {Number} id .
+ * @param {!Number} id .
  * @param {!Object} params (don't pass Raphael element).
  */
 main.gdcon.updateItem = function(id, params) {
     var box = JSON.parse(main.gdcon._list.get(id));
-    Object.keys(params).forEach(function(key){
+    Object.keys(params).forEach(function(key) {
         box[key] = params[key];
     });
     try {
@@ -77,20 +77,22 @@ main.gdcon.updateItem = function(id, params) {
     }
 };
 
+
 /**
  * This function is called when the Realtime file has been loaded. It should
  * be used to initialize any user interface components and event handlers
  * depending on the Realtime model.
- * x@param {gapi.drive.realtime.Document} doc the Realtime document.
- * @suppress {checkTypes}
+ * @param {gapi.drive.realtime.Document} doc the Realtime document.
  */
 function onFileLoaded(doc) {
     nhiro.notify('Loaded existing document');
     var gapi = nhiro.repos.get('gapi');
 
+    /**
+     * @type {gapi.drive.realtime.CollaborativeList}
+     */
     main.gdcon._list = doc.getModel().getRoot().get('my_list');
     main.gdcon.updateUI();
-
 
     // Add logic for undo button.
     var model = doc.getModel();
@@ -107,10 +109,14 @@ function onFileLoaded(doc) {
     };
 
     // Add event handler for UndoRedoStateChanged events.
+    /**
+     * @param {{canUndo: boolean, canRedo: boolean}} e .
+     */
     var onUndoRedoStateChanged = function(e) {
         undoButton.disabled = !e.canUndo;
         redoButton.disabled = !e.canRedo;
     };
+
     model.addEventListener(
         gapi.drive.realtime.EventType.UNDO_REDO_STATE_CHANGED,
         onUndoRedoStateChanged);
@@ -246,19 +252,19 @@ main.gdcon.startRealtime = function() {
         picker.setVisible(true);
     });
 
-    $('#saveButton').click(function(){
+    $('#saveButton').click(function() {
         var name = $('#nameToSave').val();
-        if(name == '') name = 'No Title';
+        if (name == '') name = 'No Title';
         realtimeLoader.saveAsAndRedirect(name);
     });
 
-    $('#exportAsJSON').click(function(){
+    $('#exportAsJSON').click(function() {
         var result = '[';
         var array = main.gdcon._list.asArray();
         var last = array.length - 1;
         for (var i in array) {
             result += array[i];
-            if(i < last) result += ', ';
+            if (i < last) result += ', ';
         }
         console.log(result + ']');
     });

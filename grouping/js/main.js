@@ -478,7 +478,7 @@ function convertMapToPNG() {
     var svg = document.getElementById('canvas');
     svg = svg.innerHTML;
     canvg(canvas, svg);
-    var src = canvas.toDataURL("image/png");
+    var src = canvas.toDataURL('image/png');
     var img = $('<img src="' + src + '" width=600/>');
     var box = $('<div>');
     box.appendTo('body');
@@ -587,17 +587,17 @@ main.setup_event_handling = function() {
     $('#import_json').click(function(e) {
         var json = $('#multitext').val();
         var items;
-        try{
+        try {
             items = JSON.parse(json);
-        }catch(err){
+        }catch (err) {
             nhiro.notify('cannot understand as JSON');
             return;
         }
         items.forEach(function(item) {
             var b = add_box(item.text);
-            if(item.x != null && item.y != null){
+            if (item.x != null && item.y != null) {
                 b.move(item.x, item.y);
-            }else{
+            }else {
                 var pos = main.find_space(b.id);
                 b.move(pos.x, pos.y);
                 item.x = pos.x; item.y = pos.y;

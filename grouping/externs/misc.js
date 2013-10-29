@@ -1,5 +1,5 @@
 /**
- * @typedef {*}
+ * @typedef {Object}
  */
 var console;
 
@@ -22,3 +22,64 @@ function canvg(arg1, arg2){};
  */
 jQuery.prototype.dialog = function(arg1){};
 
+
+/**
+ * @typedef {Object}
+ */
+var gapi;
+
+/**
+ * @typedef {Object}
+ */
+gapi.drive;
+
+/**
+ * @typedef {Object}
+ */
+gapi.drive.realtime;
+
+/**
+ * @typedef {Object}
+ */
+gapi.drive.realtime.Document;
+
+/**
+ * @return {gapi.drive.realtime.Model} .
+ */
+ gapi.drive.realtime.Document.prototype.getModel = function(){};
+
+/**
+ * @typedef {Object}
+ */
+gapi.drive.realtime.Model;
+
+
+/**
+ * @return {Object} .
+ */
+gapi.drive.realtime.Model.prototype.createList = function(){};
+
+/**
+ * @return {Object} .
+ */
+gapi.drive.realtime.Model.prototype.getRoot = function(){};
+
+/**
+ * @return {Object} .
+ */
+gapi.drive.realtime.Model.prototype.undo = function(){};
+
+/**
+ * @return {Object} .
+ */
+gapi.drive.realtime.Model.prototype.redo = function(){};
+
+/**
+ * @typedef {Object}
+ */
+ gapi.drive.realtime.CollaborativeList;
+
+/**
+ * @return {Array} .
+ */
+ gapi.drive.realtime.CollaborativeList.prototype.asArray = function(){};

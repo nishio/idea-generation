@@ -46,6 +46,11 @@ nhiro.notify = function(message, seconds) {
     }, 1000 * seconds);
 };
 
+
+/**
+ * @type {!Object}
+ * @private
+ */
 nhiro.notify.shown = {};
 
 /**
@@ -59,5 +64,14 @@ nhiro.notify.once = function(message, seconds) {
     }
 };
 
+/**
+ * @type {boolean}
+ * @private
+ */
 nhiro.notify.top_filled = false;
+
+/**
+ * @type {Object}
+ * @private
+ */
 nhiro.notify.last = null;
