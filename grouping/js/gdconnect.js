@@ -39,9 +39,7 @@ main.gdcon.updateUI = function() {
             // TODO implement updating
         }else {
             // box not exists yet
-
-            /** @type {!Object} */
-            var v = /** @type {!Object} */ (JSON.parse(array[i]));
+            var v = goog.asserts.assertObject(JSON.parse(array[i]));
             if (v.x == null && v.y == null) {
                 v.x = 142 * (v.id % 10);
                 v.y = 92 * (Math.floor(v.id / 10) % 10);
@@ -123,7 +121,6 @@ function onFileLoaded(doc) {
 }
 
 /**
- * @suppress {checkTypes}
  * @this {*}
  */
 main.gdcon.onNeedAuth = function() {
@@ -137,6 +134,7 @@ main.gdcon.onNeedAuth = function() {
         resizable: false,
         modal: true,
         buttons: {
+            /** @suppress{checkTypes} */
             'Log in': function() {
                 box.dialog('close');
                 _this.authorizeWithPopup();
@@ -212,14 +210,14 @@ var realtimeOptions = {
 main.gdcon.pushText = function(text) {
     main.gdcon.pushObj({'text': text});
 };
+
 main.gdcon.pushObj = function(obj) {
-    nhiro.assert(main.gdcon._list, 'do auth first', true);
+    nhiro.assert(main.gdcon._list != null, 'do auth first', true);
     // it may throw exception if you call it before finish initialization
     main.gdcon._list.push(JSON.stringify(obj));
 };
 /**
  * Start the Realtime loader with the options.
- * @suppress {checkTypes}
  */
 main.gdcon.startRealtime = function() {
     var rtclient = nhiro.repos.get('rtclient');
@@ -234,6 +232,7 @@ main.gdcon.startRealtime = function() {
         nhiro.log('re-authorized' + new Date());
     }, 1000 * 60 * 5);  // do auth each 5 minute
 
+    /** suppress{checkTypes} */
     $('#openButton').click(function() {
         // Opens the Google Picker.
         var token = gapi.auth.getToken().access_token;
@@ -241,6 +240,7 @@ main.gdcon.startRealtime = function() {
         view.setMimeTypes(
             'application/vnd.google-apps.drive-sdk.' +
                 realtimeOptions.appId);
+
         var picker = new google.picker.PickerBuilder()
         .enableFeature(google.picker.Feature.NAV_HIDDEN)
         .setAppId(realtimeOptions.appId)
@@ -270,9 +270,7 @@ main.gdcon.startRealtime = function() {
     });
 };
 
-/**
- * @suppress {checkTypes}
- */
+/** @suppress{checkTypes} */
 function openCallback(data) {
   if (data.action == google.picker.Action.PICKED) {
     var fileId = data.docs[0].id;
