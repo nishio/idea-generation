@@ -24,7 +24,7 @@ copy:
 
 	-rm ../idea-generation/collecting/**/*~
 	-mkdir collecting
-	cp ../idea-generation/collecting/index.html collecting
+	python ../idea-generation/collecting/ready_deploy.py > collecting/index.html
 	cp ../idea-generation/collecting/manifest.webapp collecting
 	cp ../idea-generation/collecting/basic.css collecting
 	cp -r ../idea-generation/collecting/js collecting
