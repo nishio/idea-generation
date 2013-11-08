@@ -1,11 +1,11 @@
 textarea {
     width: 100%;
     height: 200px;
-    font-size: 30px;
+    font-size: 40px;
 }
 
 input[type=text]{
-    font-size: 30px;
+    font-size: 35px;
     margin: 0;
 }
 
