@@ -14,6 +14,7 @@ copy:
 	cp ../idea-generation/grouping/entrypoint.js grouping
 	cp ../idea-generation/grouping/basic.css grouping
 	cp -r ../idea-generation/grouping/js grouping
+
 	-rm ../idea-generation/common/nhiro/**/*~
 	cp -r ../idea-generation/common/nhiro common/
 
@@ -21,3 +22,9 @@ copy:
 	cp ../idea-generation/common/raphael.js common/
 	cp ../idea-generation/common/realtime-client-utils.js common/
 
+	-rm ../idea-generation/collecting/**/*~
+	-mkdir collecting
+	cp ../idea-generation/collecting/index.html collecting
+	cp ../idea-generation/collecting/manifest.webapp collecting
+	cp ../idea-generation/collecting/basic.css collecting
+	cp -r ../idea-generation/collecting/js collecting
