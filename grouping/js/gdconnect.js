@@ -20,8 +20,7 @@ var realtimeLoader;
  * This function is called the first time that the Realtime model is created
  * for a file. This function should be used to initialize any values of the
  * model.
- * x@param {gapi.drive.realtime.Model} model the Realtime root model object.
- * @suppress {checkTypes}
+ * @param {gapi.drive.realtime.Model} model the Realtime root model object.
  */
 main.gdcon.initializeModel = function(model) {
     var field = model.createList();
@@ -30,7 +29,6 @@ main.gdcon.initializeModel = function(model) {
 
 /**
  * update UI
- * @suppress {checkTypes}
  */
 main.gdcon.updateUI = function() {
     var array = main.gdcon._list.asArray();
@@ -41,23 +39,28 @@ main.gdcon.updateUI = function() {
             // TODO implement updating
         }else {
             // box not exists yet
-            var v = JSON.parse(array[i]);
+            var v = goog.asserts.assertObject(JSON.parse(array[i]));
             if (v.x == null && v.y == null) {
                 v.x = 142 * (v.id % 10);
                 v.y = 92 * (Math.floor(v.id / 10) % 10);
-                main.gdcon.updateItem(v);
+                main.gdcon.updateItem(v.id, v);
             }
             main.add_fusen(v.text, v.x, v.y);
         }
     }
 };
 
-main.gdcon.updateItem = function(r) {
-    var box = JSON.parse(main.gdcon._list.get(r.id));
-    box.x = r.x;
-    box.y = r.y;
+/**
+ * @param {!Number} id .
+ * @param {!Object} params (don't pass Raphael element).
+ */
+main.gdcon.updateItem = function(id, params) {
+    var box = JSON.parse(main.gdcon._list.get(id));
+    Object.keys(params).forEach(function(key) {
+        box[key] = params[key];
+    });
     try {
-        main.gdcon._list.set(r.id, JSON.stringify(box));
+        main.gdcon._list.set(id, JSON.stringify(box));
     }catch (e) {
         var READONLY = ('Unable to apply local mutation ' +
                         'because document is in read-only mode.');
@@ -72,20 +75,22 @@ main.gdcon.updateItem = function(r) {
     }
 };
 
+
 /**
  * This function is called when the Realtime file has been loaded. It should
  * be used to initialize any user interface components and event handlers
  * depending on the Realtime model.
- * x@param {gapi.drive.realtime.Document} doc the Realtime document.
- * @suppress {checkTypes}
+ * @param {gapi.drive.realtime.Document} doc the Realtime document.
  */
 function onFileLoaded(doc) {
     nhiro.notify('Loaded existing document');
     var gapi = nhiro.repos.get('gapi');
 
+    /**
+     * @type {gapi.drive.realtime.CollaborativeList}
+     */
     main.gdcon._list = doc.getModel().getRoot().get('my_list');
     main.gdcon.updateUI();
-
 
     // Add logic for undo button.
     var model = doc.getModel();
@@ -102,17 +107,20 @@ function onFileLoaded(doc) {
     };
 
     // Add event handler for UndoRedoStateChanged events.
+    /**
+     * @param {{canUndo: boolean, canRedo: boolean}} e .
+     */
     var onUndoRedoStateChanged = function(e) {
         undoButton.disabled = !e.canUndo;
         redoButton.disabled = !e.canRedo;
     };
+
     model.addEventListener(
         gapi.drive.realtime.EventType.UNDO_REDO_STATE_CHANGED,
         onUndoRedoStateChanged);
 }
 
 /**
- * @suppress {checkTypes}
  * @this {*}
  */
 main.gdcon.onNeedAuth = function() {
@@ -126,6 +134,7 @@ main.gdcon.onNeedAuth = function() {
         resizable: false,
         modal: true,
         buttons: {
+            /** @suppress{checkTypes} */
             'Log in': function() {
                 box.dialog('close');
                 _this.authorizeWithPopup();
@@ -193,7 +202,7 @@ var realtimeOptions = {
     /**
      * Function to be called after authorization and before loading files.
      */
-    afterAuth: function(){
+    afterAuth: function() {
         nhiro.notify('Authorization finished');
     }
 };
@@ -201,13 +210,14 @@ var realtimeOptions = {
 main.gdcon.pushText = function(text) {
     main.gdcon.pushObj({'text': text});
 };
+
 main.gdcon.pushObj = function(obj) {
-    nhiro.assert(main.gdcon._list, 'do auth first', true);
+    nhiro.assert(main.gdcon._list != null, 'do auth first', true);
+    // it may throw exception if you call it before finish initialization
     main.gdcon._list.push(JSON.stringify(obj));
 };
 /**
  * Start the Realtime loader with the options.
- * @suppress {checkTypes}
  */
 main.gdcon.startRealtime = function() {
     var rtclient = nhiro.repos.get('rtclient');
@@ -222,6 +232,7 @@ main.gdcon.startRealtime = function() {
         nhiro.log('re-authorized' + new Date());
     }, 1000 * 60 * 5);  // do auth each 5 minute
 
+    /** suppress{checkTypes} */
     $('#openButton').click(function() {
         // Opens the Google Picker.
         var token = gapi.auth.getToken().access_token;
@@ -229,6 +240,7 @@ main.gdcon.startRealtime = function() {
         view.setMimeTypes(
             'application/vnd.google-apps.drive-sdk.' +
                 realtimeOptions.appId);
+
         var picker = new google.picker.PickerBuilder()
         .enableFeature(google.picker.Feature.NAV_HIDDEN)
         .setAppId(realtimeOptions.appId)
@@ -239,11 +251,26 @@ main.gdcon.startRealtime = function() {
         .build();
         picker.setVisible(true);
     });
+
+    $('#saveButton').click(function() {
+        var name = $('#nameToSave').val();
+        if (name == '') name = 'No Title';
+        realtimeLoader.saveAsAndRedirect(name);
+    });
+
+    $('#exportAsJSON').click(function() {
+        var result = '[';
+        var array = main.gdcon._list.asArray();
+        var last = array.length - 1;
+        for (var i in array) {
+            result += array[i];
+            if (i < last) result += ', ';
+        }
+        console.log(result + ']');
+    });
 };
 
-/**
- * @suppress {checkTypes}
- */
+/** @suppress{checkTypes} */
 function openCallback(data) {
   if (data.action == google.picker.Action.PICKED) {
     var fileId = data.docs[0].id;

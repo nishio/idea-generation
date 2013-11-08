@@ -43,16 +43,33 @@ nhiro.notify = function(message, seconds) {
         setTimeout(function() {
             dialog.dialog('destroy');
         }, 1000);
+        box.remove();
     }, 1000 * seconds);
 };
 
+
+/**
+ * @type {!Object}
+ */
 nhiro.notify.shown = {};
+
+/**
+ * @param {string} message .
+ * @param {number=} seconds .
+ */
 nhiro.notify.once = function(message, seconds) {
-    if(nhiro.notify.shown[message] == null){
+    if (nhiro.notify.shown[message] == null) {
         nhiro.notify.shown[message] = true;
         nhiro.notify(message, seconds);
     }
-}
+};
 
+/**
+ * @type {boolean}
+ */
 nhiro.notify.top_filled = false;
+
+/**
+ * @type {Object}
+ */
 nhiro.notify.last = null;

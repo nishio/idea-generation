@@ -1,5 +1,5 @@
 /**
- * box-arrow
+ * grouping
  * (c) 2013, Cybozu.
  */
 goog.require('main.gdcon');
@@ -423,6 +423,7 @@ function add_box(content) {
 }
 
 
+
 /**
  * return if *point* is in given convex hull.
  * @param {nhiro.V2} point .
@@ -468,6 +469,22 @@ function add_line(box1, box2, style, distant, attr) {
     lines.push(line);
 }
 
+/**
+ * display PNG from map
+ * Require: jQuery UI Dialog
+ */
+function convertMapToPNG() {
+    var canvas = document.getElementById('canvas2');
+    var svg = document.getElementById('canvas');
+    svg = svg.innerHTML;
+    canvg(canvas, svg);
+    var src = canvas.toDataURL('image/png');
+    var img = $('<img src="' + src + '" width=600/>');
+    var box = $('<div>');
+    box.appendTo('body');
+    img.appendTo(box);
+    box.dialog({ width: 650 });
+}
 
 /**
  * @suppress {checkTypes}
@@ -499,7 +516,7 @@ main.setup_event_handling = function() {
     });
 
     stateman.add_handler('move', 'box', 'drag_end', function(r) {
-        main.gdcon.updateItem(r);
+        main.gdcon.updateItem(r.id, {x: r.x, y: r.y});
     });
 
     stateman.add_handler('group', 'box', 'move', function(r, tx, ty) {
@@ -561,7 +578,31 @@ main.setup_event_handling = function() {
             var b = add_box(x);
             var pos = main.find_space(b.id);
             b.move(pos.x, pos.y);
-            main.gdcon.updateItem(b);
+            main.gdcon.updateItem(b.id, pos);
+        });
+        $('#multitext').val('');
+        $('.move').click();
+    });
+
+    $('#import_json').click(function(e) {
+        var json = $('#multitext').val();
+        var items;
+        try {
+            items = JSON.parse(json);
+        }catch (err) {
+            nhiro.notify('cannot understand as JSON');
+            return;
+        }
+        items.forEach(function(item) {
+            var b = add_box(item.text);
+            if (item.x != null && item.y != null) {
+                b.move(item.x, item.y);
+            }else {
+                var pos = main.find_space(b.id);
+                b.move(pos.x, pos.y);
+                item.x = pos.x; item.y = pos.y;
+            }
+            main.gdcon.updateItem(b.id, item);
         });
         $('#multitext').val('');
         $('.move').click();
@@ -601,6 +642,7 @@ main.setup_event_handling = function() {
         return false;
     });
 
+    $('#exportAsPNG').click(convertMapToPNG);
 };
 
 /**
@@ -614,14 +656,6 @@ main.find_space = function(i) {
     return b;
 };
 
-function t() {
-    main.boxes.forEach(function(b, i) {
-        var pos = main.find_space(i);
-        b.move(pos.x, pos.y);
-        main.gdcon.updateItem(b);
-    });
-}
-
 /**
  * @suppress {checkTypes}
  */
@@ -634,6 +668,7 @@ main.main = function() {
     var w = $('#canvas').width();
     var h = $('#canvas').height();
     main.paper = Raphael($('#canvas')[0], w, h);
+    main.paper.rect(0, 0, 1440, 809).attr({fill: '#eee'});
 
     // create templine
     temp_line = (

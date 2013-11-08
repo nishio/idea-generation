@@ -18,7 +18,7 @@ goog.scope(function() {
     };
 
     var _ = nhiro.assert;
-    _.assert = nhiro.assert;
+    //_.assert = nhiro.assert;
 
     /**
      * @suppress {checkTypes}

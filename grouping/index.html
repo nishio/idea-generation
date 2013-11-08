@@ -19,11 +19,19 @@
   <script type="text/javascript" src="deps.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="entrypoint.js"></script>
+  
+  <script src="../common/rgbcolor.js"></script>
+  <script src="../common/canvg.js"></script>
+  <script src="../common/StackBlur.js"></script>
+  <script src="../common/jquery.svg.min.js"></script>
+  
   <title>idea-generation</title>
 <body>
-idea-generation <a href='#' id='go_menu'>[go menu]</a>
+<a href="https://github.com/nishio/idea-generation">idea-generation</a> <a href="#" id="go_menu">[go menu]</a>
   <div style="width: 100%">
     <div id="canvas" class="canvas" style="width: 1440px; height: 809px; background: #eee;"></div>
+    <canvas id="canvas2" style="display:none;">
+    </canvas>
   </div>
 
   <div id="menu" style="width: 200px; float: left">
@@ -56,21 +64,25 @@ idea-generation <a href='#' id='go_menu'>[go menu]</a>
   <div style="width: 100px; float: left">
     <button id="authorizeButton" disabled>You must authorize</button>
     <button id="openButton">Open Existing List</button>
+    <button id="saveButton">Save as</button><input id="nameToSave" type="text"/>
+    <button id="exportAsJSON">Export as JSON on console</button>
 
     <!-- Undo and redo buttons. -->
     <button id="undoButton" disabled>Undo</button>
     <button id="redoButton" disabled>Redo</button>
   </div>
   <div>
-    <b>Enter multiple text:</b><br/>
+    <b>Import multiple text:</b><br/>
     <textarea id="multitext" cols='40' rows='10'></textarea>
-    <input id="multitext_submit" type="submit"/>
+    <button id="multitext_submit">As multiline text</button>
+    <button id="import_json">As JSON</button>
   </div>
 
   <div style="width: 100px; float: left">
     <h3>Debug</h3>
     <button id="clearAllButton">Clear All</button>
     <button id="showAllButton">Show Items on console</button>
+    <button id="exportAsPNG">Export as PNG</button>
   </div>
 
 
