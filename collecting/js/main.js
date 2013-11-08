@@ -1,9 +1,9 @@
-//localStorage.setItem('collecting_ideas', []);
 var items;
+var json;
 
 function updateJSON(){
     var is_multiline = $('#json_multiline').prop('checked');
-    var json = '[';
+    json = '[';
     var first = true;
     items.forEach(function(item){
         if(!first){
@@ -15,8 +15,12 @@ function updateJSON(){
     })
     if(is_multiline) json += '\n';
     json += ']';
-    $('#json').val(json);
     return json;
+}
+
+function updateUI(){
+    $('#list_header').text('List: ' + items.length);
+    $('#json').val(json);
 }
 
 function update(){
@@ -41,7 +45,9 @@ function update(){
     $('#original_text').val('');
 
     // update JSON
-    var json = updateJSON();
+    updateJSON();
+
+    updateUI();
     localStorage.setItem('collecting_ideas', json);
 }
 
@@ -71,9 +77,10 @@ $(function(){
 
     $('#json_multiline').click(function(){
         updateJSON();
+        updateUI();
     })
 
-    updateJSON()
+    updateJSON();
+    updateUI();
 });
 
-    //localStorage.clear()
