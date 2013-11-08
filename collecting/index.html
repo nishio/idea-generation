@@ -1,8 +1,8 @@
-<html>
+<html manifest="manifest.webapp">
   <link type="text/css" rel="stylesheet" href="basic.css">
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  <link type="text/css" rel="stylesheet" href="basic.css">
   <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/online.js"></script>
 <!--  <script type="text/javascript" src="entrypoint.js"></script>-->
   <title>collecting</title>
 <body>
@@ -25,3 +25,8 @@
 As JSON (<label style='margin-right: 0'><input id="json_multiline" type="checkbox"> Multiline?</label>):<br>
 <textarea id='json'></textarea>
 
+<h3>dev</h3>
+<button id='updateAppCache'>Update AppCache</button>
+
+<button>Connect Google Drive(not yet)</button>
+<span id='is_online'>online</span>

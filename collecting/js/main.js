@@ -80,7 +80,21 @@ $(function(){
         updateUI();
     })
 
+    // update AppCache
+    window.applicationCache.addEventListener(
+        "updateready", function() {
+            window.applicationCache.swapCache();
+            location.reload();
+        }
+    );
+    $('#updateAppCache').click(function(){
+        window.applicationCache.update();
+    });
+
     updateJSON();
     updateUI();
+    if(!nhiro.is_online){
+        $('#is_online').text('offline');
+    }
 });
 
