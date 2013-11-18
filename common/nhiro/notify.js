@@ -42,8 +42,8 @@ nhiro.notify = function(message, seconds) {
         dialog.dialog('close');
         setTimeout(function() {
             dialog.dialog('destroy');
+            box.remove();
         }, 1000);
-        box.remove();
     }, 1000 * seconds);
 };
 

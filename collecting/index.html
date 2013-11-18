@@ -1,9 +1,22 @@
 <html manifest="manifest.webapp">
   <link type="text/css" rel="stylesheet" href="basic.css">
+  <script type="text/javascript" src="../common/closure-library/closure/goog/base.js"></script>
+  <script type="text/javascript" src="deps.js"></script>
+
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/online.js"></script>
-<!--  <script type="text/javascript" src="entrypoint.js"></script>-->
+
+  <!-- Load the Realtime libraries. -->
+  <script type="text/javascript" src="//www.google.com/jsapi"></script>
+  <script type="text/javascript"
+          src="https://apis.google.com/js/api.js"></script>
+
+  <!-- Load the utility library. -->
+  <script type="text/javascript"
+          src="../common/realtime-client-utils.js"></script>
+
   <title>collecting</title>
 <body>
 <textarea id='text' placeholder='text (required, enter to save)'></textarea>
@@ -27,5 +40,9 @@ As JSON (<label style='margin-right: 0'><input id="json_multiline" type="checkbo
 <h3>dev</h3>
 <button id='updateAppCache'>Update AppCache</button>
 
-<button>Connect Google Drive(not yet)</button>
+<button id='connectGoogleDrive'>Connect Google Drive</button>
+<button id='authButton' style='display: none'>Need Auth</button>
+
+docid: <span id='docid'>none</span>
+
 <span id='is_online'>online</span>
