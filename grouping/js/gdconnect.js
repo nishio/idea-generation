@@ -2,6 +2,7 @@
  * connect to Google Drive
  * (c) 2013, Cybozu.
  */
+goog.require('goog.asserts');
 goog.require('nhiro.assert');
 goog.require('nhiro.fusen');
 goog.require('nhiro.log');
@@ -82,9 +83,8 @@ main.gdcon.updateItem = function(id, params) {
  * depending on the Realtime model.
  * @param {gapi.drive.realtime.Document} doc the Realtime document.
  */
-function onFileLoaded(doc) {
+main.gdcon.onFileLoaded = function onFileLoaded(doc) {
     nhiro.notify('Loaded existing document');
-    var gapi = nhiro.repos.get('gapi');
 
     /**
      * @type {gapi.drive.realtime.CollaborativeList}
@@ -146,6 +146,18 @@ main.gdcon.onNeedAuth = function() {
     });
 };
 
+
+main.gdcon.pushText = function(text) {
+    main.gdcon.pushObj({'text': text});
+};
+
+main.gdcon.pushObj = function(obj) {
+    nhiro.assert(main.gdcon._list != null, 'do auth first', true);
+    // it may throw exception if you call it before finish initialization
+    main.gdcon._list.push(JSON.stringify(obj));
+};
+
+
 /**
  * Options for the Realtime loader.
  */
@@ -192,7 +204,7 @@ var realtimeOptions = {
     /**
      * Function to be called every time a Realtime file is loaded.
      */
-    onFileLoaded: onFileLoaded,
+    onFileLoaded: main.gdcon.onFileLoaded,
 
     /**
      * Function to be called to inityalize custom Collaborative Objects types.
@@ -202,27 +214,20 @@ var realtimeOptions = {
     /**
      * Function to be called after authorization and before loading files.
      */
-    afterAuth: function() {
-        nhiro.notify('Authorization finished');
-    }
+    afterAuth: null
 };
 
-main.gdcon.pushText = function(text) {
-    main.gdcon.pushObj({'text': text});
-};
 
-main.gdcon.pushObj = function(obj) {
-    nhiro.assert(main.gdcon._list != null, 'do auth first', true);
-    // it may throw exception if you call it before finish initialization
-    main.gdcon._list.push(JSON.stringify(obj));
-};
 /**
  * Start the Realtime loader with the options.
  */
 main.gdcon.startRealtime = function() {
-    var rtclient = nhiro.repos.get('rtclient');
-    var $ = nhiro.repos.get('jQuery');
-    var gapi = nhiro.repos.get('gapi');
+
+    //TODO: delete realtimeOption and get it from library
+    realtimeOptions.onNeedAuth = main.gdcon.onNeedAuth;
+    realtimeOptions.afterAuth = function() {
+        nhiro.notify('Authorization finished');
+    };
 
     realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
     realtimeLoader.start();
@@ -232,10 +237,10 @@ main.gdcon.startRealtime = function() {
         nhiro.log('re-authorized' + new Date());
     }, 1000 * 60 * 5);  // do auth each 5 minute
 
-    /** suppress{checkTypes} */
-    $('#openButton').click(function() {
-        // Opens the Google Picker.
-        var token = gapi.auth.getToken().access_token;
+    /**
+     * @suppress{checkTypes}
+     */
+    function openPicker(token){
         var view = new google.picker.View(google.picker.ViewId.DOCS);
         view.setMimeTypes(
             'application/vnd.google-apps.drive-sdk.' +
@@ -252,6 +257,11 @@ main.gdcon.startRealtime = function() {
         .setCallback(openCallback)
         .build();
         picker.setVisible(true);
+    }
+    $('#openButton').click(function() {
+        // Opens the Google Picker.
+        var token = gapi.auth.getToken().access_token;
+        openPicker(token);
     });
 
     $('#saveButton').click(function() {

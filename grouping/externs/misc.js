@@ -88,7 +88,7 @@ gapi.drive.realtime.Model.prototype.redo = function(){};
 /**
  * @typedef {Object}
  */
- var rtclient;
+var rtclient;
 
 /** @typedef {Object} */
 rtclient.RealtimeLoader;
@@ -96,14 +96,14 @@ rtclient.RealtimeLoader;
 /** @typedef {{userId: string}} */
 rtclient.RealtimeLoader.prototype.autorizer;
 
- rtclient.RealtimeLoader.prototype.autorizer.authorize = function(){}
+rtclient.RealtimeLoader.prototype.autorizer.authorize = function(){}
 
 
 /** @typedef {Object} */
- gapi.auth;
+gapi.auth;
 
 /** @return {OAuthToken} */
- gapi.auth.getToken = function(){};
+gapi.auth.getToken = function(){};
 
  /** @typedef {{access_token: string, error: string, expires_in: string, state: string}} */
  var OAuthToken;
@@ -122,4 +122,3 @@ google.picker.View;
  * @return {google.picker.PickerBuilder}
  */
 google.picker.PickerBuilder = function(){};
-
