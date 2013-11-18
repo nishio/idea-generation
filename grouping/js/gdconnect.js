@@ -241,12 +241,14 @@ main.gdcon.startRealtime = function() {
             'application/vnd.google-apps.drive-sdk.' +
                 realtimeOptions.appId);
 
+        var view2 = new google.picker.DocsView();
+        view2.setMode(google.picker.DocsViewMode.LIST);
         var picker = new google.picker.PickerBuilder()
         .enableFeature(google.picker.Feature.NAV_HIDDEN)
         .setAppId(realtimeOptions.appId)
         .setOAuthToken(token)
         .addView(view)
-        .addView(new google.picker.DocsUploadView())
+        .addView(view2)
         .setCallback(openCallback)
         .build();
         picker.setVisible(true);
