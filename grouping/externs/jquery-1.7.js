@@ -286,13 +286,13 @@ $.browser.webkit;
  * @constructor
  * @private
  */
-jQuery.callbacks = function () {};
+jQuery.callbacks = function() {};
 
 /**
  * @param {string=} flags
  * @return {jQuery.callbacks}
  */
-jQuery.Callbacks = function (flags) {};
+jQuery.Callbacks = function(flags) {};
 
 /** @param {function()} callbacks */
 jQuery.callbacks.prototype.add = function(callbacks) {};
@@ -1193,14 +1193,14 @@ jQuery.prototype.jquery;
  * @private
  * @see http://api.jquery.com/jQuery.ajax/#jqXHR
  */
-jQuery.jqXHR = function () {};
+jQuery.jqXHR = function() {};
 
 /**
  * @deprecated
  * @param {function()} callback
  * @return {jQuery.jqXHR}
 */
-jQuery.jqXHR.prototype.complete = function (callback) {};
+jQuery.jqXHR.prototype.complete = function(callback) {};
 
 /**
  * @override
@@ -1214,7 +1214,7 @@ jQuery.jqXHR.prototype.done = function(doneCallbacks) {};
  * @param {function()} callback
  * @return {jQuery.jqXHR}
 */
-jQuery.jqXHR.prototype.error = function (callback) {};
+jQuery.jqXHR.prototype.error = function(callback) {};
 
 /**
  * @override
@@ -1243,14 +1243,14 @@ jQuery.jqXHR.prototype.isResolved = function() {};
  * @override
  * @deprecated
  */
-jQuery.jqXHR.prototype.onreadystatechange = function (callback) {};
+jQuery.jqXHR.prototype.onreadystatechange = function(callback) {};
 
 /**
  * @deprecated
  * @param {function()} callback
  * @return {jQuery.jqXHR}
 */
-jQuery.jqXHR.prototype.success = function (callback) {};
+jQuery.jqXHR.prototype.success = function(callback) {};
 
 /**
  * @override
@@ -1652,7 +1652,7 @@ jQuery.prototype.promise = function(type, target) {};
  * @private
  * @see http://api.jquery.com/Types/#Promise
  */
-jQuery.Promise = function () {};
+jQuery.Promise = function() {};
 
 /**
  * @param {function()} doneCallbacks

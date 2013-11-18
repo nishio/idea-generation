@@ -13,14 +13,14 @@ console.log = function(arg1) {};
  * @param {*} arg1
  * @param {*} arg2
  */
-function canvg(arg1, arg2){};
+function canvg(arg1, arg2) {}
 
 
 /**
  * jQuery UI Dialog
  * @param {*} arg1
  */
-jQuery.prototype.dialog = function(arg1){};
+jQuery.prototype.dialog = function(arg1) {};
 
 
 /**
@@ -46,7 +46,7 @@ gapi.drive.realtime.Document;
 /**
  * @return {gapi.drive.realtime.Model} .
  */
- gapi.drive.realtime.Document.prototype.getModel = function(){};
+ gapi.drive.realtime.Document.prototype.getModel = function() {};
 
 /**
  * @typedef {Object}
@@ -57,22 +57,22 @@ gapi.drive.realtime.Model;
 /**
  * @return {Object} .
  */
-gapi.drive.realtime.Model.prototype.createList = function(){};
+gapi.drive.realtime.Model.prototype.createList = function() {};
 
 /**
  * @return {Object} .
  */
-gapi.drive.realtime.Model.prototype.getRoot = function(){};
+gapi.drive.realtime.Model.prototype.getRoot = function() {};
 
 /**
  * @return {Object} .
  */
-gapi.drive.realtime.Model.prototype.undo = function(){};
+gapi.drive.realtime.Model.prototype.undo = function() {};
 
 /**
  * @return {Object} .
  */
-gapi.drive.realtime.Model.prototype.redo = function(){};
+gapi.drive.realtime.Model.prototype.redo = function() {};
 
 /**
  * @typedef {Object}
@@ -82,7 +82,7 @@ gapi.drive.realtime.Model.prototype.redo = function(){};
 /**
  * @return {Array} .
  */
- gapi.drive.realtime.CollaborativeList.prototype.asArray = function(){};
+ gapi.drive.realtime.CollaborativeList.prototype.asArray = function() {};
 
 
 /**
@@ -96,14 +96,14 @@ rtclient.RealtimeLoader;
 /** @typedef {{userId: string}} */
 rtclient.RealtimeLoader.prototype.autorizer;
 
-rtclient.RealtimeLoader.prototype.autorizer.authorize = function(){}
+rtclient.RealtimeLoader.prototype.autorizer.authorize = function() {};
 
 
 /** @typedef {Object} */
 gapi.auth;
 
 /** @return {OAuthToken} */
-gapi.auth.getToken = function(){};
+gapi.auth.getToken = function() {};
 
  /** @typedef {{access_token: string, error: string, expires_in: string, state: string}} */
  var OAuthToken;
@@ -121,4 +121,4 @@ google.picker.View;
  * @constructor
  * @return {google.picker.PickerBuilder}
  */
-google.picker.PickerBuilder = function(){};
+google.picker.PickerBuilder = function() {};

@@ -118,7 +118,7 @@ main.gdcon.onFileLoaded = function onFileLoaded(doc) {
     model.addEventListener(
         gapi.drive.realtime.EventType.UNDO_REDO_STATE_CHANGED,
         onUndoRedoStateChanged);
-}
+};
 
 /**
  * @this {*}
@@ -134,7 +134,7 @@ main.gdcon.onNeedAuth = function() {
         resizable: false,
         modal: true,
         buttons: {
-            /** @suppress{checkTypes} */
+            /** @suppress {checkTypes} */
             'Log in': function() {
                 box.dialog('close');
                 _this.authorizeWithPopup();
@@ -238,9 +238,9 @@ main.gdcon.startRealtime = function() {
     }, 1000 * 60 * 5);  // do auth each 5 minute
 
     /**
-     * @suppress{checkTypes}
+     * @suppress {checkTypes}
      */
-    function openPicker(token){
+    function openPicker(token) {
         var view = new google.picker.View(google.picker.ViewId.DOCS);
         view.setMimeTypes(
             'application/vnd.google-apps.drive-sdk.' +
@@ -282,7 +282,7 @@ main.gdcon.startRealtime = function() {
     });
 };
 
-/** @suppress{checkTypes} */
+/** @suppress {checkTypes} */
 function openCallback(data) {
   if (data.action == google.picker.Action.PICKED) {
     var fileId = data.docs[0].id;
