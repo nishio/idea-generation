@@ -1,3 +1,9 @@
+/**
+ * grouping
+ * (c) 2013, Cybozu.
+ */
+goog.provide('main.main');
+
 var items;
 var json;
 
@@ -51,6 +57,19 @@ function update(){
     localStorage.setItem('collecting_ideas', json);
 }
 
+var realtimeOptions = {};
+var realtimeLoader;
+function startRealtime(){
+    realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
+    realtimeLoader.start();
+    setInterval(function() {
+        console.log('re-authorizing' + new Date());
+        realtimeLoader.authorizer.authorize();
+        console.log('re-authorized' + new Date());
+    }, 1000 * 60 * 5);  // do auth each 5 minute
+
+}
+
 $(function(){
     items = localStorage.getItem('collecting_ideas');
     try{
@@ -85,7 +104,8 @@ $(function(){
         "updateready", function() {
             window.applicationCache.swapCache();
             location.reload();
-        }
+        },
+        false
     );
     $('#updateAppCache').click(function(){
         window.applicationCache.update();
