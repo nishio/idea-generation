@@ -28,4 +28,5 @@ copy:
 	cp ../idea-generation/collecting/deploy/index.html collecting
 	cp ../idea-generation/collecting/deploy/manifest.webapp collecting
 	cp ../idea-generation/collecting/basic.css collecting
+	cp ../idea-generation/collecting/deps.js collecting
 	cp -r ../idea-generation/collecting/js collecting
