@@ -49,12 +49,16 @@ main.gdcon.onFileLoaded = function onFileLoaded(doc) {
     // push local items into _list
     console.log('merge');
     var _arr = main.gdcon._list.asArray();
-    console.log('_arr' + _arr);
     items.forEach(function(item){
         var s = JSON.stringify(item);
-        console.log(s);
-        console.log(_arr.indexOf(s));
-        if(_arr.indexOf(s) == -1){
+        var found = false;
+        for(var i=0; i < _arr.length; i++){
+            if(_arr.when == item.when){
+                found = true;
+                break;
+            }
+        }
+        if(!found){
             // not saved yet
             main.gdcon._list.push(s);
             console.log('pushed');
