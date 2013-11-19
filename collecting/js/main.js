@@ -45,6 +45,7 @@ function update() {
         }
     });
     items.push(item);
+    main.gdcon.push(item);
 
     // clear
     $('#text').val('');
@@ -113,13 +114,15 @@ $(function() {
 
     updateJSON();
     updateUI();
+    /*
     if (!nhiro.is_online) {
         $('#is_online').text('offline');
     }
+    */
 
 
     $('#connectGoogleDrive').click(function() {
-
+        main.gdcon.startRealtime();
     });
 });
 

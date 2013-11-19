@@ -6,6 +6,10 @@ basic.css
 http://code.jquery.com/jquery-1.9.1.js
 js/main.js
 index.html
+http://www.google.com/jsapi
+../common/closure-library/closure/goog/base.js
+deps.js
+../common/realtime-client-utils.js
 
 FALLBACK:
 js/online.js js/offline.js
