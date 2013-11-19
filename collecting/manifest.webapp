@@ -5,9 +5,11 @@ CACHE:
 basic.css
 http://code.jquery.com/jquery-1.9.1.js
 js/main.js
+js/gdcon.js
 index.html
 http://www.google.com/jsapi
 ../common/closure-library/closure/goog/base.js
+../common/closure-library/closure/goog/deps.js
 deps.js
 ../common/realtime-client-utils.js
 
