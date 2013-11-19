@@ -9,9 +9,9 @@ main.gdcon.startRealtime = function() {
     realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
     realtimeLoader.start();
     setInterval(function() {
-        nhiro.log('re-authorizing' + new Date());
+        console.log('re-authorizing' + new Date());
         realtimeLoader.authorizer.authorize();
-        nhiro.log('re-authorized' + new Date());
+        console.log('re-authorized' + new Date());
     }, 1000 * 60 * 5);  // do auth each 5 minute
 };
 
