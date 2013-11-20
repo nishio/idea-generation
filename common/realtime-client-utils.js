@@ -253,6 +253,12 @@ rtclient.parseState = function(stateParam) {
     var stateObj = JSON.parse(stateParam);
     return stateObj;
   } catch(e) {
+      // SimpleHTTPServer add slash '/' on the end of URL,
+      // and it causes JSON.parse error
+      if(stateParam.match(/\/$/)){
+          var stateObj = JSON.parse(stateParam.substring(0, stateParam.length - 1));
+          return stateObj;
+      }
     return null;
   }
 }
