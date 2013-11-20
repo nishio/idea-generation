@@ -72,6 +72,16 @@ rtclient.getParams = function() {
       params[paramStr[0]] = unescape(paramStr[1]);
     }
   }
+    var getParam = document.location.search;
+    if(getParam){
+        getParam = decodeURIComponent(getParam);
+        getParam.split('&').forEach(function(paramStr){
+            paramStr = paramStr.split('=');
+            if(paramStr[0] == 'state'){
+                params['state'] = JSON.parse(paramStr[1])
+            }
+        });
+    }
   console.log(params);
   return params;
 }
