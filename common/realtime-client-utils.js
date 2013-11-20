@@ -78,10 +78,11 @@ rtclient.getParams = function() {
         getParam.split('&').forEach(function(paramStr){
             paramStr = paramStr.split('=');
             if(paramStr[0] == 'state'){
-                params['state'] = JSON.parse(paramStr[1])
+                params['state'] = paramStr[1];
             }
         });
     }
+  console.log('params');
   console.log(params);
   return params;
 }
