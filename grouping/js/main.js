@@ -643,6 +643,23 @@ main.setup_event_handling = function() {
     });
 
     $('#exportAsPNG').click(convertMapToPNG);
+
+    $('#changeTitleButton').click(function(){
+        var title = $('#newTitle').val();
+        function callback(e){
+            console.log(e);
+            nhiro.notify('title changed');
+        }
+
+        gapi.client.load('drive', 'v2', function() {
+            gapi.client.drive.files.update({
+                fileId: rtclient.params['fileIds'],
+                'resource': {
+                    title: title
+                }
+            }).execute(callback);
+        });
+    });
 };
 
 /**
