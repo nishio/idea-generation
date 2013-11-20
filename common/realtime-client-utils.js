@@ -72,7 +72,7 @@ rtclient.getParams = function() {
       params[paramStr[0]] = unescape(paramStr[1]);
     }
   }
-    debugger;
+
     var getParam = document.location.search;
     if(getParam){
         getParam = getParam.slice(1);
