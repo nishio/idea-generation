@@ -26,6 +26,7 @@ var realtimeLoader;
 main.gdcon.initializeModel = function(model) {
     var field = model.createList();
     model.getRoot().set('my_list', field);
+    main.gdcon._model = model;  // for debug
 };
 
 /**
@@ -84,7 +85,8 @@ main.gdcon.updateItem = function(id, params) {
  * @param {gapi.drive.realtime.Document} doc the Realtime document.
  */
 main.gdcon.onFileLoaded = function onFileLoaded(doc) {
-    nhiro.notify('Loaded existing document');
+    nhiro.notify('Loading document');
+    main.gdcon._doc = doc;  // for debug
 
     /**
      * @type {gapi.drive.realtime.CollaborativeList}
@@ -118,6 +120,7 @@ main.gdcon.onFileLoaded = function onFileLoaded(doc) {
     model.addEventListener(
         gapi.drive.realtime.EventType.UNDO_REDO_STATE_CHANGED,
         onUndoRedoStateChanged);
+    nhiro.notify('Finished loading');
 };
 
 /**
