@@ -42,7 +42,10 @@ main.gdcon.onFileLoaded = function onFileLoaded(doc) {
     main.gdcon._list = doc.getModel().getRoot().get('my_list');
     console.log('doc');
     console.log(doc);
-    $('#docid').text(
+    $('#docid').text('OK');
+    $('#docid').attr(
+        'href',
+        '../grouping/' +
         '#fileIds=' + rtclient.params['fileIds'] +
         '&userId=' + realtimeLoader.authorizer.userId);
 
