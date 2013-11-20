@@ -9,9 +9,9 @@ main.gdcon.startRealtime = function() {
     realtimeLoader = new rtclient.RealtimeLoader(realtimeOptions);
     realtimeLoader.start();
     setInterval(function() {
-        nhiro.log('re-authorizing' + new Date());
+        console.log('re-authorizing' + new Date());
         realtimeLoader.authorizer.authorize();
-        nhiro.log('re-authorized' + new Date());
+        console.log('re-authorized' + new Date());
     }, 1000 * 60 * 5);  // do auth each 5 minute
 };
 
@@ -42,29 +42,36 @@ main.gdcon.onFileLoaded = function onFileLoaded(doc) {
     main.gdcon._list = doc.getModel().getRoot().get('my_list');
     console.log('doc');
     console.log(doc);
-    $('#docid').text(
+    $('#docid').text('OK');
+    $('#docid').attr(
+        'href',
+        '../grouping/' +
         '#fileIds=' + rtclient.params['fileIds'] +
         '&userId=' + realtimeLoader.authorizer.userId);
 
     // push local items into _list
     console.log('merge');
     var _arr = main.gdcon._list.asArray();
+    var saved_items = _arr.map(JSON.parse);
     items.forEach(function(item){
         var s = JSON.stringify(item);
         var found = false;
-        for(var i=0; i < _arr.length; i++){
-            if(_arr.when == item.when){
+        debugger;
+        for(var i=0; i < saved_items.length; i++){
+            if(saved_items[i].when == item.when){
                 found = true;
+                console.log('found');
                 break;
             }
         }
         if(!found){
             // not saved yet
             main.gdcon._list.push(s);
+            saved_items.push(item);
             console.log('pushed');
         }
     });
-    items = main.gdcon._list.asArray().map(JSON.parse);
+    items = saved_items;
     updateJSON();
     updateUI();
     //main.gdcon.updateUI();
@@ -78,7 +85,7 @@ main.gdcon.push = function(item){
 
 
 /**
- * @this {*}
+ * @this {rtclient.Authorizer}
  */
 main.gdcon.onNeedAuth = function() {
     var authorizer = this;
