@@ -20,13 +20,26 @@ var localStorage;
  */
 var rtclient;
 
+/**
+ * @typedef {Object}
+ */
+rtclient.params;
+
 /** @typedef {Object} */
 rtclient.RealtimeLoader;
 
-/** @typedef {{userId: string}} */
-rtclient.RealtimeLoader.prototype.autorizer;
+/** @typedef {Object} */
+rtclient.Authorizer
 
-rtclient.RealtimeLoader.prototype.autorizer.authorize = function() {};
+ /** @typedef {rtclient.Authorizer} */
+rtclient.RealtimeLoader.autorizer;
+
+ /** @typedef {String} */
+rtclient.RealtimeLoader.autorizer.userId;
+
+rtclient.Authorizer.prototype.authorize = function() {};
+
+rtclient.Authorizer.prototype.authorizeWithPopup = function() {};
 
 
 /**

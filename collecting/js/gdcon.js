@@ -85,7 +85,7 @@ main.gdcon.push = function(item){
 
 
 /**
- * @this {*}
+ * @this {rtclient.Authorizer}
  */
 main.gdcon.onNeedAuth = function() {
     var authorizer = this;
