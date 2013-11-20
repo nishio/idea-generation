@@ -6,7 +6,7 @@ textarea {
     font-size: 50px;
 }
 
-input[type=text]{
+input[type=text], button{
     font-size: 50px;
     margin: 0;
 }
