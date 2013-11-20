@@ -72,16 +72,18 @@ rtclient.getParams = function() {
       params[paramStr[0]] = unescape(paramStr[1]);
     }
   }
+
     var getParam = document.location.search;
     if(getParam){
-        getParam = decodeURIComponent(getParam);
+        getParam = getParam.slice(1);
         getParam.split('&').forEach(function(paramStr){
             paramStr = paramStr.split('=');
             if(paramStr[0] == 'state'){
-                params['state'] = JSON.parse(paramStr[1])
+                params['state'] = decodeURIComponent(paramStr[1]);
             }
         });
     }
+  console.log('params');
   console.log(params);
   return params;
 }
@@ -251,6 +253,12 @@ rtclient.parseState = function(stateParam) {
     var stateObj = JSON.parse(stateParam);
     return stateObj;
   } catch(e) {
+      // SimpleHTTPServer add slash '/' on the end of URL,
+      // and it causes JSON.parse error
+      if(stateParam.match(/\/$/)){
+          var stateObj = JSON.parse(stateParam.substring(0, stateParam.length - 1));
+          return stateObj;
+      }
     return null;
   }
 }
