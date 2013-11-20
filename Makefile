@@ -22,6 +22,11 @@ copy:
 	cp ../idea-generation/common/raphael.js common/
 	cp ../idea-generation/common/realtime-client-utils.js common/
 
+	cp ../idea-generation/common/rgbcolor.js common/
+	cp ../idea-generation/common/jquery.svg.min.js common/
+	cp ../idea-generation/common/canvg.js common/
+	cp ../idea-generation/common/StackBlur.js common/
+
 	-rm ../idea-generation/collecting/**/*~
 	-mkdir collecting
 	python ../idea-generation/collecting/ready_deploy.py
