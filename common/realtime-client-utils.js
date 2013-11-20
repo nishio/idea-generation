@@ -72,13 +72,14 @@ rtclient.getParams = function() {
       params[paramStr[0]] = unescape(paramStr[1]);
     }
   }
+    debugger;
     var getParam = document.location.search;
     if(getParam){
-        getParam = decodeURIComponent(getParam);
+        getParam = getParam.slice(1);
         getParam.split('&').forEach(function(paramStr){
             paramStr = paramStr.split('=');
             if(paramStr[0] == 'state'){
-                params['state'] = paramStr[1];
+                params['state'] = decodeURIComponent(paramStr[1]);
             }
         });
     }
