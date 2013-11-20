@@ -52,22 +52,26 @@ main.gdcon.onFileLoaded = function onFileLoaded(doc) {
     // push local items into _list
     console.log('merge');
     var _arr = main.gdcon._list.asArray();
+    var saved_items = _arr.map(JSON.parse);
     items.forEach(function(item){
         var s = JSON.stringify(item);
         var found = false;
-        for(var i=0; i < _arr.length; i++){
-            if(_arr.when == item.when){
+        debugger;
+        for(var i=0; i < saved_items.length; i++){
+            if(saved_items[i].when == item.when){
                 found = true;
+                console.log('found');
                 break;
             }
         }
         if(!found){
             // not saved yet
             main.gdcon._list.push(s);
+            saved_items.push(item);
             console.log('pushed');
         }
     });
-    items = main.gdcon._list.asArray().map(JSON.parse);
+    items = saved_items;
     updateJSON();
     updateUI();
     //main.gdcon.updateUI();
