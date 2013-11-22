@@ -2,15 +2,16 @@ CACHE MANIFEST
 # version
 
 CACHE:
-basic.css
 http://code.jquery.com/jquery-1.9.1.js
+http://www.google.com/jsapi
+https://apis.google.com/js/api.js
+basic.css
 js/main.js
 js/gdcon.js
 index.html
-http://www.google.com/jsapi
+deps.js
 ../common/closure-library/closure/goog/base.js
 ../common/closure-library/closure/goog/deps.js
-deps.js
 ../common/realtime-client-utils.js
 
 FALLBACK:
