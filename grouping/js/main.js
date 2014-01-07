@@ -662,6 +662,7 @@ main.setup_event_handling = function() {
     });
 };
 
+
 /**
  * find space to put a card
  */
