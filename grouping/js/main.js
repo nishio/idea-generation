@@ -410,8 +410,6 @@ function add_box(content) {
         content = $('.text').val();
         $('.text').val('');
     }
-    if (content == '') return;
-
     var id = main.boxes.length;
     var when = new Date().toISOString();
     main.gdcon.pushObj({
