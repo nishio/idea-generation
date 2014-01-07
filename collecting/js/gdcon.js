@@ -56,7 +56,6 @@ main.gdcon.onFileLoaded = function onFileLoaded(doc) {
     items.forEach(function(item){
         var s = JSON.stringify(item);
         var found = false;
-        debugger;
         for(var i=0; i < saved_items.length; i++){
             if(saved_items[i].when == item.when){
                 found = true;

@@ -410,8 +410,6 @@ function add_box(content) {
         content = $('.text').val();
         $('.text').val('');
     }
-    if (content == '') return;
-
     var id = main.boxes.length;
     var when = new Date().toISOString();
     main.gdcon.pushObj({
@@ -593,6 +591,7 @@ main.setup_event_handling = function() {
             nhiro.notify('cannot understand as JSON');
             return;
         }
+        nhiro.notify(items.length + ' items found');
         items.forEach(function(item) {
             var b = add_box(item.text);
             if (item.x != null && item.y != null) {
@@ -660,6 +659,13 @@ main.setup_event_handling = function() {
             }).execute(callback);
         });
     });
+
+    $('#clearAllButton').click(function(){
+        main.gdcon._list.clear()
+        nhiro.notify('cleared');
+    });
+
+
 };
 
 
