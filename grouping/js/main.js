@@ -643,6 +643,17 @@ main.setup_event_handling = function() {
 
     $('#exportAsPNG').click(convertMapToPNG);
 
+    $('#exportAsJSON').click(function() {
+        var result = '[';
+        var array = main.gdcon._list.asArray();
+        var last = array.length - 1;
+        for (var i in array) {
+            result += array[i];
+            if (i < last) result += ', ';
+        }
+        $('#multitext').val(result + ']');
+    });
+
     $('#changeTitleButton').click(function(){
         var title = $('#newTitle').val();
         function callback(e){
