@@ -643,6 +643,17 @@ main.setup_event_handling = function() {
 
     $('#exportAsPNG').click(convertMapToPNG);
 
+    $('#exportAsJSON').click(function() {
+        var result = '[';
+        var array = main.gdcon._list.asArray();
+        var last = array.length - 1;
+        for (var i in array) {
+            result += array[i];
+            if (i < last) result += ', ';
+        }
+        $('#multitext').val(result + ']');
+    });
+
     $('#changeTitleButton').click(function(){
         var title = $('#newTitle').val();
         function callback(e){
@@ -665,7 +676,10 @@ main.setup_event_handling = function() {
         nhiro.notify('cleared');
     });
 
-
+    $('#openLocal').click(function(){
+        // open current map in local develop environment
+        document.location = 'http://localhost:8000/grouping/' + document.location.hash;
+    });
 };
 
 
