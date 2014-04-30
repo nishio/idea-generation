@@ -676,7 +676,10 @@ main.setup_event_handling = function() {
         nhiro.notify('cleared');
     });
 
-
+    $('#openLocal').click(function(){
+        // open current map in local develop environment
+        document.location = 'http://localhost:8000/grouping/' + document.location.hash;
+    });
 };
 
 
