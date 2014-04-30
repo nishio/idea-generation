@@ -1,16 +1,32 @@
-import json
+"""
+command line interface
 
+Usage
+1: Run IPython
+2: execfile('workbench.py')
+
+"""
+
+import json
+default_items = []
 
 def loads(s):
-    return json.loads(s)
+    global default_items
+    default_items = json.loads(s)
 
 
-def save(items, filename='inbox.txt'):
+def export_as_json(items=None):
+    if not items: items = default_items
+    print json.dumps(items)
+
+
+def save(items=None, filename='inbox.txt'):
     """readably output for non-ascii user.
     Non-ascii strings in json are hexadecimal encoded and not human readable,
     so it print 'text' fields in UTF-8. Unfortunately JSON doesn't have comment notation,
     it is not JSON format.
     """
+    if not items: items = default_items
     fo = file(filename, 'w')
     for x in items:
         fo.write('# %s\n' % x['text'].encode('utf-8'))
@@ -22,6 +38,7 @@ def load(filename='inbox.txt'):
     """readably output for non-ascii user.
     see 'save' for why it needed.
     """
+    global default_items
     f = file(filename)
     items = []
     prev_text = None
@@ -36,15 +53,19 @@ def load(filename='inbox.txt'):
             prev_text = None
         items.append(item)
     f.close()
+    default_items = items
     return items
 
 
-def list(items):
+def list(items=None):
+    if not items: items = default_items
     for x in items:
         print x['id'], x['text']
 
 
-def edit_text(id):
+def edit_text(items=None, id=None):
+    if not items: items = default_items
+    if id == None: raise RuntimeError('id required')
     max_id = 0
     target = None
     for x in items:
