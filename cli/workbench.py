@@ -10,14 +10,30 @@ Usage
 import json
 default_items = []
 
-def loads(s):
+def import_json(s):
     global default_items
     default_items = json.loads(s)
+    return default_items
 
 
-def export_as_json(items=None):
+def export_json(items=None):
     if not items: items = default_items
     print json.dumps(items)
+
+
+def export_json_to_clipboard(items=None):
+    if not items: items = default_items
+    s = json.dumps(items)
+    _to_clipboard(s)
+
+
+def _to_clipboard(s):
+    'Mac only'
+    from AppKit import NSPasteboard, NSArray
+    pb = NSPasteboard.generalPasteboard()
+    pb.clearContents()
+    a = NSArray.arrayWithObject_(s)
+    pb.writeObjects_(a)
 
 
 def save(items=None, filename='inbox.txt'):
