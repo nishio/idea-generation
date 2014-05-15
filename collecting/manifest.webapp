@@ -1,10 +1,10 @@
 CACHE MANIFEST
-# version: 2014-05-15T14:19:48.078979
+# version: 2014-05-15T14:46:36.851173
 
 CACHE:
 http://code.jquery.com/jquery-1.9.1.js
 http://www.google.com/jsapi
-http://apis.google.com/js/api.js
+https://apis.google.com/js/api.js
 basic.css
 js/main.js
 js/gdcon.js
