@@ -672,7 +672,11 @@ main.setup_event_handling = function() {
     });
 
     $('#clearAllButton').click(function(){
-        main.gdcon._list.clear()
+        main.boxes.forEach(function(x){
+            x.remove();
+        })
+        main.boxes = [];
+        main.gdcon._list.clear();
         nhiro.notify('cleared');
     });
 
