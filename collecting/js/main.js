@@ -28,6 +28,13 @@ function updateJSON() {
 function updateUI() {
     $('#list_header').text('List: ' + items.length);
     $('#json').val(json);
+
+    $('#list').empty();
+    items.forEach(function(item) {
+        var bq = $('<blockquote>');
+        bq.text(item['text']);
+        $('#list').append(bq);
+    });
 }
 
 function update() {

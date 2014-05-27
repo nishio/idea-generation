@@ -1,13 +1,11 @@
-/* why 50px? to avoid zooming: https://github.com/jquery/jquery-mobile/issues/2069 */
-
 textarea {
     width: 100%;
     height: 200px;
-    font-size: 50px;
+    font-size: 16px;
 }
 
 input[type=text], button{
-    font-size: 50px;
+    font-size: 16px;
     margin: 0;
 }
 
@@ -16,3 +14,10 @@ label {
     white-space: nowrap;
 }
 
+#inputarea {
+    width: 800px;
+}
+
+#json {
+    font-size: 8px;
+}
