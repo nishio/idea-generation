@@ -6,7 +6,9 @@ textarea {
 
 input[type=text], button{
     font-size: 16px;
-    margin: 0;
+    margin: -2px;
+    padding: 0;
+    border: 1;
 }
 
 label {

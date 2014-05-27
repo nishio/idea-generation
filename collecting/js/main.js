@@ -35,6 +35,21 @@ function updateUI() {
         bq.text(item['text']);
         $('#list').append(bq);
     });
+
+    scroll();
+}
+
+function scroll(){
+    var bottom = $(window).height() + $(window).scrollTop();
+    var div = $('#inputarea');
+    var div_bottom = div.offset().top  + div.height();
+    console.log(div_bottom);
+    console.log(bottom);
+    if(div_bottom > bottom){
+        $(window).scrollTop(
+            $(window).scrollTop() + div_bottom - bottom
+        );
+    }
 }
 
 function update() {
