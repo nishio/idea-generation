@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, send_from_directory
 app = Flask(__name__)
 
@@ -15,7 +16,8 @@ def send_common(filename):
 
 @app.route('/api/save', methods=['POST'])
 def save():
-    file(request.form['filename'], 'w').write(request.form['data'])
+    filename = os.path.join('data', request.form['filename'])
+    file(filename, 'w').write(request.form['data'])
     return 'ok'
 
 if __name__ == '__main__':
