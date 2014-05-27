@@ -131,5 +131,9 @@ $(function() {
     $('#connectGoogleDrive').click(function() {
         main.gdcon.startRealtime();
     });
+
+    $('#save').click(function(){
+        $.post('/api/save', {'filename': $('#filename').val(), 'data': json});
+    });
 });
 
