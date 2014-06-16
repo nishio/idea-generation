@@ -97,19 +97,22 @@ function startRealtime() {
 
 }
 
-$(function() {
-    items = localStorage.getItem('collecting_ideas');
+function load_json(data){
     try {
-        if (items == null) {
+        if (data == null) {
             items = [];
         }else {
-            items = JSON.parse(items);
+            items = JSON.parse(data);
         }
     }catch (e) {
-        console.log(items);
+        console.log(data);
         console.log('cannot understand as JSON');
         items = [];
     }
+}
+
+$(function() {
+    load_json(localStorage.getItem('collecting_ideas'));
 
     $('input[type=text]').keypress(function(e) {
         if (e.keyCode == 13) add_item();
@@ -155,11 +158,15 @@ $(function() {
         $.post('/api/save', {'filename': $('#filename').val(), 'data': json});
     });
 
+    $('#load').click(function(){
+        $.post('/api/load', {'filename': $('#filename').val()}, function(data){
+            load_json(data);
+        });
+    });
+
     $('#clear').click(function(){
         items = [];
         update();
     });
-
-
 });
 

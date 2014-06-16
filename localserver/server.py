@@ -20,5 +20,10 @@ def save():
     file(filename, 'w').write(request.form['data'])
     return 'ok'
 
+@app.route('/api/load', methods=['POST'])
+def load():
+    filename = os.path.join('data', request.form['filename'])
+    return file(filename).read()
+
 if __name__ == '__main__':
     app.run(debug=True)
