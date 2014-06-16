@@ -114,7 +114,7 @@ function load_json(data){
 $(function() {
     load_json(localStorage.getItem('collecting_ideas'));
 
-    $('input[type=text]').keypress(function(e) {
+    $('#inputarea input[type=text]').keypress(function(e) {
         if (e.keyCode == 13) add_item();
     });
     $('#text').keypress(function(e) {
