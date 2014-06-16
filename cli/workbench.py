@@ -99,3 +99,5 @@ def edit_text(items=None, id=None):
     print 'modified'
     print target['id'], target['text']
 
+if __name__ == '__main__':
+    print 'exec in IPython'
