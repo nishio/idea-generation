@@ -161,6 +161,7 @@ $(function() {
     $('#load').click(function(){
         $.post('/api/load', {'filename': $('#filename').val()}, function(data){
             load_json(data);
+            update();
         });
     });
 
