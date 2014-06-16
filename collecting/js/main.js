@@ -52,7 +52,7 @@ function scroll(){
     }
 }
 
-function update() {
+function add_item() {
     var text = $('#text').val();
     var id = items.length;
     var when = new Date().toISOString();
@@ -74,9 +74,13 @@ function update() {
     $('#pages').val('');
     $('#original_text').val('');
 
-    // update JSON
-    updateJSON();
+    $('#text').focus();
 
+    update();
+}
+
+function update() {
+    updateJSON();
     updateUI();
     localStorage.setItem('collecting_ideas', json);
 }
@@ -108,11 +112,11 @@ $(function() {
     }
 
     $('input[type=text]').keypress(function(e) {
-        if (e.keyCode == 13) update();
+        if (e.keyCode == 13) add_item();
     });
     $('#text').keypress(function(e) {
         if (e.keyCode == 13) {
-            update();
+            add_item();
             return false;
         }
     });
@@ -150,5 +154,12 @@ $(function() {
     $('#save').click(function(){
         $.post('/api/save', {'filename': $('#filename').val(), 'data': json});
     });
+
+    $('#clear').click(function(){
+        items = [];
+        update();
+    });
+
+
 });
 
