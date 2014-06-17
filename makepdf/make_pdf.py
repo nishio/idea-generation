@@ -65,11 +65,21 @@ for i in range(5):
         while True:
             para = Paragraph(text, style)
             w, h = para.wrap(WIDTH_BOX, HEIGHT_BOX)
-            print (w, h), style.fontSize
-            if w <= WIDTH_BOX and h <= HEIGHT_BOX:
-                break
-            style.fontSize -= 1
-            style.leading -= 1
+            if w > WIDTH_BOX or h > HEIGHT_BOX:
+                style.fontSize -= 1
+                style.leading -= 1
+                continue
+
+            # in some case of 禁則処理 overflow can happen
+            para2 = Paragraph(text, style)
+            lines = para2.breakLinesCJK([WIDTH_BOX, WIDTH_BOX]).lines
+            if any(rest < 0 for rest, _text in lines):
+                style.fontSize -= 1
+                style.leading -= 1
+                continue
+
+            break
+
         para.drawOn(c, x, y + HEIGHT_BOX - h)
 
         #c.drawString(x, y, text)
