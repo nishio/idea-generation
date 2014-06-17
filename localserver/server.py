@@ -17,7 +17,7 @@ def send_common(filename):
 @app.route('/api/save', methods=['POST'])
 def save():
     filename = os.path.join('data', request.form['filename'])
-    file(filename, 'w').write(request.form['data'])
+    file(filename, 'w').write(request.form['data'].encode('utf-8'))
     return 'ok'
 
 @app.route('/api/load', methods=['POST'])
