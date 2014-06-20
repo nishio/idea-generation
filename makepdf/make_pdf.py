@@ -12,13 +12,17 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 
 
-def get_items():
+def get_items(files=[]):
+    if files == []:
+        PATH = '../localserver/data'
+        for filename in os.listdir(PATH):
+            if filename.startswith('test'): continue
+            if '_copy' in filename: continue
+            files.append(os.path.join(PATH, filename))
+
     items = []
-    PATH = '../localserver/data'
-    for filename in os.listdir(PATH):
-        if filename.startswith('test'): continue
-        if '_copy' in filename: continue
-        newitems = json.load(file(os.path.join(PATH, filename)))
+    for filename in files:
+        newitems = json.load(file(filename))
         items.extend(newitems)
     return items
 
