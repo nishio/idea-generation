@@ -53,46 +53,45 @@ MARGIN_BOX = 20  # margin between boxs
 WIDTH_BOX = (WIDTH - 2 * PADDING_PAGE - 4 * MARGIN_BOX) / 5
 HEIGHT_BOX = (HEIGHT - 2 * PADDING_PAGE - 4 * MARGIN_BOX) / 5
 START_FONT_SIZE = 30
-for i in range(5):
-    for j in range(5):
-        x = PADDING_PAGE + (WIDTH_BOX + MARGIN_BOX) * i
-        y = PADDING_PAGE + (HEIGHT_BOX + MARGIN_BOX) * j
-        text = items[i * 5 + j]['text']
-        if 0:
-            c.line(0, y, WIDTH, y)
-            c.line(x, 0, x, HEIGHT)
-            c.line(0, y + HEIGHT_BOX, WIDTH, y + HEIGHT_BOX)
-            c.line(x + WIDTH_BOX, 0, x + WIDTH_BOX, HEIGHT)
+from math import ceil
+NUM_PAGES = int(ceil(len(items) / 25.0))
+for pages in range(NUM_PAGES):
+    for i in range(5):
+        for j in range(5):
+            x = PADDING_PAGE + (WIDTH_BOX + MARGIN_BOX) * i
+            y = PADDING_PAGE + (HEIGHT_BOX + MARGIN_BOX) * j
+            text = items[pages * 25 + i * 5 + j]['text']
+            if 0:
+                c.line(0, y, WIDTH, y)
+                c.line(x, 0, x, HEIGHT)
+                c.line(0, y + HEIGHT_BOX, WIDTH, y + HEIGHT_BOX)
+                c.line(x + WIDTH_BOX, 0, x + WIDTH_BOX, HEIGHT)
 
-        style.fontSize = START_FONT_SIZE
-        style.leading = START_FONT_SIZE
-        while True:
-            para = Paragraph(text, style)
-            w, h = para.wrap(WIDTH_BOX, HEIGHT_BOX)
-            if w > WIDTH_BOX or h > HEIGHT_BOX:
-                style.fontSize -= 1
-                style.leading -= 1
-                continue
+            style.fontSize = START_FONT_SIZE
+            style.leading = START_FONT_SIZE
+            while True:
+                para = Paragraph(text, style)
+                w, h = para.wrap(WIDTH_BOX, HEIGHT_BOX)
+                if w > WIDTH_BOX or h > HEIGHT_BOX:
+                    style.fontSize -= 1
+                    style.leading -= 1
+                    continue
 
-            # in some case of 禁則処理 overflow can happen
-            para2 = Paragraph(text, style)
-            lines = para2.breakLinesCJK([WIDTH_BOX, WIDTH_BOX]).lines
-            if any(rest < 0 for rest, _text in lines):
-                style.fontSize -= 1
-                style.leading -= 1
-                continue
+                # in some case of 禁則処理 overflow can happen
+                para2 = Paragraph(text, style)
+                lines = para2.breakLinesCJK([WIDTH_BOX, WIDTH_BOX]).lines
+                if any(rest < 0 for rest, _text in lines):
+                    style.fontSize -= 1
+                    style.leading -= 1
+                    continue
 
-            break
+                break
 
-        para.drawOn(c, x, y + HEIGHT_BOX - h)
+            para.drawOn(c, x, y + HEIGHT_BOX - h)
 
-        #c.drawString(x, y, text)
+            #c.drawString(x, y, text)
+    c.showPage()
 
-
-
-c.restoreState()
-
-c.showPage()
 
 c.save()
 
