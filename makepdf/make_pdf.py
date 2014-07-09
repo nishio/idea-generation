@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
-
+"""
+テキストを25upでPDFにする
+"""
 import os
 import json
 from reportlab.pdfgen import canvas
@@ -92,51 +94,4 @@ for pages in range(NUM_PAGES):
             #c.drawString(x, y, text)
     c.showPage()
 
-
 c.save()
-
-"""
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.rl_config import defaultPageSize
-from reportlab.lib.units import inch
-
-
-PAGE_HEIGHT=defaultPageSize[1]
-PAGE_WIDTH=defaultPageSize[0]
-
-styles = getSampleStyleSheet()
-my_style = styles["Normal"]
-my_style.name = "bonlife"
-my_style.fontName = "HeiseiKakuGo-W5"
-
-Title = u"ReportLabで日本語を扱うサンプルなんだぜ？"
-pageinfo = u"日本語PDFのサンプルなんだぜ？"
-
-def myFirstPage(canvas, doc):
-    canvas.saveState()
-    canvas.setFont("HeiseiKakuGo-W5",18)
-    canvas.drawCentredString(PAGE_WIDTH/2.0, PAGE_HEIGHT-70, Title)
-    canvas.setFont("HeiseiKakuGo-W5",9)
-    canvas.drawString(inch, 0.75*inch, u'これは "%s" の表紙なんだぜ？' % pageinfo)
-    canvas.restoreState()
-
-def myLaterPages(canvas, doc):
-    canvas.saveState()
-    canvas.setFont("HeiseiKakuGo-W5", 9)
-    canvas.drawString(inch, 0.75*inch, u'これは "%s" の %d ページなんだぜ？' % (pageinfo, doc.page))
-    canvas.restoreState()
-
-def go():
-    doc = SimpleDocTemplate("reportlab_japanese.pdf")
-    Story = [Spacer(1, 0.2*inch)]
-    style = my_style
-    for i in range(5):
-        bogustext = (u"「覚悟」とは！！ 暗闇の荒野に！！進むべき道を切り開く事だッ！ (段落番号は %s) " % (i + 1)) * 50
-        p = Paragraph(bogustext, style)
-        Story.append(p)
-        Story.append(Spacer(1, 0.2*inch))
-    doc.build(Story, onFirstPage=myFirstPage, onLaterPages=myLaterPages)
-
-go()
-"""
