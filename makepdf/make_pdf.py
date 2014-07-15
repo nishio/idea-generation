@@ -5,6 +5,8 @@
 """
 import os
 import json
+import argparse
+
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase import pdfmetrics
@@ -62,7 +64,8 @@ def make_para(text):
         break
     return para
 
-def get_items(files=[]):
+
+def get_texts(files=[]):
     if files == []:
         PATH = '../localserver/data'
         for filename in os.listdir(PATH):
@@ -79,14 +82,13 @@ def get_items(files=[]):
     return items
 
 
-def make_pdf(items=None):
-    if not items: items = get_items()
+def make_pdf(texts):
     c = canvas.Canvas("hello.pdf", pagesize=pagesize)
 
     c.saveState()
 
     from math import ceil
-    NUM_PAGES = int(ceil(len(items) / 25.0))
+    NUM_PAGES = int(ceil(len(texts) / 25.0))
     for pages in range(NUM_PAGES):
         for i in range(6):
             for j in range(6):
@@ -98,10 +100,10 @@ def make_pdf(items=None):
 
         for i in range(5):
             for j in range(5):
-                card_index = pages * 25 + i * 5 + j
-                if card_index >= len(items): continue  # no more cards
+                text_index = pages * 25 + i * 5 + j
+                if text_index >= len(texts): continue  # no more cards
 
-                text = items[card_index]
+                text = texts[text_index]
 
                 para = make_para(text)
                 x, y = calc_xy(i, j)
@@ -111,9 +113,23 @@ def make_pdf(items=None):
 
     c.save()
 
-def main():
-    make_pdf()
 
+def main():
+    parser = argparse.ArgumentParser(description='Text to PPTX.')
+    parser.add_argument('--test', action='store_true')
+    parser.add_argument('--json', action='append')
+
+    args = parser.parse_args()
+
+    if args.test:
+        texts = ['あ' * x for x in range(1, 101)]
+    elif args.json:
+        texts = get_texts(args.json)
+    else:
+        import sys
+        texts = sys.stdin.read().split('\n')
+
+    make_pdf(texts)
 
 
 if __name__ == '__main__':
