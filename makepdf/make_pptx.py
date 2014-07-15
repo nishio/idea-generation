@@ -26,15 +26,15 @@ def main():
 
 def find_best_fontsize(text):
     sizes = [415, 415, 346, 240]
-    chars = len(text) / 2
+    chars = len(text.decode('utf-8').encode('sjis')) / 2
     if chars < len(sizes):
-        return sizes[len(text) / 3]
+        return sizes[chars]
 
-    # means 'if chars leq 6, fontsize is 200pt'
+    # means 'if chars leq 6 (2 * 3), fontsize is 200pt'
     sizes = [
-        (6, 200), (8, 167), (12, 159),
-        (15, 125), (25, 110), (41, 90),
-        (46, 80), (61, 70), (85, 60),
+        (2 * 3, 200), (2 * 4, 167), (3 * 4, 159),
+        (3 * 5, 125), (4 * 6, 110), (5 * 8, 90),
+        (5 * 9, 80), (6 * 10, 70), (7 * 14, 60),
     ]
 
     for lim, siz in sizes:
