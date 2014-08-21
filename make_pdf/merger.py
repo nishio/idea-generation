@@ -117,7 +117,7 @@ def imp_exp_pdf(inputfile,outputfile,size,margin,padding):
                if j%2 == 0:
                    xfactor=inch_pixel(margin[1])
                
-               tmppage.mergeTranslatedPage(page,xfactor,h-inch_pixel(margin[0])-inch_pixel(size[1])*(j/2+1)-inch_pixel(padding[2])*j/2)
+               tmppage.mergeTranslatedPage(page,xfactor,h-inch_pixel(margin[0])-inch_pixel(size[1])*(j/2+1)-inch_pixel(padding[2])*(j/2))
                print echoer,
            p=[]
            output.addPage(tmppage)
@@ -134,7 +134,7 @@ def imp_exp_pdf(inputfile,outputfile,size,margin,padding):
             if j%2 == 0:
                xfactor=inch_pixel(margin[1])
                
-            tmppage.mergeTranslatedPage(page,xfactor,h-inch_pixel(margin[0])-inch_pixel(size[1])*(j/2+1)-inch_pixel(padding[2])*j/2)
+            tmppage.mergeTranslatedPage(page,xfactor,h-inch_pixel(margin[0])-inch_pixel(size[1])*(j/2+1)-inch_pixel(padding[2])*(j/2))
             print echoer,
        p=[]
        output.addPage(tmppage)
