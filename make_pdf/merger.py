@@ -1,16 +1,13 @@
 import sys
 import getopt
 from PyPDF2 import PdfFileWriter, PdfFileReader
-# This is where the application enters
-
 
 def main(argv):
     size = (91, 55)
-    margin = '11x14'
+    margin = (11, 14)
     padding = '5'
     outputfile = ''
     inputfile = ''
-    size_array = margin_array = padding_array = []
     try:
         opts, args = getopt.getopt(
             argv, "hi:o:s:m:p:", ["ifile=", "ofile=", "size=", "margin=", "padding="])
@@ -23,39 +20,39 @@ def main(argv):
             sys.exit()
         elif opt in ("-s", "--size"):
             try:
-                size = map(int, arg.split("x"))
-                assert len(size) == 2
-                assert size[0] != 0 and size[1] != 0
+                items = map(int, arg.split("x"))
+                assert len(items) == 2
+                assert items[0] != 0 and items[1] != 0
+                size = items
             except:
                 print "Incorrect Format!! Using default value for size."
 
         elif opt in ("-m", "--margin"):
-            #margin = arg
-            x = arg.split("x")
-            if len(x) == 2:
-                if int(x[0]) != 0 and int(x[1]) != 0:
-                    margin = arg
-                else:
-                    print "Incorrect Format!! Using default value for margin."
-            else:
+            try:
+                items = map(int, arg.split("x"))
+                assert len(items) == 2
+                assert items[0] != 0 and items[1] != 0
+
+                margin = items
+            except:
                 print "Incorrect Format!! Using default value for margin."
+
         elif opt in ("-p", "--padding"):
-            #padding = arg
-            x = arg.split("x")
-            if len(x) == 1:
-                padding = arg
-            elif len(x) == 2:
-                if int(x[0]) != 0 and int(x[1]) != 0:
-                    padding = arg
+            try:
+                items = map(int, arg.split("x"))
+                if len(items) == 1:
+                    padding = (items[0], items[0], items[0], items[0])
+                elif len(x) == 2:
+                    assert items[0] != 0 and items[1] != 0
+                    padding = (items[0], items[1], items[0], items[1])
+                elif len(x) == 4:
+                    assert all(x != 0 for x in items)
+                    padding = tuple(items)
                 else:
-                    print "Incorrect Format!! Using default value for padding."
-            elif len(x) == 4:
-                if int(x[0]) != 0 and int(x[1]) != 0 and int(x[2]) != 0 and int(x[3]) != 0:
-                    padding = arg
-                else:
-                    print "Incorrect Format!! Using default value for padding."
-            else:
+                    raise AssertionError('not here')
+            except:
                 print "Incorrect Format!! Using default value for padding."
+
         elif opt in ("-o", "--ofile"):
             if not arg.endswith(".pdf"):
                 arg = arg + ".pdf"
@@ -72,22 +69,11 @@ def main(argv):
         sys.exit()
 
     print 'The configuration is :\nSize:{}\nMargin:{}\nPadding:{}\nOutput file:{}'.format(size, margin, padding, outputfile)
-    margin_array = margin.split("x")
-    temp = padding.split("x")
-    if len(temp) == 1:
-        padding_array = [temp[0], temp[0], temp[0], temp[0]]
-    elif len(temp) == 2:
-        padding_array = [temp[0], temp[1], temp[0], temp[1]]
-    elif len(temp) == 4:
-        padding_array = [temp[0], temp[1], temp[2], temp[3]]
-    padding_array = map(int, padding_array)
-    margin_array = map(int, margin_array)
-    imp_exp_pdf(inputfile, outputfile, size, margin_array, padding_array)
-
-# For displaying help.
+    imp_exp_pdf(inputfile, outputfile, size, margin, padding)
 
 
 def help_printer():
+    "For displaying help."
     print 'Usage: {} [-s <WxH>] [-m <TOPxLEFT>] [-p <PADDING>] -o <outputfile> -i <inputfile>'.format(__file__)
     print '-s, --size\t Size of each box in WIDTHxHEIGHT format'
     print '-m, --margin\t Margin between paper boundry and boxes in TOPxLEFT format'
@@ -98,7 +84,6 @@ def help_printer():
     print '-i, --ifile\t PDF input file name'
     print '-o, --ofile\t PDF output file name'
 
-# For Import and Export PDF files by resizing
 
 def output_one_page(pages, size, margin, padding, output):
     tmppdf = PdfFileReader(file('BlankA4.pdf', 'rb'))
@@ -176,10 +161,9 @@ def imp_exp_pdf(inputfile, outputfile, size, margin, padding):
     outputStream.close()
     print 'END OF PROGRAM'
 
-# inch to pixel calculator
-
 
 def inch_pixel(inch):
+    "inch to pixel calculator"
     pix = int(float(inch) * 2.834747474747475)
     return pix
 
