@@ -94,11 +94,6 @@ def output_one_page(pages, size, margin, padding, output):
     slide_height = size[1] - padding[0] - padding[2]
 
     for (j, page) in enumerate(pages):
-        #pages = pages + 1
-        #echoer = "{}Printed {} of {}  [{:.2f}%]".format(
-        #delete, pages, totalPages, pages / float(totalPages) * 100)
-        #delete = "\b" * (len(echoer) + 1)
-
         if j % 2 == 0:
             xfactor = inch_pixel(margin[1] + padding[3])
         else:
@@ -123,28 +118,27 @@ def output_one_page(pages, size, margin, padding, output):
                          inch_pixel(slide_height))
             xfactor += inch_pixel(slide_width - scaled_width) / 2
 
-        #page.scaleTo(inch_pixel(size[0]), inch_pixel(size[1]))
         tmppage.mergeTranslatedPage(page, xfactor, yfactor)
-        #print echoer,
     output.addPage(tmppage)
 
 
 def imp_exp_pdf(inputfile, outputfile, size, margin, padding):
+    "For Import and Export PDF files by resizing"
     output = PdfFileWriter()
     input = PdfFileReader(file(inputfile, 'rb'))
-    pages = 0
     totalPages = input.getNumPages()
     p = []
-    echoer = "Printed {} of {}  [{:.2f}%]".format(
-        pages, totalPages, pages / float(totalPages) * 100)
-    print echoer,
 
-    delete = "\b" * (len(echoer) + 1)
     for i in range(0, input.getNumPages()):
         p.append(input.getPage(i))
         if len(p) == 10:
             output_one_page(p, size, margin, padding, output)
             p = []
+
+            echoer = "Printed {} of {}  [{:.2f}%]".format(
+                i + 1, totalPages, (i + 1) / float(totalPages) * 100)
+            print echoer
+
 
     if len(p) > 0:
         tmppdf = PdfFileReader(file('BlankA4.pdf', 'rb'))
