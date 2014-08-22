@@ -5,7 +5,7 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 def main(argv):
     size = (91, 55)
     margin = (11, 14)
-    padding = '5'
+    padding = [5]
     outputfile = ''
     inputfile = ''
     try:
