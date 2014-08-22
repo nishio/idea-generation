@@ -4,8 +4,8 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 
 def main(argv):
     size = (91, 55)
-    margin = (11, 14)
-    padding = [5]
+    margin = (14, 11)
+    padding = (5, 5, 5, 5)
     outputfile = ''
     inputfile = ''
     try:
@@ -33,7 +33,7 @@ def main(argv):
                 assert len(items) == 2
                 assert items[0] != 0 and items[1] != 0
 
-                margin = items
+                margin = (items[1], items[0])
             except:
                 print "Incorrect Format!! Using default value for margin."
 
@@ -88,35 +88,44 @@ def help_printer():
 def output_one_page(pages, size, margin, padding, output):
     tmppdf = PdfFileReader(file('BlankA4.pdf', 'rb'))
     tmppage = tmppdf.getPage(0)
-    (w, h) = tmppage.mediaBox.upperRight
-
+    (w, h) = map(float, tmppage.mediaBox.upperRight)
+    #print w, h
+    #-> 595.32 841.92; A4 paper in pixels (72DPI): 605, 855
+    #print mm_pixel(size[0] * 2 + margin[0] * 2),
+    #print mm_pixel(size[1] * 5 + margin[1] * 2)
+    #-> 595.275912 841.8902184
     slide_width = size[0] - padding[1] - padding[3]
     slide_height = size[1] - padding[0] - padding[2]
 
     for (j, page) in enumerate(pages):
         if j % 2 == 0:
-            xfactor = inch_pixel(margin[1] + padding[3])
+            xfactor = mm_pixel(margin[0] + padding[3])
         else:
-            xfactor = inch_pixel(margin[1] + size[0] + padding[3])
+            xfactor = mm_pixel(margin[0] + size[0] + padding[3])
 
-        yfactor = h - inch_pixel(
-            margin[0] +
+        yfactor = h - mm_pixel(
+            margin[1] +
             size[1] * (j / 2 + 1) +
             padding[0])
 
         w2, h2 = page.mediaBox.upperRight
         scaled_height = float(slide_width) / w2 * h2
-        if scaled_height < slide_height:
-            # fit with width
-            page.scaleTo(inch_pixel(slide_width),
-                         inch_pixel(scaled_height))
-            yfactor -= inch_pixel(slide_height - scaled_height) / 2
+        if 'KEEP ASPECT RATIO':
+            if scaled_height < slide_height:
+                # fit with width
+                page.scaleTo(mm_pixel(slide_width),
+                             mm_pixel(scaled_height))
+                yfactor -= mm_pixel(slide_height - scaled_height) / 2
+            else:
+                # fit with height
+                scaled_width = float(slide_height) / h2 * w2
+                page.scaleTo(mm_pixel(scaled_width),
+                             mm_pixel(slide_height))
+                xfactor += mm_pixel(slide_width - scaled_width) / 2
         else:
-            # fit with height
-            scaled_width = float(slide_height) / h2 * w2
-            page.scaleTo(inch_pixel(scaled_width),
-                         inch_pixel(slide_height))
-            xfactor += inch_pixel(slide_width - scaled_width) / 2
+            # good for debug
+            page.scaleTo(mm_pixel(slide_width),
+                         mm_pixel(slide_height))
 
         tmppage.mergeTranslatedPage(page, xfactor, yfactor)
     output.addPage(tmppage)
@@ -156,10 +165,9 @@ def imp_exp_pdf(inputfile, outputfile, size, margin, padding):
     print 'END OF PROGRAM'
 
 
-def inch_pixel(inch):
-    "inch to pixel calculator"
-    pix = int(float(inch) * 2.834747474747475)
-    return pix
+def mm_pixel(mm):
+    "mm to inch = 0.0393701, DPI(inch to pixel) = 72"
+    return float(mm) * 2.8346472
 
 
 if __name__ == "__main__":
