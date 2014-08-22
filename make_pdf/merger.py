@@ -4,7 +4,7 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 def main(argv):
    size = '91x55'
    margin = '11x14'
-   padding = '3'
+   padding = '5'
    outputfile = ''
    inputfile = ''
    size_array=margin_array=padding_array = []
@@ -68,8 +68,14 @@ def main(argv):
       print 'Output file is not specified!!!'
       help_printer()
       sys.exit()
-   print 'The configuration is :\nSize:{}\nMargin:{}\nPadding:{}\nOutput file:{}'.format(size,margin,padding,outputfile)
+   tmp_input=PdfFileReader(file(inputfile, 'rb'))
+   tmp_input_page=tmp_input.getPage(0)
+   (w, h) = tmp_input_page.mediaBox.upperRight
    size_array=size.split("x")
+   aspect_ratio = w/float(size_array[0])
+   size_array[1] = int(h/aspect_ratio)
+   size = "{}x{}".format(size_array[0],size_array[1]);
+   print 'The configuration is :\nSize:{}\nMargin:{}\nPadding:{}\nOutput file:{}'.format(size,margin,padding,outputfile)
    margin_array=margin.split("x")
    temp=padding.split("x")
    if len(temp)==1:
@@ -113,11 +119,11 @@ def imp_exp_pdf(inputfile,outputfile,size,margin,padding):
                echoer = "{}Printed {} of {}  [{:.2f}%]".format(delete,pages,totalPages,pages/float(totalPages)*100)
                delete = "\b" * (len(echoer)+1)
                page.scaleTo(inch_pixel(size[0]),inch_pixel(size[1]))
-               xfactor = inch_pixel(int(margin[1])+int(size[0])+int(padding[1]))
+               xfactor = inch_pixel(int(margin[1])+int(size[0])+int(padding[1])+int(padding[3])*2)
                if j%2 == 0:
-                   xfactor=inch_pixel(margin[1])
+                   xfactor=inch_pixel(margin[1])+inch_pixel(padding[3])
                
-               tmppage.mergeTranslatedPage(page,xfactor,h-inch_pixel(margin[0])-inch_pixel(size[1])*(j/2+1)-inch_pixel(padding[2])*(j/2))
+               tmppage.mergeTranslatedPage(page,xfactor,h-inch_pixel(margin[0])-(inch_pixel(size[1])+inch_pixel(padding[0]))*(j/2+1)-inch_pixel(padding[2])*(j/2))
                print echoer,
            p=[]
            output.addPage(tmppage)
@@ -130,11 +136,11 @@ def imp_exp_pdf(inputfile,outputfile,size,margin,padding):
             echoer = "{}Printed {} of {}  [{:.2f}%]".format(delete,pages,totalPages,pages/float(totalPages)*100)
             delete = "\b" * (len(echoer)+1)
             page.scaleTo(inch_pixel(size[0]),inch_pixel(size[1]))
-            xfactor = inch_pixel(int(margin[1])+int(size[0])+int(padding[1]))
+            xfactor = inch_pixel(int(margin[1])+int(size[0])+int(padding[1])+int(padding[3])*2)
             if j%2 == 0:
-               xfactor=inch_pixel(margin[1])
-               
-            tmppage.mergeTranslatedPage(page,xfactor,h-inch_pixel(margin[0])-inch_pixel(size[1])*(j/2+1)-inch_pixel(padding[2])*(j/2))
+				xfactor=inch_pixel(margin[1])+inch_pixel(padding[3])
+		   
+            tmppage.mergeTranslatedPage(page,xfactor,h-inch_pixel(margin[0])-(inch_pixel(size[1])+inch_pixel(padding[0]))*(j/2+1)-inch_pixel(padding[2])*(j/2))
             print echoer,
        p=[]
        output.addPage(tmppage)
