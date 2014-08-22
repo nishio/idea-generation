@@ -80,6 +80,8 @@ def main(argv):
         padding_array = [temp[0], temp[1], temp[0], temp[1]]
     elif len(temp) == 4:
         padding_array = [temp[0], temp[1], temp[2], temp[3]]
+    padding_array = map(int, padding_array)
+    margin_array = map(int, margin_array)
     imp_exp_pdf(inputfile, outputfile, size, margin_array, padding_array)
 
 # For displaying help.
@@ -102,20 +104,42 @@ def output_one_page(pages, size, margin, padding, output):
     tmppdf = PdfFileReader(file('BlankA4.pdf', 'rb'))
     tmppage = tmppdf.getPage(0)
     (w, h) = tmppage.mediaBox.upperRight
-    #pages = pages + 1
-    #echoer = "{}Printed {} of {}  [{:.2f}%]".format(
-    #    delete, pages, totalPages, pages / float(totalPages) * 100)
-    #delete = "\b" * (len(echoer) + 1)
-    for (j, page) in enumerate(pages):
-        page.scaleTo(inch_pixel(size[0]), inch_pixel(size[1]))
-        xfactor = inch_pixel(
-            int(margin[1]) + int(size[0]) + int(padding[1]) + int(padding[3]) * 2)
-        if j % 2 == 0:
-            xfactor = inch_pixel(margin[1]) + inch_pixel(padding[3])
 
-        yfactor = h - inch_pixel(margin[0]) - (inch_pixel(size[1]) + inch_pixel(padding[0])) * (j / 2 + 1) - inch_pixel(padding[2]) * (j / 2)
-        tmppage.mergeTranslatedPage(
-            page, xfactor, yfactor)
+    slide_width = size[0] - padding[1] - padding[3]
+    slide_height = size[1] - padding[0] - padding[2]
+
+    for (j, page) in enumerate(pages):
+        #pages = pages + 1
+        #echoer = "{}Printed {} of {}  [{:.2f}%]".format(
+        #delete, pages, totalPages, pages / float(totalPages) * 100)
+        #delete = "\b" * (len(echoer) + 1)
+
+        if j % 2 == 0:
+            xfactor = inch_pixel(margin[1] + padding[3])
+        else:
+            xfactor = inch_pixel(margin[1] + size[0] + padding[3])
+
+        yfactor = h - inch_pixel(
+            margin[0] +
+            size[1] * (j / 2 + 1) +
+            padding[0])
+
+        w2, h2 = page.mediaBox.upperRight
+        scaled_height = float(slide_width) / w2 * h2
+        if scaled_height < slide_height:
+            # fit with width
+            page.scaleTo(inch_pixel(slide_width),
+                         inch_pixel(scaled_height))
+            yfactor -= inch_pixel(slide_height - scaled_height) / 2
+        else:
+            # fit with height
+            scaled_width = float(slide_height) / h2 * w2
+            page.scaleTo(inch_pixel(scaled_width),
+                         inch_pixel(slide_height))
+            xfactor += inch_pixel(slide_width - scaled_width) / 2
+
+        #page.scaleTo(inch_pixel(size[0]), inch_pixel(size[1]))
+        tmppage.mergeTranslatedPage(page, xfactor, yfactor)
         #print echoer,
     output.addPage(tmppage)
 
