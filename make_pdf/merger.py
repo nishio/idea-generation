@@ -5,7 +5,7 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 
 
 def main(argv):
-    size = '91x55'
+    size = (91, 55)
     margin = '11x14'
     padding = '5'
     outputfile = ''
@@ -22,15 +22,13 @@ def main(argv):
             help_printer()
             sys.exit()
         elif opt in ("-s", "--size"):
-            #size = arg
-            x = arg.split("x")
-            if len(x) == 2:
-                if int(x[0]) != 0 and int(x[1]) != 0:
-                    size = arg
-                else:
-                    print "Incorrect Format!! Using default value for size."
-            else:
+            try:
+                size = map(int, arg.split("x"))
+                assert len(size) == 2
+                assert size[0] != 0 and size[1] != 0
+            except:
                 print "Incorrect Format!! Using default value for size."
+
         elif opt in ("-m", "--margin"):
             #margin = arg
             x = arg.split("x")
@@ -72,13 +70,7 @@ def main(argv):
         print 'Output file is not specified!!!'
         help_printer()
         sys.exit()
-    tmp_input = PdfFileReader(file(inputfile, 'rb'))
-    tmp_input_page = tmp_input.getPage(0)
-    (w, h) = tmp_input_page.mediaBox.upperRight
-    size_array = size.split("x")
-    aspect_ratio = w / float(size_array[0])
-    size_array[1] = int(h / aspect_ratio)
-    size = "{}x{}".format(size_array[0], size_array[1])
+
     print 'The configuration is :\nSize:{}\nMargin:{}\nPadding:{}\nOutput file:{}'.format(size, margin, padding, outputfile)
     margin_array = margin.split("x")
     temp = padding.split("x")
@@ -88,7 +80,7 @@ def main(argv):
         padding_array = [temp[0], temp[1], temp[0], temp[1]]
     elif len(temp) == 4:
         padding_array = [temp[0], temp[1], temp[2], temp[3]]
-    imp_exp_pdf(inputfile, outputfile, size_array, margin_array, padding_array)
+    imp_exp_pdf(inputfile, outputfile, size, margin_array, padding_array)
 
 # For displaying help.
 
@@ -106,6 +98,27 @@ def help_printer():
 
 # For Import and Export PDF files by resizing
 
+def output_one_page(pages, size, margin, padding, output):
+    tmppdf = PdfFileReader(file('BlankA4.pdf', 'rb'))
+    tmppage = tmppdf.getPage(0)
+    (w, h) = tmppage.mediaBox.upperRight
+    #pages = pages + 1
+    #echoer = "{}Printed {} of {}  [{:.2f}%]".format(
+    #    delete, pages, totalPages, pages / float(totalPages) * 100)
+    #delete = "\b" * (len(echoer) + 1)
+    for (j, page) in enumerate(pages):
+        page.scaleTo(inch_pixel(size[0]), inch_pixel(size[1]))
+        xfactor = inch_pixel(
+            int(margin[1]) + int(size[0]) + int(padding[1]) + int(padding[3]) * 2)
+        if j % 2 == 0:
+            xfactor = inch_pixel(margin[1]) + inch_pixel(padding[3])
+
+        yfactor = h - inch_pixel(margin[0]) - (inch_pixel(size[1]) + inch_pixel(padding[0])) * (j / 2 + 1) - inch_pixel(padding[2]) * (j / 2)
+        tmppage.mergeTranslatedPage(
+            page, xfactor, yfactor)
+        #print echoer,
+    output.addPage(tmppage)
+
 
 def imp_exp_pdf(inputfile, outputfile, size, margin, padding):
     output = PdfFileWriter()
@@ -116,49 +129,21 @@ def imp_exp_pdf(inputfile, outputfile, size, margin, padding):
     echoer = "Printed {} of {}  [{:.2f}%]".format(
         pages, totalPages, pages / float(totalPages) * 100)
     print echoer,
+
     delete = "\b" * (len(echoer) + 1)
     for i in range(0, input.getNumPages()):
         p.append(input.getPage(i))
         if len(p) == 10:
-            tmppdf = PdfFileReader(file('BlankA4.pdf', 'rb'))
-            tmppage = tmppdf.getPage(0)
-            (w, h) = tmppage.mediaBox.upperRight
-            for (j, page) in enumerate(p):
-                pages = pages + 1
-                echoer = "{}Printed {} of {}  [{:.2f}%]".format(
-                    delete, pages, totalPages, pages / float(totalPages) * 100)
-                delete = "\b" * (len(echoer) + 1)
-                page.scaleTo(inch_pixel(size[0]), inch_pixel(size[1]))
-                xfactor = inch_pixel(
-                    int(margin[1]) + int(size[0]) + int(padding[1]) + int(padding[3]) * 2)
-                if j % 2 == 0:
-                    xfactor = inch_pixel(margin[1]) + inch_pixel(padding[3])
-
-                tmppage.mergeTranslatedPage(page, xfactor, h - inch_pixel(margin[0]) - (inch_pixel(
-                    size[1]) + inch_pixel(padding[0])) * (j / 2 + 1) - inch_pixel(padding[2]) * (j / 2))
-                print echoer,
+            output_one_page(p, size, margin, padding, output)
             p = []
-            output.addPage(tmppage)
+
     if len(p) > 0:
         tmppdf = PdfFileReader(file('BlankA4.pdf', 'rb'))
         tmppage = tmppdf.getPage(0)
         (w, h) = tmppage.mediaBox.upperRight
-        for (j, page) in enumerate(p):
-            pages = pages + 1
-            echoer = "{}Printed {} of {}  [{:.2f}%]".format(
-                delete, pages, totalPages, pages / float(totalPages) * 100)
-            delete = "\b" * (len(echoer) + 1)
-            page.scaleTo(inch_pixel(size[0]), inch_pixel(size[1]))
-            xfactor = inch_pixel(
-                int(margin[1]) + int(size[0]) + int(padding[1]) + int(padding[3]) * 2)
-            if j % 2 == 0:
-                xfactor = inch_pixel(margin[1]) + inch_pixel(padding[3])
-
-            tmppage.mergeTranslatedPage(page, xfactor, h - inch_pixel(margin[0]) - (inch_pixel(
-                size[1]) + inch_pixel(padding[0])) * (j / 2 + 1) - inch_pixel(padding[2]) * (j / 2))
-            print echoer,
+        output_one_page(p, size, margin, padding, output)
         p = []
-        output.addPage(tmppage)
+
     print
     print 'Completed converting.'
     print 'Saving...'
