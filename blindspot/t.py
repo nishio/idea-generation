@@ -21,7 +21,7 @@ if 0:
             fo.write("%s\n" % line.strip())
 
 
-FN = re.compile("(\d+)\.html")
+FN = re.compile("(\d+)\.html$")
 fo = file("cards.html", "w")
 fo.write(file("preface.html").read())
 
@@ -33,8 +33,9 @@ for name in os.listdir("."):
 
 ids.sort()
 for i in ids:
+    print i
     f = file("%d.html" % i)
-    title = f.readline()
+    title = f.readline().strip()
     body = f.read()
     fo.write("<h1 id='%s'>%s: %s</h1>\n" % (i, i, title))
     if os.path.isfile("%d.png" % i):
