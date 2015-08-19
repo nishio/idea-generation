@@ -1,3 +1,6 @@
+"""
+Layout landscape PDF in 2 columns 5 rows (intended to print as a bisuness card)
+"""
 import sys
 import getopt
 from PyPDF2 import PdfFileWriter, PdfFileReader
@@ -109,7 +112,7 @@ def output_one_page(pages, size, margin, padding, output):
             padding[0])
 
         w2, h2 = page.mediaBox.upperRight
-        scaled_height = float(slide_width) / w2 * h2
+        scaled_height = float(slide_width) / float(w2) * float(h2)
         if 'KEEP ASPECT RATIO':
             if scaled_height < slide_height:
                 # fit with width
@@ -118,7 +121,7 @@ def output_one_page(pages, size, margin, padding, output):
                 yfactor -= mm_pixel(slide_height - scaled_height) / 2
             else:
                 # fit with height
-                scaled_width = float(slide_height) / h2 * w2
+                scaled_width = float(slide_height) / float(h2) * float(w2)
                 page.scaleTo(mm_pixel(scaled_width),
                              mm_pixel(slide_height))
                 xfactor += mm_pixel(slide_width - scaled_width) / 2
