@@ -30,7 +30,7 @@ for i, target in enumerate(args.pdfs):
 
 print 'renaming'
 pages = 0
-for f in os.listdir('tmp'):
+for f in sorted(os.listdir('tmp')):
     shutil.move(
         os.path.join('tmp', f),
         os.path.join('tmp', 'page_%04d.png' % pages))
