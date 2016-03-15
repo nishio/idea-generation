@@ -1,5 +1,7 @@
 """
 Layout landscape PDF in 2 columns 5 rows (intended to print as a bisuness card)
+
+It won't work now and I think it should be rewrited, see 25up.pdf
 """
 import sys
 import getopt
@@ -137,7 +139,7 @@ def output_one_page(pages, size, margin, padding, output):
 def imp_exp_pdf(inputfile, outputfile, size, margin, padding):
     "For Import and Export PDF files by resizing"
     output = PdfFileWriter()
-    input = PdfFileReader(file(inputfile, 'rb'))
+    input = PdfFileReader(file(inputfile, 'rb'), strict=False)
     totalPages = input.getNumPages()
     p = []
 
@@ -153,7 +155,7 @@ def imp_exp_pdf(inputfile, outputfile, size, margin, padding):
 
 
     if len(p) > 0:
-        tmppdf = PdfFileReader(file('BlankA4.pdf', 'rb'))
+        tmppdf = PdfFileReader(file('BlankA4.pdf', 'rb'), strict=False)
         tmppage = tmppdf.getPage(0)
         (w, h) = tmppage.mediaBox.upperRight
         output_one_page(p, size, margin, padding, output)
