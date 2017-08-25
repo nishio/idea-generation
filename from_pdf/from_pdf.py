@@ -26,6 +26,9 @@ args = parser.parse_args()
 
 def to_text(filename):
     outdir = os.path.join(args.outdir, filename).replace('.pdf', '')
+    if not os.path.isdir(outdir):
+        os.makedirs(outdir)
+
     outfile = os.path.join(outdir, "line_per_page.txt")
     if os.path.isfile(outfile):
         print 'text already exists'
@@ -70,5 +73,5 @@ for filename in sorted(os.listdir(args.indir)):
     if not filename.endswith('.pdf'): continue
     print(filename)
 
-    to_text(filename)
     to_pngs(filename)
+    to_text(filename)
