@@ -1,3 +1,10 @@
 from_pdf
 
 PDFからのテキスト化、画像化、動画化、など色々実験したが、それぞれのツールがちらばっていることが不便なので「PDFから何かをする」という観点で一本化していきたい。
+
+requirements
+
+```
+apt-get install poppler-utils poppler-data
+pip install neologdn
+```
