@@ -5,6 +5,11 @@ PDFからのテキスト化、画像化、動画化、など色々実験した�
 requirements
 
 ```
+# for pdftocairo
 apt-get install poppler-utils poppler-data
+
+# for pdf2txt
+pip install pdfminer
+
 pip install neologdn
 ```
