@@ -62,17 +62,11 @@ def to_pngs(filename):
     os.makedirs('tmp')
     starttime = time.time()
 
-    if 1:
-        subprocess.check_call( # -r 45 for slides, -r 200 for books
-            ['pdftocairo', '-r', str(args.resolution), '-f', '0',
-             #'-l', '10',
-             '-png', infile, 'tmp/page'],
-            stdout=sys.stdout, stderr=sys.stderr)
-    else:
-        subprocess.check_call(
-            ['pdftocairo', '-r', '45', '-f', '0',
-             '-png', infile, 'tmp/pages-%04d.png'],  # NOT WORKING
-            stdout=sys.stdout, stderr=sys.stderr)
+    subprocess.check_call( # -r 45 for slides, -r 200 for books
+        ['pdftocairo', '-r', str(args.resolution), '-f', '0',
+         #'-l', '10',
+         '-png', infile, 'tmp/page'],
+        stdout=sys.stdout, stderr=sys.stderr)
 
     print 'elapse', time.time() - starttime
     shutil.move('tmp', outdir)
