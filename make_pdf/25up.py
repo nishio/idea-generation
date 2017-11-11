@@ -90,7 +90,7 @@ if __name__ == "__main__":
     parser.add_option('-x', dest='pages_horizont', help='pages combined on one page HORIZONT [5]', default=5)
     parser.add_option('-y', dest='pages_vertical', help='pages combined on one page VERTICAL [5]', default=5)
     parser.add_option('-g', dest='gap', help='margin between pages in centimeters [0.01]', default=0.01)
-    parser.add_option('-o', dest='output_file_name', help='output survey file [out_pdf.pdf]', default='out_pdf.pdf')
+    parser.add_option('-o', dest='output_file_name', help='output file')
     parser.add_option('-t', dest='test_mode', action="store_true", help='test mode on')
     options, args = parser.parse_args()
 
@@ -98,6 +98,8 @@ if __name__ == "__main__":
 
         inp_file_name = options.input_file_name
         out_file_name = options.output_file_name
+        if not out_file_name:
+            out_file_name  = inp_file_name.replace(".pdf", "_25up.pdf")
         x = options.pages_horizont
         y = options.pages_vertical
         gap = options.gap
