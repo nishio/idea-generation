@@ -20,9 +20,15 @@ parser.add_argument('--indir', action='store', default='in',
                    help='directory for PDFs')
 parser.add_argument('--outdir', action='store', default='out',
                    help='directory to output PNGs')
+parser.add_argument('--resolution', action='store', default=200,
+                   help='set resolution(default 200)')
+parser.add_argument('--slide', action='store_true',
+                   help='set resolution=45p')
 
 args = parser.parse_args()
 
+if args.slide:
+    args.resolution = 45
 
 def to_text(filename):
     outdir = os.path.join(args.outdir, filename).replace('.pdf', '')
@@ -56,11 +62,17 @@ def to_pngs(filename):
     os.makedirs('tmp')
     starttime = time.time()
 
-    subprocess.check_call(
-        ['pdftocairo', '-r', '45', '-f', '0',
-         #'-l', '10',
-         '-png', infile, 'tmp/page'],
-        stdout=sys.stdout, stderr=sys.stderr)
+    if 1:
+        subprocess.check_call( # -r 45 for slides, -r 200 for books
+            ['pdftocairo', '-r', str(args.resolution), '-f', '0',
+             #'-l', '10',
+             '-png', infile, 'tmp/page'],
+            stdout=sys.stdout, stderr=sys.stderr)
+    else:
+        subprocess.check_call(
+            ['pdftocairo', '-r', '45', '-f', '0',
+             '-png', infile, 'tmp/pages-%04d.png'],  # NOT WORKING
+            stdout=sys.stdout, stderr=sys.stderr)
 
     print 'elapse', time.time() - starttime
     shutil.move('tmp', outdir)
