@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 - upload pngs to Gyazo
 - make scrapbox.txt for Scrapbox
@@ -8,7 +7,7 @@ import requests
 import os
 import argparse
 
-parser = argparse.ArgumentParser(description='Convert PDF to movie.')
+parser = argparse.ArgumentParser(description='Upload to Gyazo')
 parser.add_argument('--target', action='store')
 
 args = parser.parse_args()
@@ -16,18 +15,19 @@ args = parser.parse_args()
 
 def upload_to_gyazo(filepath):
     url = 'https://upload.gyazo.com/upload.cgi'
-    files = {'imagedata': (filepath, file(filepath).read())}
+    files = {'imagedata': (filepath, open(filepath, "rb").read())}
     r = requests.post(url, files=files)
     return r.text
 
 
 def to_scrapbox(target):
-    textfile = file(os.path.join(target, "line_per_page.txt"))
-    outfile = file(os.path.join(target, "scrapbox.txt"), "w")
+    textfile = open(os.path.join(target, "line_per_page.txt"))
+    outfile = open(os.path.join(target, "scrapbox.txt"), "w")
 
     page = 1
     for filename in sorted(os.listdir(target)):
-        if not filename.startswith("page"): continue
+        if not filename.startswith("page"):
+            continue
         print(filename)
 
         filepath = os.path.join(target, filename)

@@ -1,15 +1,12 @@
 from_pdf
 
-PDFからのテキスト化、画像化、動画化、など色々実験したが、それぞれのツールがちらばっていることが不便なので「PDFから何かをする」という観点で一本化していきたい。
+PDF からのテキスト化、画像化、動画化、など色々実験したが、それぞれのツールがちらばっていることが不便なので「PDF から何かをする」という観点で一本化していきたい。
 
-requirements
+from_pdf.py
+`in/foo.pdf`から`out/foo/page-01.png`と`out/foo/line_per_page.txt`ができる
 
-```
-# for pdftocairo
-apt-get install poppler-utils poppler-data
+to_scrapbox.py
+`--target out/foo/`すると`out/foo/scrapbox.txt`できる
 
-# for pdf2txt
-pip install pdfminer
-
-pip install neologdn
-```
+2021-10-24
+Python3 用にした
